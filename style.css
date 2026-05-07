@@ -2,6 +2,7 @@ body {
     background: radial-gradient(circle at top, #5184fd 0%, #5dffff 100%);
     min-height: 100vh;
     margin: 0;
+    font-family: 'Inter', Arial, sans-serif;
 }
 .Login-card{
     background: #fffffff3;
@@ -10,6 +11,10 @@ body {
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(102, 110, 153, 0.541);
     margin: 50px auto;
+}
+.Login-card.wide {
+    width: min(760px, calc(100% - 28px));
+    padding: 36px;
 }
 .Login-card h2{
     text-align: center;
@@ -45,6 +50,23 @@ body {
 .in_wrapper input:focus {
     border-color: #5184fd;
 }
+.in_wrapper textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    outline: none;
+    transition: 0.3s;
+    resize: vertical;
+}
+.in_wrapper textarea:focus {
+    border-color: #5184fd;
+}
+.in_wrapper input[type="file"] {
+    padding-left: 45px;
+    background: #fff;
+}
 .options {
     display: flex;
     justify-content: space-between;
@@ -65,4 +87,29 @@ body {
 }
 .btn-signin:hover {
     background: #18ade8;
+}
+.alert-box {
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+.alert-error {
+    background: #fff1f2;
+    color: #991b1b;
+    border: 1px solid #fecdd3;
+}
+.alert-success {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+.auth-link {
+    text-align: center;
+    margin-top: 18px;
+}
+.auth-link a {
+    color: #1e62ff;
+    font-weight: 700;
+    text-decoration: none;
 }

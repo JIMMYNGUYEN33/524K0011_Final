@@ -59,6 +59,23 @@
     justify-content: flex-end; 
     margin-bottom: 30px; }
 
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.logout {
+    color: #ef4444;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.content-body h2 {
+    margin-bottom: 22px;
+    color: #1f2937;
+}
+
 .balance-card { 
     background: linear-gradient(135deg, #89a8fb 0%, #355cc9 100%);
     border-radius: 24px; padding: 30px; color: white; width: 100%; max-width: 600px;
@@ -91,6 +108,8 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
      cursor: pointer; 
      transition: 0.3s;
+     text-decoration: none;
+     color: #1f2937;
 }
 
 .action-item:hover { 
@@ -101,4 +120,28 @@
     font-size: 24px; 
     margin-bottom: 10px; 
     display: block; 
+}
+
+.notice-box {
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+    border-radius: 16px;
+    padding: 16px;
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+@media (max-width: 900px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .quick-actions {
+        grid-template-columns: repeat(2, minmax(130px, 1fr));
+    }
 }
