@@ -4,7 +4,7 @@ require_once __DIR__ . '/../helpers/ui.php';
 $errors = [];
 $generatedPassword = null;
 
-function save_id_card_upload($field)
+function save_id_card_upload(string $field):string
 {
     if (empty($_FILES[$field]) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
         throw new RuntimeException('Please upload both ID card images.');
