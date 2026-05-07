@@ -1,0 +1,68 @@
+body {
+    background: radial-gradient(circle at top, #5184fd 0%, #5dffff 100%);
+    min-height: 100vh;
+    margin: 0;
+}
+.Login-card{
+    background: #fffffff3;
+    width: 500px;
+    padding: 5%;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(102, 110, 153, 0.541);
+    margin: 50px auto;
+}
+.Login-card h2{
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+.in_gr{
+    margin-bottom: 20px;
+}
+.in_gr label{
+    display: block;
+    margin-bottom: 2px;
+    color: #000000;
+}
+.in_wrapper {
+    position: relative;
+}
+.in_wrapper i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #999;
+}
+.in_wrapper input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    outline: none;
+    transition: 0.3s;
+}
+.in_wrapper input:focus {
+    border-color: #5184fd;
+}
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 13px;
+}
+.btn-signin{
+    width: 100%;
+    padding: 14px;
+    background: #1e62ff; 
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-signin:hover {
+    background: #18ade8;
+}

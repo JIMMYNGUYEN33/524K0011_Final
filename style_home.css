@@ -1,0 +1,104 @@
+/* hOME**/
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Inter', 
+    sans-serif; 
+
+}
+
+.dashboard-container { 
+    display: flex; min-height: 100vh; 
+    background-color: #f4f7fe; 
+}
+
+/* Sidebar */
+.sidebar { 
+    width: 260px; 
+    background: white; 
+    padding: 30px 20px; 
+    display: flex; 
+    flex-direction: column; 
+    border-right: 1px solid #e0e6ed;
+}
+
+.brand-logo { 
+    font-size: 24px; 
+    font-weight: 700; 
+    color: #355cc9; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px;
+    margin-bottom: 40px; }
+
+.menu a { display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    padding: 12px 15px; 
+    color: #718096; 
+    text-decoration: none; 
+    border-radius: 12px; 
+    margin-bottom: 5px; 
+    transition: 0.3s; }
+
+.menu a.active, .menu a:hover {
+    background: #eef2ff; 
+    color: #355cc9; 
+    font-weight: 600; 
+}
+
+/* Main Content */
+.main-content { 
+    flex: 1;
+    padding: 30px; 
+    }
+
+.top-header { 
+    display: flex; 
+    justify-content: flex-end; 
+    margin-bottom: 30px; }
+
+.balance-card { 
+    background: linear-gradient(135deg, #89a8fb 0%, #355cc9 100%);
+    border-radius: 24px; padding: 30px; color: white; width: 100%; max-width: 600px;
+    box-shadow: 0 10px 20px rgba(53, 92, 201, 0.2); margin-bottom: 40px;
+}
+
+.status-tag { 
+    background: rgba(255,255,255,0.2); 
+    padding: 5px 12px; border-radius: 20px; 
+    font-size: 12px; float: right; }
+
+.balance-card h3 { 
+    font-size: 36px; 
+    margin: 15px 0; 
+    font-weight: 700;
+}
+
+/* Quick Actions */
+.quick-actions { 
+    display: grid;
+    grid-template-columns: repeat(4, 150px);
+    gap: 20px; 
+}
+
+.action-item { 
+    background: white; 
+    padding: 20px; 
+    border-radius: 16px; 
+    text-align: center; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+     cursor: pointer; 
+     transition: 0.3s;
+}
+
+.action-item:hover { 
+    transform: translateY(-5px); 
+}
+
+.action-item i { 
+    font-size: 24px; 
+    margin-bottom: 10px; 
+    display: block; 
+}
