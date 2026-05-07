@@ -20,6 +20,8 @@ CREATE TABLE Users (
     locked_until DATETIME NULL,
     is_permanently_locked BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    abnormal_login_count INT DEFAULT 0,
+    permanently_locked_at DATETIME NULL,
 );
 
 CREATE TABLE Cards (
@@ -47,14 +49,17 @@ CREATE TABLE Transactions (
     note TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
-    FOREIGN KEY (receiver_id) REFERENCES Users(id) ON DELETE SET NULL
+    FOREIGN KEY (receiver_id) REFERENCES Users(id) ON DELETE SET NULL,
+    approve_by INT NULL,
+    approve_at DATETIME NULL,
+    FOREIGN KEY (approve_by) REFERENCES Users(id) ON DELETE SET NULL
 );
 
 
 CREATE TABLE PhoneCards (
     id INT AUTO_INCREMENT PRIMARY KEY,
     transaction_id INT NOT NULL,
-    carrier VARCHAR(50) NOT NULL, ne
+    carrier VARCHAR(50) NOT NULL, 
     card_code VARCHAR(10) NOT NULL UNIQUE, 
     amount INT NOT NULL, 
     FOREIGN KEY (transaction_id) REFERENCES Transactions(id) ON DELETE CASCADE
@@ -63,3 +68,15 @@ CREATE TABLE PhoneCards (
 
 INSERT INTO Users (role, phone, email, password, full_name, status, is_first_login) VALUES
 ('admin', '0000000000', 'admin@ewallet.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'System Administrator', 'verified', FALSE);
+
+-- 7. Bảng OTP_Codes (Lưu mã xác thực cho Chuyển tiền & Quên mật khẩu)
+CREATE TABLE OTP_Codes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    otp_code VARCHAR(6) NOT NULL,
+    type ENUM('transfer', 'reset_password') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME NOT NULL,
+    is_used BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
