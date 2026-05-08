@@ -1,19 +1,38 @@
-body {
-    background: radial-gradient(circle at top, #5184fd 0%, #5dffff 100%);
-    min-height: 100vh;
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
 }
-.Login-card{
+body {
+    background-color: #e0e0e0; 
+    display: flex;
+    justify-content: center;
+}
+.app-container {
+    width: 100%;
+    max-width: 414px; /* Kích thước chuẩn của iPhone */
+    min-height: 100vh;
+    background-color: #322500;
+    position: relative;
+    padding-bottom: 80px; /* Chừa chỗ cho Bottom Nav */
+    overflow-x: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+
+.Login-card {
     background: #fffffff3;
-    width: 500px;
-    padding: 5%;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(102, 110, 153, 0.541);
-    margin: 50px auto;
+    width: calc(100% - 40px); 
+    max-width: 374px;
+    padding: 25px 20px; 
+    border-radius: 24px; 
+    box-shadow: 0 10px 30px rgba(102, 110, 153, 0.2); 
+    margin: 30px auto; 
 }
 .Login-card h2{
     text-align: center;
-    color: #333;
+    color: #000000;
     margin-bottom: 30px;
 }
 .in_gr{

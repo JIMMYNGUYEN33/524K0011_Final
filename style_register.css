@@ -1,0 +1,232 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #e0e0e0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Khung điện thoại giả lập chuẩn */
+.app-container {
+    width: 100%;
+    max-width: 414px;
+    min-height: 100vh;
+    background-color: #322500;
+    position: relative;
+    padding-bottom: 30px;
+    overflow-x: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+
+.back-navigation {
+    padding: 20px 20px 0 20px;
+    display: flex;
+    align-items: center;
+}
+
+.btn-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    color: #333333;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #ffea00; 
+    color: #252603;
+    transform: translateX(-3px);
+}
+
+.btn-back i {
+    font-size: 18px;
+}
+
+
+.brand-title {
+    text-align: center; 
+    color: rgb(255, 200, 3); 
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 32px;
+}
+
+.brand-subtitle {
+    text-align: center; 
+    color: rgb(255, 162, 0);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* --- CARD ĐĂNG KÝ (Co giãn chống tràn tuyệt đối) --- */
+.Register-card {
+    background: #fffffff3;
+    width: calc(100% - 40px);
+    max-width: 374px;
+    padding: 25px 20px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(102, 110, 153, 0.15);
+    margin: 0 auto 20px auto;
+}
+
+.Register-card h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+/* --- INPUT GROUP --- */
+.in_gr {
+    margin-bottom: 18px;
+}
+
+.in_gr label {
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.in_wrapper {
+    position: relative;
+}
+
+.in_wrapper i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.in_wrapper input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.in_wrapper input:focus {
+    border-color: #ffea00; /* Viền vàng BeePay khi focus */
+    box-shadow: 0 0 5px rgba(255, 234, 0, 0.3);
+}
+
+/* --- NÚT ĐĂNG KÝ VÀNG ĐEN --- */
+.btn-register {
+    width: 100%;
+    padding: 14px;
+    background: #252603; /* Tông đen-vàng thương hiệu */
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.btn-register:hover {
+    background: #ffea00;
+    color: #252603;
+}
+
+/* --- TEXT CHUYỂN TRANG Ở DƯỚI CARD --- */
+.signin-text {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
+.signin-text a {
+    color: rgb(255, 162, 0);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.signin-text a:hover {
+    text-decoration: underline;
+}
+/* Tiêu đề khu vực tải ID */
+.id-verification-section {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.verification-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+/* Hộp tải file nét đứt */
+.upload-box {
+    border: 2px dashed #b5bbc9; /* Viền nét đứt màu xám */
+    border-radius: 16px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Khi người dùng hover chuột vào hộp */
+.upload-box:hover {
+    border-color: #ffea00; /* Viền chuyển sang màu vàng BeePay */
+    background-color: #fffef0;
+}
+
+/* Hiển thị lúc file đã được tải lên thành công */
+.upload-box.uploaded {
+    border-style: solid;
+    border-color: #2ecc71; /* Chuyển sang viền xanh lá cây */
+    background-color: #f0fff4;
+}
+
+/* Thiết kế nội dung bên trong hộp */
+.upload-icon {
+    font-size: 28px;
+    color: #666;
+    margin-bottom: 8px;
+    transition: color 0.3s;
+}
+
+.upload-box:hover .upload-icon {
+    color: #ffea00;
+}
+
+.upload-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.upload-hint {
+    font-size: 11px;
+    color: #888;
+}
