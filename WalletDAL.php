@@ -37,7 +37,7 @@ class WalletDAL {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
-            'GD' . time() . rand(100, 999), // [cite: 127]
+            'GD' . time() . rand(100, 999), 
             $data['user_id'],
             $data['receiver_id'] ?? null,
             $data['type'],
@@ -58,30 +58,30 @@ class WalletDAL {
         $stmt = $this->pdo->prepare("INSERT INTO PhoneCards (transaction_id, carrier, card_code, amount) VALUES (?, ?, ?, ?)");
         return $stmt->execute([$transactionId, $carrier, $code, $amount]);
     }
-}
 
-// Lấy danh sách tài khoản chờ kích hoạt (mới nhất lên đầu)
-public function getPendingAccounts() {
-    $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE status = 'pending' ORDER BY created_at DESC");
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    // Lấy danh sách tài khoản chờ kích hoạt (mới nhất lên đầu)
+    public function getPendingAccounts() {
+        $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE status = 'pending' ORDER BY created_at DESC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-// Lấy danh sách tài khoản bị khóa vô thời hạn do sai pass
-public function getLockedAccounts() {
-    $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE is_permanently_locked = TRUE ORDER BY locked_until DESC");
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    // Lấy danh sách tài khoản bị khóa vô thời hạn do sai pass
+    public function getLockedAccounts() {
+        $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE is_permanently_locked = TRUE ORDER BY locked_until DESC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-// Lấy danh sách các giao dịch rút/chuyển trên 5 triệu đang chờ duyệt
-public function getPendingTransactions() {
-    $stmt = $this->pdo->prepare("SELECT t.*, u.full_name as sender_name 
-                                 FROM Transactions t 
-                                 JOIN Users u ON t.user_id = u.id 
-                                 WHERE t.status = 'pending' AND t.amount > 5000000 
-                                 ORDER BY t.created_at DESC");
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    // Lấy danh sách các giao dịch rút/chuyển trên 5 triệu đang chờ duyệt
+    public function getPendingTransactions() {
+        $stmt = $this->pdo->prepare("SELECT t.*, u.full_name as sender_name 
+                                     FROM Transactions t 
+                                     JOIN Users u ON t.user_id = u.id 
+                                     WHERE t.status = 'pending' AND t.amount > 5000000 
+                                     ORDER BY t.created_at DESC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+} 
 ?>
