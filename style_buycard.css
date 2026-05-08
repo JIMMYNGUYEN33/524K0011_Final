@@ -1,0 +1,261 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #e0e0e0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Khung giả lập di động chuẩn khớp với trang Home và Deposit, Withdraw */
+.app-container {
+    width: 100%;
+    max-width: 414px;
+    min-height: 100vh;
+    background-color: #f5f6fa;
+    position: relative;
+    padding-bottom: 40px;
+    overflow-x: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- THANH ĐẦU TRANG --- */
+.app-top-bar {
+    padding: 20px 20px 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Nút Back hình tròn */
+.btn-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    color: #333333;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: 0.3s ease;
+    flex-shrink: 0;
+}
+
+.btn-back:hover {
+    background-color: #ffea00; /* Màu vàng BeePay đặc trưng */
+    color: #252603;
+    transform: translateX(-3px);
+}
+
+/* Khối chữ tiêu đề */
+.page-title-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e1e1e;
+    margin: 0;
+}
+
+.page-subtitle {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.3;
+    margin-top: 2px;
+}
+
+/* --- CARD FORM MUA THẺ CÀO --- */
+.buycard-card {
+    background: #ffffff;
+    width: calc(100% - 40px);
+    max-width: 374px;
+    padding: 25px 20px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(102, 110, 153, 0.1);
+    margin: 10px auto 0 auto;
+}
+
+.section-label {
+    display: block;
+    margin-bottom: 12px;
+    color: #333;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.required {
+    color: #dc3545; /* Sao đỏ bắt buộc */
+}
+
+/* --- GRID CHỌN NHÀ MẠNG --- */
+.carriers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.carrier-item {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 14px;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.carrier-item span {
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    margin-top: 10px;
+}
+
+/* Các vòng màu biểu tượng nhà mạng */
+.carrier-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+}
+
+.carrier-icon.red { background: #e51a1a; }
+.carrier-icon.blue { background: #1e82e6; }
+.carrier-icon.purple { background: #9c27b0; }
+
+/* Trạng thái được chọn (Active) */
+.carrier-item.active {
+    border-color: #1e62ff; /* Viền xanh dương đậm */
+    background-color: #f0f4ff;
+    box-shadow: 0 4px 10px rgba(30, 98, 255, 0.15);
+}
+
+/* --- GRID CHỌN MỆNH GIÁ --- */
+.denominations-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.denom-item {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 15px 10px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #222;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Trạng thái được chọn (Active) */
+.denom-item.active {
+    border-color: #1e62ff;
+    background-color: #f0f4ff;
+    color: #1e62ff;
+    box-shadow: 0 4px 10px rgba(30, 98, 255, 0.15);
+}
+
+/* --- INPUT NHẬP SỐ LƯỢNG --- */
+.in_gr {
+    margin-bottom: 18px;
+}
+
+.in_gr label {
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.in_wrapper {
+    position: relative;
+}
+
+.in_wrapper i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.in_wrapper input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.in_wrapper input:focus {
+    border-color: #1e62ff;
+    box-shadow: 0 0 5px rgba(30, 98, 255, 0.2);
+}
+
+/* --- KHU VỰC HIỂN THỊ TỔNG TIỀN --- */
+.total-payment-box {
+    background-color: #f8f9fa; /* Nền xám nhạt */
+    border: 1px dashed #e0e0e0; /* Viền đứt mảnh nhẹ nhàng */
+    border-radius: 14px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between; /* Đẩy chữ sang trái, số tiền sang phải */
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.total-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+}
+
+.total-amount {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e62ff; /* Màu xanh dương thương hiệu nổi bật */
+}
+
+/* --- NÚT PURCHASE XANH DƯƠNG --- */
+.btn-purchase {
+    width: 100%;
+    padding: 14px;
+    background: #1e62ff; /* Màu xanh dương nhạt theo hình mẫu */
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.btn-purchase:hover {
+    background: #154bcc;
+}

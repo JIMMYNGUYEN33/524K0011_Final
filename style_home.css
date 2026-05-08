@@ -52,7 +52,7 @@ body {
     padding: 20px;
     border-radius: 20px;
     color: white;
-    box-shadow: 0 10px 20px rgba(230, 0, 92, 0.2);
+    box-shadow: 0 10px 20px rgba(188, 230, 0, 0.2);
 }
 .wallet-icon { 
     background: rgba(255,255,255,0.2); 
@@ -148,10 +148,23 @@ body {
 }
 .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 70px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; border-radius: 20px 20px 0 0; }
 .nav-item { text-decoration: none; color: #999; display: flex; flex-direction: column; align-items: center; font-size: 12px; font-weight: 500; }
-.nav-item.active { color: #e6005c; }
+.nav-item.active { color: #514c02; }
 .nav-item i { font-size: 20px; margin-bottom: 5px; }
 
 /* Nút Scan ở giữa */
-.scan-btn { position: relative; top: -20px; }
-.scan-circle { width: 55px; height: 55px; background: linear-gradient(135deg, #a406bd 0%, #e6005c 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; border: 4px solid #f5f6fa; box-shadow: 0 5px 15px rgba(230, 0, 92, 0.3); }
+.scan-btn { position: relative;
+     top: -20px; 
+    }
+.scan-circle { 
+    width: 55px; 
+    height: 55px; 
+    background: linear-gradient(135deg, #faf79b 0%, #452a00 100%); 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    margin-bottom: 5px; 
+    border: 4px solid #f5f6fa; 
+    box-shadow: 0 5px 15px rgba(230, 207, 0, 0.3); 
+}
 .scan-circle i { color: white; font-size: 24px; margin: 0; }
