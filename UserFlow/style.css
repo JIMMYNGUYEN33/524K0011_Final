@@ -1,0 +1,137 @@
+* {
+    margin: 0;
+<<<<<<< HEAD:style.css
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+=======
+    font-family: 'Inter', Arial, sans-serif;
+>>>>>>> dbf68f61a717158ea6654b0ceb16ea6ac2b86ca7:UserFlow/style.css
+}
+body {
+    background-color: #e0e0e0; 
+    display: flex;
+    justify-content: center;
+}
+.app-container {
+    width: 100%;
+    max-width: 414px; /* Kích thước chuẩn của iPhone */
+    min-height: 100vh;
+    background-color: #322500;
+    position: relative;
+    padding-bottom: 80px; /* Chừa chỗ cho Bottom Nav */
+    overflow-x: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+
+.Login-card {
+    background: #fffffff3;
+    width: calc(100% - 40px); 
+    max-width: 374px;
+    padding: 25px 20px; 
+    border-radius: 24px; 
+    box-shadow: 0 10px 30px rgba(102, 110, 153, 0.2); 
+    margin: 30px auto; 
+}
+.Login-card.wide {
+    width: min(760px, calc(100% - 28px));
+    padding: 36px;
+}
+.Login-card h2{
+    text-align: center;
+    color: #000000;
+    margin-bottom: 30px;
+}
+.in_gr{
+    margin-bottom: 20px;
+}
+.in_gr label{
+    display: block;
+    margin-bottom: 2px;
+    color: #000000;
+}
+.in_wrapper {
+    position: relative;
+}
+.in_wrapper i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #999;
+}
+.in_wrapper input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    outline: none;
+    transition: 0.3s;
+}
+.in_wrapper input:focus {
+    border-color: #5184fd;
+}
+.in_wrapper textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    outline: none;
+    transition: 0.3s;
+    resize: vertical;
+}
+.in_wrapper textarea:focus {
+    border-color: #5184fd;
+}
+.in_wrapper input[type="file"] {
+    padding-left: 45px;
+    background: #fff;
+}
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 13px;
+}
+.btn-signin{
+    width: 100%;
+    padding: 14px;
+    background: #211d00; 
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-signin:hover {
+    background: #ffe600;
+}
+.alert-box {
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+.alert-error {
+    background: #fff1f2;
+    color: #991b1b;
+    border: 1px solid #fecdd3;
+}
+.alert-success {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+.auth-link {
+    text-align: center;
+    margin-top: 18px;
+}
+.auth-link a {
+    color: #1e62ff;
+    font-weight: 700;
+    text-decoration: none;
+}
