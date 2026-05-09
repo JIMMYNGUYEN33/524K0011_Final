@@ -74,7 +74,7 @@ body {
 .btn-signin{
     width: 100%;
     padding: 14px;
-    background: #1e62ff; 
+    background: #211d00; 
     color: white;
     border: none;
     border-radius: 12px;
@@ -83,5 +83,5 @@ body {
     transition: 0.3s;
 }
 .btn-signin:hover {
-    background: #18ade8;
+    background: #ffe600;
 }

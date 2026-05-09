@@ -1,0 +1,172 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #e0e0e0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Khung giả lập di động chuẩn BeePay */
+.app-container {
+    width: 100%;
+    max-width: 414px;
+    min-height: 100vh;
+    background-color: #251501;
+    position: relative;
+    padding: 40px 0;
+    overflow-x: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- ICON VÍ TRÒN PHÍA TRÊN --- */
+.header-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.wallet-circle {
+    width: 70px;
+    height: 70px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffea00; /* Màu vàng BeePay */
+    font-size: 32px;
+    box-shadow: 0 4px 15px rgba(255, 234, 0, 0.2);
+}
+
+/* --- TIÊU ĐỀ TRANG ĐỒNG BỘ MÀU XANH/ĐEN --- */
+.page-title {
+    text-align: center;
+    color: #fffffffa; /* Màu tối của BeePay */
+    font-weight: 700;
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.page-subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+/* --- CARD FORM --- */
+.password-card {
+    background: #ffffff;
+    width: calc(100% - 40px);
+    max-width: 374px;
+    padding: 25px 20px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(102, 110, 153, 0.1);
+    margin: 0 auto;
+}
+
+/* --- HỘP THÔNG BÁO CẢNH BÁO MÀU VÀNG NHẠT --- */
+.warning-alert-box {
+    background-color: #fffdec; /* Nền vàng nhạt */
+    border: 1px solid #ffe8a1;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 12px;
+    color: #6b5100;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* --- Ô INPUT FIELD --- */
+.in_gr {
+    margin-bottom: 5px;
+}
+
+.in_gr label {
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.in_wrapper {
+    position: relative;
+}
+
+.in_wrapper i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.in_wrapper input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.in_wrapper input:focus {
+    border-color: #ffea00; /* Viền vàng khi chọn */
+    box-shadow: 0 0 5px rgba(255, 234, 0, 0.3);
+}
+
+.input-hint {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+    display: block;
+}
+
+/* --- NÚT ĐỔI MẬT KHẨU (XANH DƯƠNG ĐỒNG BỘ SIGN IN) --- */
+.btn-change-pw {
+    width: 100%;
+    padding: 14px;
+    background: #1e62ff; /* Giữ tông xanh dương chủ đạo của nút Sign In Như thích */
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 15px;
+}
+
+.btn-change-pw:hover {
+    background: #154bcc;
+}
+
+/* --- KHU VỰC NÚT LOGOUT DƯỚI CÙNG --- */
+.logout-action-wrapper {
+    text-align: center;
+}
+
+.btn-logout-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #888;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-logout-link:hover {
+    color: #dc3545; /* Đổi sang đỏ cảnh báo khi di chuột vào Logout */
+}

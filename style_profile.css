@@ -1,0 +1,313 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #e0e0e0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Mobile Emulator Framework */
+.app-container {
+    width: 100%;
+    max-width: 414px;
+    min-height: 100vh;
+    background-color: #f5f6fa;
+    position: relative;
+    padding-bottom: 90px; /* Space for bottom navigation */
+    overflow-x: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- GRADIENT HEADER --- */
+.profile-header {
+    background: linear-gradient(135deg, #a406bd 0%, #e6005c 100%);
+    padding: 25px 20px 40px 20px;
+    color: white;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.welcome-text p {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 3px;
+}
+
+.welcome-text h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.btn-notification {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- PROFILE CARD --- */
+.profile-card {
+    background: #ffffff;
+    width: calc(100% - 32px);
+    margin: -20px auto 20px auto; /* Overlaps header slightly */
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(149, 157, 165, 0.1);
+    z-index: 2;
+}
+
+.card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333333;
+    margin-bottom: 15px;
+}
+
+.profile-info-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-grow: 1;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.info-icon {
+    font-size: 18px;
+    color: #888888;
+    width: 20px;
+    text-align: center;
+}
+
+.info-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-label {
+    font-size: 11px;
+    color: #999999;
+}
+
+.info-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333333;
+}
+
+/* --- DOUBLE STATUS BADGES SYSTEM --- */
+.status-badge-wrapper {
+    flex-shrink: 0;
+    margin-left: 10px;
+}
+
+.status-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* 1. Pending Verification Status (Yellow design) */
+.status-badge.pending {
+    background-color: #fffde7;
+    color: #f57f17;
+    border: 1px solid #fff59d;
+}
+
+/* 2. Verified Status (Green design) */
+.status-badge.verified {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+/* --- NAVIGATION LIST MENU --- */
+.menu-section {
+    width: calc(100% - 32px);
+    background: #ffffff;
+    margin: 0 auto 20px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(149, 157, 165, 0.08);
+}
+
+.menu-item-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f5f6fa;
+    transition: background 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #fcfcfc;
+}
+
+.menu-item-link:last-child .menu-item {
+    border-bottom: none;
+}
+
+.menu-icon-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-right: 15px;
+}
+
+/* Custom Icon Colors */
+.menu-icon-box.purple { background-color: #f3e5f5; color: #9c27b0; }
+.menu-icon-box.green { background-color: #e8f5e9; color: #2e7d32; }
+.menu-icon-box.orange { background-color: #fff3e0; color: #ef6c00; }
+
+.menu-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    flex-grow: 1;
+}
+
+.arrow-icon {
+    font-size: 12px;
+    color: #cccccc;
+}
+
+/* --- LOGOUT ACTION BUTTON --- */
+.logout-wrapper {
+    width: calc(100% - 32px);
+    margin: 0 auto;
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    background-color: #ffffff;
+    border: 1px solid #f5f5f5;
+    border-radius: 16px;
+    color: #d32f2f;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    transition: all 0.2s;
+}
+
+.btn-logout:hover {
+    background-color: #ffebee;
+    border-color: #ffcdd2;
+}
+
+.app-version {
+    text-align: center;
+    font-size: 11px;
+    color: #b0bec5;
+    margin: 20px 0;
+    line-height: 1.5;
+}
+
+/* --- SYSTEM BOTTOM NAVIGATION BAR --- */
+.bottom-nav {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 75px;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid #eee;
+    border-radius: 20px 20px 0 0;
+    z-index: 10;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #999999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.nav-item.active {
+    color: #e6005c; /* Pink accent color */
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+/* Center Scanning Action Button */
+.scan-btn {
+    position: relative;
+    top: -15px;
+}
+
+.scan-circle {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, #a406bd 0%, #e6005c 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    border: 4px solid #f5f6fa;
+    box-shadow: 0 5px 15px rgba(230, 0, 92, 0.3);
+}
+
+.scan-circle i {
+    color: white;
+    font-size: 22px;
+    margin: 0;
+}

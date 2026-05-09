@@ -1,0 +1,153 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #e0e0e0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Khung giả lập di động chuẩn BeePay */
+.app-container {
+    width: 100%;
+    max-width: 414px;
+    min-height: 100vh;
+    background-color: #f5f6fa;
+    position: relative;
+    padding: 40px 0;
+    overflow-x: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- ICON THÀNH CÔNG --- */
+.success-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.success-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2ecc71; /* Màu xanh lá cây thành công */
+    font-size: 80px; /* Độ lớn của icon Checkmark */
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
+}
+
+/* --- TIÊU ĐỀ TRANG --- */
+.page-title {
+    text-align: center;
+    color: #252603; /* Màu tối của BeePay */
+    font-weight: 700;
+    font-size: 24px;
+    margin-bottom: 8px;
+    padding: 0 20px;
+}
+
+.page-subtitle {
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 25px;
+    padding: 0 30px;
+    line-height: 1.5;
+}
+
+/* --- CARD THÔNG TIN TÀI KHOẢN --- */
+.success-card {
+    background: #ffffff;
+    width: calc(100% - 40px);
+    max-width: 374px;
+    padding: 22px 20px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(102, 110, 153, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #475569;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Dòng thông tin */
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 13px;
+    border-bottom: 1px dashed #f1f5f9;
+}
+
+.info-label {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.info-value {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* Hàng nổi bật chứa Password mặc định */
+.highlight-row {
+    background-color: #f0f4ff;
+    border-radius: 8px;
+    padding: 10px 8px;
+    border-bottom: none;
+    margin-top: 5px;
+}
+
+.password-value {
+    color: #1e62ff; /* Màu xanh nổi bật */
+    font-weight: 700;
+    font-family: 'Courier New', monospace; /* Kiểu chữ monospace cho dễ đọc kí tự */
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+.info-footer {
+    font-size: 11px;
+    color: #94a3b8;
+    font-style: italic;
+    margin-top: 15px;
+    text-align: center;
+    line-height: 1.4;
+}
+
+
+.btn-go-login {
+    width: 100%;
+    padding: 14px;
+    background: #1e62ff; 
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 15px;
+}
+
+.btn-go-login:hover {
+    background: #154bcc;
+}
