@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Phone Card</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style_buycard.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-top-bar">
+            <a href="Home.php" class="btn-back">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            
+            <div class="page-title-group">
+                <h1 class="page-title">Buy Phone Card</h1>
+                <p class="page-subtitle">Purchase mobile phone scratch cards</p>
+            </div>
+        </header>
+
+        <div class="buycard-card">
+            <form action="#" method="POST">
+                
+                <div class="selection-section">
+                    <label class="section-label">Select Carrier <span class="required">*</span></label>
+                    <div class="carriers-grid">
+                        <div class="carrier-item active" data-carrier="viettel">
+                            <div class="carrier-icon red">
+                                <i class="fa-solid fa-mobile-screen-button"></i>
+                            </div>
+                            <span>Viettel</span>
+                        </div>
+                        <div class="carrier-item" data-carrier="mobifone">
+                            <div class="carrier-icon blue">
+                                <i class="fa-solid fa-mobile-screen-button"></i>
+                            </div>
+                            <span>Mobifone</span>
+                        </div>
+                        <div class="carrier-item" data-carrier="vinaphone">
+                            <div class="carrier-icon purple">
+                                <i class="fa-solid fa-mobile-screen-button"></i>
+                            </div>
+                            <span>Vinaphone</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="selected-carrier" name="carrier" value="viettel">
+                </div>
+
+                <div class="selection-section mt-4">
+                    <label class="section-label">Select Denomination <span class="required">*</span></label>
+                    <div class="denominations-grid">
+                        <div class="denom-item active" data-value="10000">10,000 VND</div>
+                        <div class="denom-item" data-value="20000">20,000 VND</div>
+                        <div class="denom-item" data-value="50000">50,000 VND</div>
+                        <div class="denom-item" data-value="100000">100,000 VND</div>
+                    </div>
+                    <input type="hidden" id="selected-denomination" name="denomination" value="10000">
+                </div>
+
+                <div class="in_gr mt-4">
+                    <label>Quantity (Max: 5) <span class="required">*</span></label>
+                    <div class="in_wrapper">
+                        <i class="fa-solid fa-arrow-up-9-1"></i>
+                        <input required type="number" id="quantity-input" name="quantity" min="1" max="5" value="1" placeholder="1">
+                    </div>
+                </div>
+
+                <div class="total-payment-box mt-4">
+                    <div class="total-label">Total Payment</div>
+                    <div class="total-amount" id="total-amount-display">10,000 VND</div>
+                </div>
+                <button type="submit" class="btn-purchase">Purchase</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Xử lý chọn Nhà mạng
+        const carrierItems = document.querySelectorAll('.carrier-item');
+        const selectedCarrierInput = document.getElementById('selected-carrier');
+
+        carrierItems.forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelector('.carrier-item.active').classList.remove('active');
+                item.classList.add('active');
+                selectedCarrierInput.value = item.getAttribute('data-carrier');
+            });
+        });
+
+        // Xử lý chọn Mệnh giá, Số lượng và tính Tổng tiền
+        const denomItems = document.querySelectorAll('.denom-item');
+        const selectedDenomInput = document.getElementById('selected-denomination');
+        const quantityInput = document.getElementById('quantity-input');
+        const totalAmountDisplay = document.getElementById('total-amount-display');
+
+        // Hàm tính toán và hiển thị tổng tiền tự động
+        function updateTotalPayment() {
+            const denomination = parseInt(selectedDenomInput.value) || 0;
+            let quantity = parseInt(quantityInput.value) || 1;
+
+            // Ràng buộc số lượng trong khoảng 1 - 5
+            if (quantity < 1) {
+                quantity = 1;
+                quantityInput.value = 1;
+            } else if (quantity > 5) {
+                quantity = 5;
+                quantityInput.value = 5;
+            }
+
+            const total = denomination * quantity;
+            
+            // Định dạng hiển thị dấu phẩy ngăn cách hàng nghìn (ví dụ: 50,000 VND)
+            totalAmountDisplay.innerText = total.toLocaleString('en-US') + " VND";
+        }
+
+        denomItems.forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelector('.denom-item.active').classList.remove('active');
+                item.classList.add('active');
+                selectedDenomInput.value = item.getAttribute('data-value');
+                
+                // Mỗi lần click mệnh giá mới sẽ tính lại tổng tiền
+                updateTotalPayment();
+            });
+        });
+
+        // Lắng nghe sự kiện khi người dùng gõ hoặc nhấn mũi tên tăng giảm số lượng
+        quantityInput.addEventListener('input', updateTotalPayment);
+        quantityInput.addEventListener('change', updateTotalPayment);
+    </script>
+</body>
+</html>

@@ -1,195 +1,120 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Bật hiển thị lỗi PHP để dễ debug trong quá trình làm bài
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// 1. Nhúng các file helper trước
+require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 
-$errors = [];
-$generatedPassword = null;
+// 2. Nhúng file kết nối database SAU CÙNG để đảm bảo không bị file khác ghi đè biến $pdo
+require __DIR__ . '/../config/db_config.php'; 
 
-function save_id_card_upload(string $field):string
-{
-    if (empty($_FILES[$field]) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
-        throw new RuntimeException('Please upload both ID card images.');
-    }
+// 3. Khai báo global $pdo để PHP chắc chắn sử dụng biến kết nối từ db_config.php
+global $pdo;
 
-    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
-    $originalName = $_FILES[$field]['name'];
-    $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-
-    if (!in_array($extension, $allowed, true)) {
-        throw new RuntimeException('ID card images must be JPG, PNG, or WEBP.');
-    }
-
-    $uploadDir = __DIR__ . '/../uploads/id_cards';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
-    }
-
-    $fileName = $field . '_' . date('YmdHis') . '_' . random_string(8) . '.' . $extension;
-    $target = $uploadDir . '/' . $fileName;
-
-    if (!move_uploaded_file($_FILES[$field]['tmp_name'], $target)) {
-        throw new RuntimeException('Cannot save uploaded ID card image.');
-    }
-
-    return 'uploads/id_cards/' . $fileName;
-}
+$error = '';
+$success = '';
+$generated_password = ''; // Dùng để hiển thị mật khẩu tạm thời cho người dùng khi đăng ký thành công để test
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $phone = trim($_POST['phone'] ?? '');
-    $email = trim($_POST['email'] ?? '');
+    // Nhận dữ liệu đầu vào và làm sạch (Trim)
     $fullName = trim($_POST['full_name'] ?? '');
-    $dob = trim($_POST['dob'] ?? '');
-    $address = trim($_POST['address'] ?? '');
+    $birthday = trim($_POST['birthday'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
 
-    if ($phone === '') {
-        $errors[] = 'Phone is required.';
-    }
+    // Validate kiểm tra dữ liệu bắt buộc
+    if (empty($fullName) || empty($birthday) || empty($email) || empty($phone)) {
+        $error = 'Please fill in all required fields.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Invalid email address format.';
+    } elseif (!preg_match('/^[0-9]{10,11}$/', $phone)) {
+        $error = 'Phone number must be 10 or 11 digits.';
+    } else {
+        // Kiểm tra chắc chắn một lần nữa xem kết nối pdo có tồn tại không
+        if (!isset($pdo) || !$pdo) {
+            $error = 'Database connection lost. Please check db_config.php.';
+        } else {
+            try {
+                // Kiểm tra xem Email hoặc Số điện thoại đã tồn tại trong database chưa
+                $stmt = $pdo->prepare('SELECT id FROM Users WHERE email = ? OR phone = ? LIMIT 1');
+                $stmt->execute([$email, $phone]);
+                
+                if ($stmt->fetch()) {
+                    $error = 'Email or Phone number is already registered.';
+                } else {
+                    // Xử lý upload ảnh ID Card (Mặt trước & Mặt sau)
+                    $uploadDir = __DIR__ . '/../uploads/';
+                    
+                    // Tự động tạo thư mục uploads nếu chưa tồn tại
+                    if (!is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
 
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'Valid email is required.';
-    }
+                    $idFrontPath = '';
+                    $idBackPath = '';
+                    $uploadSuccess = true;
 
-    if ($fullName === '') {
-        $errors[] = 'Full name is required.';
-    }
+                    // Xử lý upload ảnh mặt trước
+                    if (isset($_FILES['id_front']) && $_FILES['id_front']['error'] === UPLOAD_ERR_OK) {
+                        $ext = pathinfo($_FILES['id_front']['name'], PATHINFO_EXTENSION);
+                        $newFilename = 'id_front_' . time() . '_' . uniqid() . '.' . $ext;
+                        if (move_uploaded_file($_FILES['id_front']['tmp_name'], $uploadDir . $newFilename)) {
+                            $idFrontPath = 'uploads/' . $newFilename;
+                        } else {
+                            $uploadSuccess = false;
+                        }
+                    }
 
-    if (!$errors) {
-        $stmt = $pdo->prepare('SELECT id FROM Users WHERE phone = ? OR email = ? LIMIT 1');
-        $stmt->execute([$phone, $email]);
+                    // Xử lý upload ảnh mặt sau
+                    if (isset($_FILES['id_back']) && $_FILES['id_back']['error'] === UPLOAD_ERR_OK) {
+                        $ext = pathinfo($_FILES['id_back']['name'], PATHINFO_EXTENSION);
+                        $newFilename = 'id_back_' . time() . '_' . uniqid() . '.' . $ext;
+                        if (move_uploaded_file($_FILES['id_back']['tmp_name'], $uploadDir . $newFilename)) {
+                            $idBackPath = 'uploads/' . $newFilename;
+                        } else {
+                            $uploadSuccess = false;
+                        }
+                    }
 
-        if ($stmt->fetch()) {
-            $errors[] = 'Phone or email already exists.';
-        }
-    }
+                    if (!$uploadSuccess || empty($idFrontPath) || empty($idBackPath)) {
+                        $error = 'Failed to upload ID Card images. Please try again.';
+                    } else {
+                        // Phát sinh mật khẩu ngẫu nhiên 6 số để người dùng đăng nhập lần đầu
+                        $generated_password = (string)random_int(100000, 999999);
+                        $passwordHash = password_hash($generated_password, PASSWORD_DEFAULT);
 
-    if (!$errors) {
-        try {
-            $frontPath = save_id_card_upload('id_front');
-            $backPath = save_id_card_upload('id_back');
-            $generatedPassword = random_string(6);
-            $passwordHash = password_hash($generatedPassword, PASSWORD_DEFAULT);
+                        // Thực hiện INSERT tài khoản mới vào database
+                        $stmt = $pdo->prepare(
+                            'INSERT INTO Users (full_name, dob, email, phone, password, role, is_first_login, id_front, id_back, status, created_at) 
+                             VALUES (?, ?, ?, ?, ?, "user", TRUE, ?, ?, "active", NOW())'
+                        );
+                        $stmt->execute([
+                            $fullName,
+                            $birthday,
+                            $email,
+                            $phone,
+                            $passwordHash,
+                            $idFrontPath,
+                            $idBackPath
+                        ]);
 
-            $stmt = $pdo->prepare(
-                'INSERT INTO Users
-                (role, phone, email, password, full_name, dob, address, id_front, id_back, status, is_first_login)
-                VALUES
-                ("user", ?, ?, ?, ?, ?, ?, ?, ?, "pending", TRUE)'
-            );
-            $stmt->execute([
-                $phone,
-                $email,
-                $passwordHash,
-                $fullName,
-                $dob !== '' ? $dob : null,
-                $address,
-                $frontPath,
-                $backPath,
-            ]);
-        } catch (Throwable $e) {
-            $errors[] = $e->getMessage();
+                        $success = 'Account registered successfully!';
+                    }
+                }
+            } catch (PDOException $e) {
+                $error = 'Database error: ' . $e->getMessage();
+            }
         }
     }
 }
 
+// Gọi file giao diện hiển thị
+require_once __DIR__ . '/../user/Register.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BeePay - Register</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?= base_url('/style.css') ?>">
-</head>
-<body>
-    <h1 style="text-align: center; color: aliceblue; margin-top: 30px;">BeePay</h1>
-    <p style="text-align: center; color: aliceblue;">Create your secure digital wallet</p>
-
-    <div class="Login-card wide">
-        <form method="post" enctype="multipart/form-data">
-            <h2>Register</h2>
-
-            <?php if ($generatedPassword): ?>
-                <div class="alert-box alert-success">
-                    Register success. Temporary password: <strong><?= h($generatedPassword) ?></strong>
-                </div>
-            <?php endif; ?>
-
-            <?php if ($errors): ?>
-                <div class="alert-box alert-error"><?= h(implode(' ', $errors)) ?></div>
-            <?php endif; ?>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="in_gr">
-                        <label for="phone">Phone</label>
-                        <div class="in_wrapper">
-                            <i class="fa-solid fa-phone"></i>
-                            <input id="phone" name="phone" value="<?= h($_POST['phone'] ?? '') ?>" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="in_gr">
-                        <label for="email">Email</label>
-                        <div class="in_wrapper">
-                            <i class="fa-regular fa-envelope"></i>
-                            <input id="email" type="email" name="email" value="<?= h($_POST['email'] ?? '') ?>" required>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="in_gr">
-                <label for="full_name">Full name</label>
-                <div class="in_wrapper">
-                    <i class="fa-regular fa-user"></i>
-                    <input id="full_name" name="full_name" value="<?= h($_POST['full_name'] ?? '') ?>" required>
-                </div>
-            </div>
-
-            <div class="in_gr">
-                <label for="dob">Date of birth</label>
-                <div class="in_wrapper">
-                    <i class="fa-regular fa-calendar"></i>
-                    <input id="dob" type="date" name="dob" value="<?= h($_POST['dob'] ?? '') ?>">
-                </div>
-            </div>
-
-            <div class="in_gr">
-                <label for="address">Address</label>
-                <div class="in_wrapper">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <textarea id="address" name="address"><?= h($_POST['address'] ?? '') ?></textarea>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="in_gr">
-                        <label for="id_front">ID card front image</label>
-                        <div class="in_wrapper">
-                            <i class="fa-regular fa-id-card"></i>
-                            <input id="id_front" type="file" name="id_front" accept=".jpg,.jpeg,.png,.webp" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="in_gr">
-                        <label for="id_back">ID card back image</label>
-                        <div class="in_wrapper">
-                            <i class="fa-regular fa-id-card"></i>
-                            <input id="id_back" type="file" name="id_back" accept=".jpg,.jpeg,.png,.webp" required>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button type="submit" class="btn-signin">Register</button>
-        </form>
-
-        <p class="auth-link">Already have an account? <a href="<?= base_url('/auth/login.php') ?>">Sign in</a></p>
-    </div>
-</body>
-</html>

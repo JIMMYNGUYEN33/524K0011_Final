@@ -1,0 +1,63 @@
+.bn-logout {
+    transition: background-color 0.2s ease; 
+}
+.btn-logout:hover { 
+    background-color: rgba(255, 255, 255, 0.2); 
+}
+
+
+.menu-item {
+    border-left: 4px solid transparent;
+    transition: all 0.2s ease;
+}
+.menu-item:hover {
+    background-color: #eef2ff; 
+    color: #4f46e5;            
+    border-left-color: #a5b4fc; 
+}
+
+
+.card {
+    transition: all 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-6px); 
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
+}
+
+.card-icon {
+    transition: transform 0.3s ease;
+}
+.card:hover .card-icon { 
+    transform: scale(1.1); 
+}
+.card-label {
+    transition: color 0.3s ease;
+}
+
+.card:hover .card-label.hover-blue { color: #3b82f6; }
+.card:hover .card-label.hover-yellow { color: #eab308; }
+.card:hover .card-label.hover-green { color: #22c55e; }
+
+
+.finance-card {
+    transition: all 0.3s ease;
+}
+.finance-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15);
+}
+
+.finance-card.deposits:hover { 
+    background-color: #4ade80; 
+}
+.finance-card.withdrawals:hover { 
+    background-color: #60a5fa; 
+}
+
+.finance-icon {
+    transition: transform 0.3s ease;
+}
+.finance-card:hover .finance-icon { 
+    transform: translateY(-4px); 
+}

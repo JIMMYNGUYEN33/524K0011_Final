@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/../config/db_config.php';
 
 function render_header($title)
 {

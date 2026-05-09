@@ -1,135 +1,85 @@
 <?php
-require_once __DIR__ . '/../helpers/ui.php';
-
-if (current_user()) {
-    redirect_after_login(current_user());
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
+// Bật hiển thị lỗi PHP để dễ debug trong quá trình làm bài
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// 1. Nhúng các file helper trước
+require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../helpers/ui.php';
+
+// 2. Nhúng file kết nối database SAU CÙNG để tránh bị ghi đè biến $pdo
+require __DIR__ . '/../config/db_config.php'; 
+
+// 3. Khai báo global để PHP chắc chắn sử dụng kết nối từ db_config.php
+global $pdo;
+
 $error = '';
+$success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Nhận dữ liệu "username" (Email hoặc SĐT) và "password" từ form giao diện gửi lên
     $username = trim($_POST['username'] ?? '');
-    $passwordInput = $_POST['password'] ?? '';
+    $password = $_POST['password'] ?? '';
 
-    $stmt = $pdo->prepare('SELECT * FROM Users WHERE email = ? OR phone = ? LIMIT 1');
-    $stmt->execute([$username, $username]);
-    $user = $stmt->fetch();
-
-    if (!$user) {
-        $error = 'Invalid username or password.';
+    // Kiểm tra dữ liệu đầu vào không được để trống
+    if (empty($username) || empty($password)) {
+        $error = 'Please enter both username and password.';
     } else {
-        $isAdmin = $user['role'] === 'admin';
-
-        if (!$isAdmin && $user['status'] === 'disabled') {
-            $error = 'This account has been disabled, please contact the hotline 18001008.';
-        } elseif (!$isAdmin && (int) $user['is_permanently_locked'] === 1) {
-            $error = 'Account has been locked due to entering the wrong password many times, please contact the administrator for support.';
-        } elseif (!$isAdmin && $user['locked_until'] && strtotime($user['locked_until']) > time()) {
-            $error = 'Account is currently locked, please try again in 1 minute.';
-        } elseif (password_verify($passwordInput, $user['password'])) {
-            if (!$isAdmin) {
-                $stmt = $pdo->prepare(
-                    'UPDATE Users
-                    SET wrong_login_count = 0,
-                        abnormal_login_count = 0,
-                        locked_until = NULL
-                    WHERE id = ?'
-                );
-                $stmt->execute([$user['id']]);
-            }
-
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['role'] = $user['role'];
-
-            $stmt = $pdo->prepare('SELECT * FROM Users WHERE id = ? LIMIT 1');
-            $stmt->execute([$user['id']]);
-            redirect_after_login($stmt->fetch());
-        } elseif ($isAdmin) {
-            $error = 'Invalid username or password.';
+        if (!isset($pdo) || !$pdo) {
+            $error = 'Database connection lost. Please check db_config.php.';
         } else {
-            $newWrongCount = (int) $user['wrong_login_count'] + 1;
+            try {
+                // Tìm người dùng bằng Email hoặc Số điện thoại
+                $stmt = $pdo->prepare('SELECT * FROM Users WHERE email = ? OR phone = ? LIMIT 1');
+                $stmt->execute([$username, $username]);
+                $user = $stmt->fetch();
 
-            if ($newWrongCount >= 3) {
-                if ((int) $user['abnormal_login_count'] >= 1) {
-                    $stmt = $pdo->prepare(
-                        'UPDATE Users
-                        SET wrong_login_count = 0,
-                            locked_until = NULL,
-                            is_permanently_locked = TRUE,
-                            permanently_locked_at = NOW()
-                        WHERE id = ?'
-                    );
-                    $stmt->execute([$user['id']]);
-                    $error = 'Account has been locked permanently because of too many failed logins.';
+                if ($user) {
+                    // Kiểm tra trạng thái tài khoản (nếu database của bạn có cột status)
+                    if (isset($user['status']) && $user['status'] === 'locked') {
+                        $error = 'This account has been locked. Please contact support.';
+                    } 
+                    // So khớp mật khẩu đã mã hóa bằng password_verify
+                    elseif (password_verify($password, $user['password'])) {
+                        
+                        // Đăng nhập thành công! Lưu thông tin vào Session
+                        $_SESSION['user_id'] = $user['id'];
+                        $_SESSION['user_name'] = $user['full_name'];
+                        $_SESSION['user_role'] = $user['role'];
+
+                        session_write_close();
+
+                        // Chuyển hướng người dùng dựa vào quyền (Role) hoặc trạng thái đăng nhập đầu tiên
+                        if (isset($user['is_first_login']) && $user['is_first_login']) {
+                            // Nếu là lần đầu đăng nhập, bắt buộc đổi mật khẩu
+                            header("Location: first_change_password.php");
+                        } else {
+                            // Nếu bình thường, chuyển hướng theo role
+                            if ($user['role'] === 'admin') {
+                                header("Location: ../admin/AdminDashboard.php"); // Sửa đường dẫn trang admin của bạn tại đây
+                            } else {
+                                header("Location: ../user/Home.php"); // Sửa đường dẫn trang chủ user của bạn tại đây
+                            }
+                        }
+                        exit();
+                    } else {
+                        $error = 'Invalid username or password.';
+                    }
                 } else {
-                    $stmt = $pdo->prepare(
-                        'UPDATE Users
-                        SET wrong_login_count = 0,
-                            abnormal_login_count = abnormal_login_count + 1,
-                            locked_until = DATE_ADD(NOW(), INTERVAL 1 MINUTE)
-                        WHERE id = ?'
-                    );
-                    $stmt->execute([$user['id']]);
-                    $error = 'Wrong password 3 times. Account is locked for 1 minute.';
+                    $error = 'Invalid username or password.';
                 }
-            } else {
-                $stmt = $pdo->prepare('UPDATE Users SET wrong_login_count = ? WHERE id = ?');
-                $stmt->execute([$newWrongCount, $user['id']]);
-                $error = 'Invalid username or password.';
+            } catch (PDOException $e) {
+                $error = 'Database error: ' . $e->getMessage();
             }
         }
     }
 }
 
+// Gọi file giao diện hiển thị đăng nhập
+require_once __DIR__ . '/../user/Login.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BeePay - Sign In</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?= base_url('/style.css') ?>">
-</head>
-<body>
-    <h1 style="text-align: center; color: aliceblue; margin-top: 30px;">BeePay</h1>
-    <p style="text-align: center; color: aliceblue;">Secure digital payment solution</p>
-
-    <div class="Login-card">
-        <form method="post">
-            <h2>Sign In</h2>
-
-            <?php if ($error): ?>
-                <div class="alert-box alert-error"><?= h($error) ?></div>
-            <?php endif; ?>
-
-            <div class="in_gr">
-                <label for="username">Email or Phone Number</label>
-                <div class="in_wrapper">
-                    <i class="fa-regular fa-envelope"></i>
-                    <input id="username" required type="text" name="username" placeholder="Enter email or phone" value="<?= h($_POST['username'] ?? '') ?>">
-                </div>
-            </div>
-
-            <div class="in_gr">
-                <label for="password">Password</label>
-                <div class="in_wrapper">
-                    <i class="fa-solid fa-lock"></i>
-                    <input id="password" required type="password" name="password" placeholder="Enter password">
-                </div>
-            </div>
-
-            <div class="options">
-                <label><input type="checkbox"> Remember Me</label>
-                <a href="<?= base_url('/auth/forgot_password.php') ?>">Forgot password?</a>
-            </div>
-
-            <button type="submit" class="btn-signin">Sign In</button>
-        </form>
-
-        <p class="auth-link">Don't have an account? <a href="<?= base_url('/auth/register.php') ?>">Register now</a></p>
-    </div>
-</body>
-</html>
