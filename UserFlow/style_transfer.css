@@ -1,35 +1,43 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-}
-
+/* --- PHẦN BODY CĂN GIỮA TOÀN MÀN HÌNH --- */
 body {
-    background-color: #e0e0e0; 
+    background-color: #cbd5e1; /* Màu nền xám nhạt bên ngoài để làm nổi bật khung app */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 20px 0; /* Khoảng đệm trên dưới giúp khung không bị chạm sát mép màn hình */
 }
 
-/* Khung giả lập di động chuẩn khớp với trang Home và Deposit */
+/* --- KHUNG APP BO GÓC MỀM MẠI, GỌN GÀNG TRÊN MÀN HÌNH --- */
 .app-container {
     width: 100%;
     max-width: 414px;
-    min-height: 100vh;
-    background-color: #f5f6fa;
+    height: 820px; /* Chiều cao cố định lọt màn hình */
+    background-color: #fffef5;
     position: relative;
-    padding-bottom: 40px;
-    overflow-x: hidden;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    border-radius: 24px; 
+    border: none; 
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); 
+    overflow: hidden; 
     display: flex;
     flex-direction: column;
 }
 
+/* Ẩn thanh cuộn webkit để nhìn giống ứng dụng thực tế */
+.app-container::-webkit-scrollbar {
+    width: 5px;
+}
+.app-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+.app-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
 /* --- THANH ĐẦU TRANG --- */
 .app-top-bar {
-    padding: 20px 20px 15px 20px;
+    padding: 25px 20px 15px 20px;
     display: flex;
     align-items: center;
     gap: 15px;
@@ -52,7 +60,7 @@ body {
 }
 
 .btn-back:hover {
-    background-color: #ffea00; /* Màu vàng BeePay đặc trưng */
+    background-color: #ffea00; /* Màu vàng BeePay */
     color: #252603;
     transform: translateX(-3px);
 }
@@ -77,8 +85,8 @@ body {
     margin-top: 2px;
 }
 
-/* --- CARD FORM RÚT TIỀN --- */
-.withdraw-card {
+/* --- CARD CHỨA FORM CHUYỂN TIỀN --- */
+.transfer-card {
     background: #ffffff;
     width: calc(100% - 40px);
     max-width: 374px;
@@ -90,7 +98,7 @@ body {
 
 /* --- Ô NHẬP LIỆU --- */
 .in_gr {
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
 .in_gr label {
@@ -102,7 +110,7 @@ body {
 }
 
 .required {
-    color: #dc3545; /* Sao đỏ bắt buộc */
+    color: #dc3545; /* Dấu sao đỏ */
 }
 
 .in_wrapper {
@@ -128,7 +136,7 @@ body {
 }
 
 .in_wrapper input:focus {
-    border-color: #1e62ff; /* Viền xanh dương khi focus */
+    border-color: #1e62ff; /* Viền xanh dương thương hiệu */
     box-shadow: 0 0 5px rgba(30, 98, 255, 0.2);
 }
 
@@ -141,7 +149,7 @@ body {
     outline: none;
     transition: 0.3s;
     font-size: 14px;
-    resize: none; /* Khóa không cho người dùng tự ý kéo dãn kích thước */
+    resize: none; /* Khóa không cho kéo dãn */
 }
 
 .note-textarea:focus {
@@ -149,11 +157,11 @@ body {
     box-shadow: 0 0 5px rgba(30, 98, 255, 0.2);
 }
 
-/* --- NÚT SUBMIT RÚT TIỀN --- */
-.btn-withdraw {
+/* --- NÚT SUBMIT TRANSFER MÀU XANH DƯƠNG --- */
+.btn-transfer {
     width: 100%;
     padding: 14px;
-    background: #1e62ff; /* Màu xanh đồng bộ trang Deposit */
+    background: #1e62ff; /* Xanh dương giống nút các trang khác */
     color: white;
     border: none;
     border-radius: 12px;
@@ -164,6 +172,6 @@ body {
     margin-top: 10px;
 }
 
-.btn-withdraw:hover {
+.btn-transfer:hover {
     background: #154bcc;
 }

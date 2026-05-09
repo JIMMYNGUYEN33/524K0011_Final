@@ -1,0 +1,233 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #cbd5e1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px 0;
+}
+
+/* Khung giả lập di động bo tròn, lọt lòng màn hình chuẩn BeePay */
+.app-container {
+    width: 100%;
+    max-width: 414px;
+    height: 820px;
+    background-color: #1e1e24; /* Nền tối cho sang trọng và nổi bật camera */
+    position: relative;
+    border-radius: 24px; 
+    border: none; 
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); 
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- TOP BAR --- */
+.app-top-bar {
+    padding: 25px 20px 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: #1e1e24;
+    flex-shrink: 0;
+}
+
+.btn-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: #ffffff;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: 0.3s ease;
+    flex-shrink: 0;
+}
+
+.btn-back:hover {
+    background-color: #ffea00;
+    color: #252603;
+    transform: translateX(-3px);
+}
+
+.page-title-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.page-subtitle {
+    font-size: 11px;
+    color: #a0aec0;
+    line-height: 1.3;
+    margin-top: 2px;
+}
+
+/* --- VÙNG HIỂN THỊ CAMERA --- */
+.scan-area-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+}
+
+.camera-wrapper {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    background-color: #000000;
+}
+
+/* Ẩn bớt các chữ thừa của thư viện html5-qrcode mặc định */
+#reader {
+    border: none !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#reader video {
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Nút chọn camera của thư viện */
+#reader button {
+    background-color: #ffea00 !important;
+    color: #000000 !important;
+    border: none !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    margin-top: 10px !important;
+}
+
+/* Hiệu ứng tia Laser chạy lên xuống quét mã */
+.scan-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; /* Tránh cản trở click nút chọn camera */
+}
+
+.scanner-laser {
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #ffea00, transparent);
+    box-shadow: 0 0 8px #ffea00;
+    animation: laser-move 2.5s infinite linear;
+}
+
+@keyframes laser-move {
+    0% { top: 10%; }
+    50% { top: 90%; }
+    100% { top: 10%; }
+}
+
+/* --- HỘP HƯỚNG DẪN DƯỚI CAMERA --- */
+.instruction-box {
+    margin: 20px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.instruction-box i {
+    color: #ffea00;
+    font-size: 16px;
+    margin-top: 2px;
+}
+
+.instruction-box p {
+    color: #cbd5e0;
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* --- SYSTEM BOTTOM NAVIGATION BAR --- */
+.bottom-nav {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 75px;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid #eee;
+    border-radius: 20px 20px 0 0;
+    z-index: 10;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #999999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.nav-item.active {
+    color: #452a00; /* Màu active vàng đậm của trang Scan */
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+/* Center Scanning Action Button */
+.scan-btn {
+    position: relative;
+    top: -15px;
+}
+
+.scan-circle {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, #faf79b 0%, #452a00 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    border: 4px solid #f5f6fa;
+    box-shadow: 0 5px 15px rgba(230, 207, 0, 0.3);
+}
+
+.scan-circle i {
+    color: white;
+    font-size: 24px;
+    margin: 0;
+}

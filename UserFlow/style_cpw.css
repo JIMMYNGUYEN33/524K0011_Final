@@ -1,0 +1,207 @@
+/* --- Cấu hình chung --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #e0e0e0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* --- Khung điện thoại giả lập --- */
+.app-container {
+    width: 100%;
+    max-width: 414px;
+    height: 820px; 
+    background-color: #392802; /* Màu nâu đen giống Register */
+    position: relative;
+    border-radius: 32px; 
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); 
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 20px 20px 20px;
+}
+
+/* Ẩn thanh cuộn */
+.app-container::-webkit-scrollbar {
+    display: none;
+}
+.app-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.brand-title {
+    text-align: center; 
+    color: rgb(255, 200, 3); 
+    font-weight: 700;
+    font-size: 32px;
+    margin-bottom: 4px;
+}
+
+.brand-subtitle {
+    text-align: center; 
+    color: rgb(255, 162, 0);
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+/* --- Card trắng --- */
+.password-card {
+    background: #ffffff;
+    width: 100%;
+    border-radius: 28px;
+    padding: 25px 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Layout Header của Card (Chứa ví và chữ "Change Password") --- */
+.card-header-custom {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    justify-content: center; /* Căn giữa tổ hợp ví + chữ */
+}
+
+/* Icon ví tròn nhỏ màu vàng nhạt có bóng nhẹ */
+.wallet-circle-mini {
+    width: 45px;
+    height: 45px;
+    background-color: #fffdf0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(255, 202, 8, 0.15);
+    border: 1px solid #fffae0;
+}
+
+.wallet-circle-mini i {
+    font-size: 20px;
+    color: #ffca08; /* Màu ví vàng */
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #222;
+    margin: 0;
+}
+
+/* --- Hộp cảnh báo màu vàng nhạt --- */
+.warning-alert-box {
+    background-color: #fffde6;
+    border: 1px solid #ffe699;
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 13px;
+    color: #856404;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.warning-alert-box strong {
+    color: #b58900;
+}
+
+/* --- Input Group --- */
+.in_gr {
+    display: flex;
+    flex-direction: column;
+}
+
+.in_gr label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 8px;
+}
+
+.in_wrapper {
+    position: relative;
+}
+
+.in_wrapper i {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: #999999;
+    font-size: 16px;
+}
+
+.in_wrapper input {
+    width: 100%;
+    padding: 14px 16px 14px 44px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 15px;
+    background-color: #ffffff;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+.in_wrapper input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input-hint {
+    font-size: 12px;
+    color: #999999;
+    margin-top: 6px;
+}
+
+/* --- Nút bấm thay đổi mật khẩu (Màu xanh dương) --- */
+.btn-change-pw {
+    width: 100%;
+    padding: 14px;
+    background-color: #1a62ff; 
+    color: #ffffff;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-change-pw:hover {
+    background-color: #0b4fdf;
+}
+
+.btn-change-pw:active {
+    transform: scale(0.98);
+}
+
+/* --- Nút Logout --- */
+.logout-action-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.btn-logout-link {
+    color: #777777;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+}
+
+.btn-logout-link:hover {
+    color: #333333;
+}

@@ -17,12 +17,13 @@ body {
 .app-container {
     width: 100%;
     max-width: 414px;
-    min-height: 100vh;
-    background-color: #f5f6fa;
+    height: 820px; /* Chiều cao cố định lọt màn hình */
+    background-color: #fffef5;
     position: relative;
-    padding-bottom: 40px;
-    overflow-x: hidden;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    border-radius: 24px; 
+    border: none; 
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); 
+    overflow: hidden; 
     display: flex;
     flex-direction: column;
 }

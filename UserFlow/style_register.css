@@ -9,21 +9,27 @@ body {
     background-color: #e0e0e0; 
     display: flex;
     justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
 
 .app-container {
     width: 100%;
-    max-width: 414px; 
-    min-height: 100vh;
-    background-color: #322500;
+    max-width: 414px;
+    height: 820px; /* Chiều cao cố định lọt màn hình */
+    background-color: #392802;
     position: relative;
-    padding-bottom: 40px;
-    overflow-x: hidden;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    border-radius: 24px; 
+    border: none; 
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); 
+
+    overflow-y: auto; 
+    display: flex;
+    flex-direction: column;
 }
 
-/* --- KHU VỰC NÚT BACK (MŨI TÊN) --- */
+
 .back-navigation {
     padding: 20px 20px 0 20px;
     display: flex;
@@ -38,27 +44,29 @@ body {
     height: 40px;
     background-color: #ffffff;
     border-radius: 50%;
-    color: #000000;
+    color: #333333;
     text-decoration: none;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     transition: 0.3s ease;
 }
 
 .btn-back:hover {
-    background-color: #ffea00; /* Đổi màu vàng BeePay khi rê chuột vào */
+    background-color: #ffea00; 
     color: #252603;
-    transform: translateX(-3px); /* Nhích nhẹ sang trái tạo cảm giác quay lại */
+    transform: translateX(-3px);
 }
 
 .btn-back i {
     font-size: 18px;
 }
 
-/* --- TÊN APP --- */
+
 .brand-title {
     text-align: center; 
-    color: #ffc800; 
-    margin-top: 15px; 
+    color: rgb(255, 200, 3); 
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 32px;
 }
 
 .brand-subtitle {
@@ -68,42 +76,34 @@ body {
     margin-bottom: 20px;
 }
 
-
-.Forgot-card {
+/* --- CARD ĐĂNG KÝ (Co giãn chống tràn tuyệt đối) --- */
+.Register-card {
     background: #fffffff3;
-    width: calc(100% - 40px); 
+    width: calc(100% - 40px);
     max-width: 374px;
     padding: 25px 20px;
     border-radius: 24px;
     box-shadow: 0 10px 30px rgba(102, 110, 153, 0.15);
-    margin: 10px auto;
+    margin: 0 auto 20px auto;
 }
 
-.Forgot-card h2 {
+.Register-card h2 {
     text-align: center;
     color: #333;
-    margin-bottom: 10px;
-    font-size: 22px;
+    margin-bottom: 20px;
+    font-size: 24px;
     font-weight: 700;
 }
 
-.forgot-desc {
-    text-align: center;
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 25px;
-    line-height: 1.5;
-}
 
-/* --- INPUT GROUP --- */
 .in_gr {
-    margin-bottom: 25px;
+    margin-bottom: 18px;
 }
 
 .in_gr label {
     display: block;
     margin-bottom: 6px;
-    color: #000000;
+    color: #333;
     font-size: 14px;
     font-weight: 500;
 }
@@ -131,15 +131,15 @@ body {
 }
 
 .in_wrapper input:focus {
-    border-color: #ffea00; /* Khi focus đổi sang viền vàng đồng bộ */
+    border-color: #ffea00; 
     box-shadow: 0 0 5px rgba(255, 234, 0, 0.3);
 }
 
-/* --- NÚT GỬI YÊU CẦU --- */
-.btn-submit {
+
+.btn-register {
     width: 100%;
     padding: 14px;
-    background: #252603; /* Màu tối của BeePay */
+    background: #252603; 
     color: white;
     border: none;
     border-radius: 12px;
@@ -147,28 +147,88 @@ body {
     cursor: pointer;
     transition: 0.3s;
     font-size: 15px;
-    margin-bottom: 20px;
+    margin-top: 10px;
 }
 
-.btn-submit:hover {
-    background: #ffea00; 
+.btn-register:hover {
+    background: #ffea00;
     color: #252603;
 }
 
 
-.back-to-login {
+.signin-text {
     text-align: center;
+    margin-top: 20px;
     font-size: 14px;
     color: #555;
-    margin-top: 10px;
 }
 
-.back-to-login a {
+.signin-text a {
     color: rgb(255, 162, 0);
     text-decoration: none;
     font-weight: 600;
 }
 
-.back-to-login a:hover {
+.signin-text a:hover {
     text-decoration: underline;
+}
+
+.id-verification-section {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.verification-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+
+.upload-box {
+    border: 2px dashed #b5bbc9; 
+    border-radius: 16px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+.upload-box:hover {
+    border-color: #ffea00; 
+    background-color: #fffef0;
+}
+
+
+.upload-box.uploaded {
+    border-style: solid;
+    border-color: #2ecc71; 
+    background-color: #f0fff4;
+}
+
+
+.upload-icon {
+    font-size: 28px;
+    color: #666;
+    margin-bottom: 8px;
+    transition: color 0.3s;
+}
+
+.upload-box:hover .upload-icon {
+    color: #ffea00;
+}
+
+.upload-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.upload-hint {
+    font-size: 11px;
+    color: #888;
 }

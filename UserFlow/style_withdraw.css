@@ -1,0 +1,170 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #e0e0e0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Khung giả lập di động chuẩn khớp với trang Home và Deposit */
+.app-container {
+    width: 100%;
+    max-width: 414px;
+    height: 820px; /* Chiều cao cố định lọt màn hình */
+    background-color: #fffef5;
+    position: relative;
+    border-radius: 24px; 
+    border: none; 
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); 
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- THANH ĐẦU TRANG --- */
+.app-top-bar {
+    padding: 20px 20px 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Nút Back hình tròn */
+.btn-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    color: #333333;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: 0.3s ease;
+    flex-shrink: 0;
+}
+
+.btn-back:hover {
+    background-color: #ffea00; /* Màu vàng BeePay đặc trưng */
+    color: #252603;
+    transform: translateX(-3px);
+}
+
+/* Khối chữ tiêu đề */
+.page-title-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e1e1e;
+    margin: 0;
+}
+
+.page-subtitle {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.3;
+    margin-top: 2px;
+}
+
+/* --- CARD FORM RÚT TIỀN --- */
+.withdraw-card {
+    background: #ffffff;
+    width: calc(100% - 40px);
+    max-width: 374px;
+    padding: 25px 20px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(102, 110, 153, 0.1);
+    margin: 10px auto 0 auto;
+}
+
+/* --- Ô NHẬP LIỆU --- */
+.in_gr {
+    margin-bottom: 18px;
+}
+
+.in_gr label {
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.required {
+    color: #dc3545; /* Sao đỏ bắt buộc */
+}
+
+.in_wrapper {
+    position: relative;
+}
+
+.in_wrapper i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.in_wrapper input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.in_wrapper input:focus {
+    border-color: #1e62ff; /* Viền xanh dương khi focus */
+    box-shadow: 0 0 5px rgba(30, 98, 255, 0.2);
+}
+
+/* Ô Textarea của Ghi chú (Note) */
+.note-textarea {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+    resize: none; /* Khóa không cho người dùng tự ý kéo dãn kích thước */
+}
+
+.note-textarea:focus {
+    border-color: #1e62ff;
+    box-shadow: 0 0 5px rgba(30, 98, 255, 0.2);
+}
+
+/* --- NÚT SUBMIT RÚT TIỀN --- */
+.btn-withdraw {
+    width: 100%;
+    padding: 14px;
+    background: #1e62ff; /* Màu xanh đồng bộ trang Deposit */
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.btn-withdraw:hover {
+    background: #154bcc;
+}

@@ -1,12 +1,8 @@
 * {
     margin: 0;
-<<<<<<< HEAD:style.css
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-=======
     font-family: 'Inter', Arial, sans-serif;
->>>>>>> dbf68f61a717158ea6654b0ceb16ea6ac2b86ca7:UserFlow/style.css
 }
 body {
     background-color: #e0e0e0; 
@@ -15,13 +11,17 @@ body {
 }
 .app-container {
     width: 100%;
-    max-width: 414px; /* Kích thước chuẩn của iPhone */
-    min-height: 100vh;
-    background-color: #322500;
+    max-width: 414px;
+    height: 820px; 
+    background-color: #392802;
     position: relative;
-    padding-bottom: 80px; /* Chừa chỗ cho Bottom Nav */
-    overflow-x: hidden;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    border-radius: 24px; 
+    border: none; 
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); 
+    
+    overflow-y: auto; 
+    display: flex;
+    flex-direction: column;
 }
 
 
