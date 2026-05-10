@@ -1,38 +1,39 @@
 <?php
-
+// 1. Khởi động session sạch sẽ
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-
+// 2. Nhúng các helper và kết nối database
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
 
-
+// 3. Khóa trang bảo vệ quyền Admin
 require_admin();
 
 $error = '';
 $success = '';
+$redirect_url = ''; // Dùng biến này để định hướng chuyển trang tự động
 
-
+// 4. Lấy ID giao dịch từ tham số GET trên URL
 $transactionId = $_GET['id'] ?? null;
 
 if (!$transactionId) {
-    header("Location: pending_transactions.php");
+    header("Location: AdminTransactions.php");
     exit();
 }
 
-
+// 5. Xử lý phê duyệt (Approve) hoặc từ chối (Reject) giao dịch
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
     try {
-        
+        // Bắt đầu một Transaction trong Database để đảm bảo an toàn dữ liệu
         $pdo->beginTransaction();
 
-        
+        // Lấy thông tin chi tiết giao dịch hiện tại để xử lý tiền tệ
         $stmtTx = $pdo->prepare("SELECT * FROM Transactions WHERE id = ? FOR UPDATE");
         $stmtTx->execute([$transactionId]);
         $tx = $stmtTx->fetch();
@@ -46,57 +47,98 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
 
         if ($action === 'approve') {
+            // --- XỬ LÝ KHI PHÊ DUYỆT ---
+            if ($tx['type'] === 'transfer') {
+                // 1. Tính tổng tiền người gửi phải trả (Tiền chuyển + Phí nếu người gửi trả)
+                $total_deduct = $tx['amount'];
+                if ($tx['fee_payer'] === 'sender') {
+                    $total_deduct += $tx['fee'];
+                }
+
+                // Kiểm tra xem số dư người gửi có đủ tại thời điểm duyệt không
+                $stmtCheckSender = $pdo->prepare("SELECT balance FROM Users WHERE id = ?");
+                $stmtCheckSender->execute([$tx['user_id']]);
+                $sender = $stmtCheckSender->fetch();
+
+                if (!$sender || $sender['balance'] < $total_deduct) {
+                    throw new Exception("Sender does not have enough balance to complete this transaction.");
+                }
+
+                // 2. TRỪ TIỀN NGƯỜI GỬI
+                $stmtDeductSender = $pdo->prepare("UPDATE Users SET balance = balance - ? WHERE id = ?");
+                $stmtDeductSender->execute([$total_deduct, $tx['user_id']]);
+
+                // 3. Tính số tiền người nhận được hưởng (Trừ phí nếu người nhận chịu phí)
+                $received_amount = $tx['amount'];
+                if ($tx['fee_payer'] === 'receiver') {
+                    $received_amount -= $tx['fee'];
+                }
+
+                // 4. CỘNG TIỀN NGƯỜI NHẬN
+                $stmtUpdateReceiver = $pdo->prepare("UPDATE Users SET balance = balance + ? WHERE id = ?");
+                $stmtUpdateReceiver->execute([$received_amount, $tx['receiver_id']]);
+
+            } elseif ($tx['type'] === 'withdraw') {
+                // Nếu rút tiền: Đã trừ tiền người rút từ lúc tạo lệnh pending thì ở đây chỉ cập nhật trạng thái.
+            }
+
+            // Cập nhật trạng thái giao dịch thành hoàn tất (completed)
+            $stmtUpdateTx = $pdo->prepare("UPDATE Transactions SET status = 'completed', approved_by = ?, approved_at = NOW() WHERE id = ?");
+            $stmtUpdateTx->execute([$_SESSION['user_id'] ?? null, $transactionId]);
+
+            $success = "Transaction approved successfully! Sender's balance deducted and receiver's balance credited.";
+            $redirect_url = 'AdminTransactions.php'; // Chuyển hướng về danh sách
             
-            $stmtUpdateTx = $pdo->prepare("UPDATE Transactions SET status = 'success' WHERE id = ?");
-            $stmtUpdateTx->execute([$transactionId]);
-
-
-            $success = "Transaction approved successfully!";
         } elseif ($action === 'reject') {
-            
-            $stmtUpdateTx = $pdo->prepare("UPDATE Transactions SET status = 'failed' WHERE id = ?");
-            $stmtUpdateTx->execute([$transactionId]);
+            // --- XỬ LÝ KHI TỪ CHỐI GIAO DỊCH ---
+            // Cập nhật trạng thái giao dịch thành Hủy bỏ (cancelled)
+            $stmtUpdateTx = $pdo->prepare("UPDATE Transactions SET status = 'cancelled', approved_by = ?, approved_at = NOW() WHERE id = ?");
+            $stmtUpdateTx->execute([$_SESSION['user_id'] ?? null, $transactionId]);
 
-            
-            $total_refund = $tx['amount'] + $tx['fee'];
-            $stmtRefund = $pdo->prepare("UPDATE Users SET balance = balance + ? WHERE id = ?");
-            $stmtRefund->execute([$total_refund, $tx['user_id']]);
+            // HOÀN TIỀN: Chỉ thực hiện hoàn lại nếu hệ thống tự trừ tiền lúc tạo lệnh rút
+            if ($tx['type'] === 'withdraw') {
+                $refund_amount = $tx['amount'] + $tx['fee'];
+                $stmtRefund = $pdo->prepare("UPDATE Users SET balance = balance + ? WHERE id = ?");
+                $stmtRefund->execute([$refund_amount, $tx['user_id']]);
+            }
 
-            $success = "Transaction rejected and funds have been refunded to the user.";
+            $success = "Transaction rejected successfully! No funds were deducted from the sender.";
+            $redirect_url = 'AdminTransactions.php'; // Chuyển hướng về danh sách
         }
 
-        
+        // Commit (Lưu) mọi thay đổi vào Database
         $pdo->commit();
     } catch (Exception $e) {
-       
+        // Hoàn tác nếu có bất kỳ lỗi nào xảy ra trong quá trình xử lý
         $pdo->rollBack();
         $error = "Error processing transaction: " . $e->getMessage();
     }
 }
 
+// 6. Truy vấn lấy thông tin chi tiết giao dịch cùng thông tin người gửi & người nhận
 try {
     $stmt = $pdo->prepare(
         'SELECT t.*, 
                 sender.full_name AS sender_name, sender.phone AS sender_phone, sender.email AS sender_email,
                 receiver.full_name AS receiver_name, receiver.phone AS receiver_phone
-        FROM Transactions t
-        LEFT JOIN Users sender ON sender.id = t.user_id
-        LEFT JOIN Users receiver ON receiver.id = t.receiver_id
-        WHERE t.id = ? 
-        LIMIT 1'
+         FROM Transactions t
+         LEFT JOIN Users sender ON sender.id = t.user_id
+         LEFT JOIN Users receiver ON receiver.id = t.receiver_id
+         WHERE t.id = ? 
+         LIMIT 1'
     );
     $stmt->execute([$transactionId]);
     $transaction = $stmt->fetch();
 
     if (!$transaction) {
-        header("Location: pending_transactions.php");
+        header("Location: AdminTransactions.php");
         exit();
     }
 } catch (PDOException $e) {
     die("Database error: " . $e->getMessage());
 }
 
-
+// Định cấu hình giao diện theo loại giao dịch
 $is_withdraw = ($transaction['type'] === 'withdraw');
 $type_label = $is_withdraw ? 'Withdrawal (Rút tiền)' : 'Transfer (Chuyển tiền)';
 $header_bg = $is_withdraw ? 'bg-blue-600' : 'bg-purple-600';
@@ -112,6 +154,14 @@ $text_amount_color = $is_withdraw ? 'text-blue-600' : 'text-purple-600';
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/admin_style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <?php if (!empty($redirect_url)): ?>
+        <script>
+            setTimeout(function() {
+                window.location.href = '<?= $redirect_url ?>';
+            }, 1500);
+        </script>
+    <?php endif; ?>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans h-screen flex flex-col overflow-hidden">
 
@@ -165,7 +215,7 @@ $text_amount_color = $is_withdraw ? 'text-blue-600' : 'text-purple-600';
                         </a>
                     </li>
                     <li>
-                        <a href="pending_transactions.php" class="menu-item flex items-center gap-3 px-6 py-3 bg-indigo-50 text-indigo-600 font-medium">
+                        <a href="AdminTransactions.php" class="menu-item flex items-center gap-3 px-6 py-3 bg-indigo-50 text-indigo-600 font-medium">
                             <i class="fa-solid fa-users"></i> Pending Transactions
                         </a>
                     </li>
@@ -176,7 +226,7 @@ $text_amount_color = $is_withdraw ? 'text-blue-600' : 'text-purple-600';
         <main class="flex-1 p-8 overflow-y-auto">
             
             <div class="mb-6 flex items-center justify-between">
-                <a href="pending_transactions.php" class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+                <a href="AdminTransactions.php" class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-semibold transition-colors text-lg text-decoration-none">
                     <i class="fa-solid fa-arrow-left"></i> Back
                 </a>
 
@@ -255,7 +305,7 @@ $text_amount_color = $is_withdraw ? 'text-blue-600' : 'text-purple-600';
                         <div>
                             <p class="text-sm text-gray-400">Amount</p>
                             <p class="<?= $text_amount_color ?> font-bold text-2xl mt-1">
-                                <?= h(format_money($transaction['amount'])) ?> VND
+                                <?= h(format_money($transaction['amount'])) ?>
                             </p>
                         </div>
                         <div>
@@ -272,7 +322,7 @@ $text_amount_color = $is_withdraw ? 'text-blue-600' : 'text-purple-600';
                         </div>
                         <div>
                             <p class="text-sm text-gray-400">Fee</p>
-                            <p class="text-gray-800 font-bold mt-1"><?= h(format_money($transaction['fee'] ?? 0)) ?> VND</p>
+                            <p class="text-gray-800 font-bold mt-1"><?= h(format_money($transaction['fee'] ?? 0)) ?></p>
                         </div>
                     </div>
                 </div>
@@ -284,14 +334,14 @@ $text_amount_color = $is_withdraw ? 'text-blue-600' : 'text-purple-600';
                 
                 <?php if ($transaction['status'] === 'pending'): ?>
                     <div class="flex flex-wrap gap-4">
-                        <form method="POST" action="" class="flex-1 min-w-[180px] m-0" onsubmit="return confirm('Do you want to APPROVE this transaction?');">
+                        <form method="POST" action="" class="flex-1 min-w-[180px] m-0" onsubmit="return confirm('Do you want to APPROVE this transaction? This will deduct from the sender and credit the receiver.');">
                             <input type="hidden" name="action" value="approve">
                             <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
                                 <i class="fa-regular fa-circle-check"></i> Approve Transaction
                             </button>
                         </form>
                         
-                        <form method="POST" action="" class="flex-1 min-w-[180px] m-0" onsubmit="return confirm('Do you want to REJECT and refund this transaction?');">
+                        <form method="POST" action="" class="flex-1 min-w-[180px] m-0" onsubmit="return confirm('Do you want to REJECT this transaction? No money will be deducted.');">
                             <input type="hidden" name="action" value="reject">
                             <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
                                 <i class="fa-regular fa-circle-xmark"></i> Reject Transaction

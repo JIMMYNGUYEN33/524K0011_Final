@@ -164,10 +164,10 @@ $pending_count = count($transactions);
                                 </div>
                                 
                                 <div class="flex items-center gap-2">
-                                    <a href="AdPendingTransactionsDetail.php?id=<?= h($tx['id']) ?>" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-1.5">
+                                    <a href="AdTransactionsDetail.php?id=<?= h($tx['id']) ?>" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-1.5">
                                         <i class="fa-solid fa-magnifying-glass text-xs"></i> Review & Action
                                     </a>
-                                    <a href="AdPendingTransactionsDetail.php?id=<?= h($tx['id']) ?>" class="p-2 text-gray-400 hover:text-indigo-500 transition-colors">
+                                    <a href="AdminTransactions.php?id=<?= h($tx['id']) ?>" class="p-2 text-gray-400 hover:text-indigo-500 transition-colors">
                                         <i class="fa-solid fa-chevron-right text-lg"></i>
                                     </a>
                                 </div>
