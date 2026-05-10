@@ -1,4 +1,4 @@
-/* --- Cấu hình chung --- */
+
 * {
     margin: 0;
     padding: 0;
@@ -14,12 +14,12 @@ body {
     min-height: 100vh;
 }
 
-/* --- Khung điện thoại giả lập --- */
+
 .app-container {
     width: 100%;
     max-width: 414px;
     height: 820px; 
-    background-color: #392802; /* Màu nâu đen giống Register */
+    background-color: #392802; 
     position: relative;
     border-radius: 32px; 
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); 
@@ -29,7 +29,7 @@ body {
     padding: 40px 20px 20px 20px;
 }
 
-/* Ẩn thanh cuộn */
+
 .app-container::-webkit-scrollbar {
     display: none;
 }
@@ -53,7 +53,7 @@ body {
     margin-bottom: 25px;
 }
 
-/* --- Card trắng --- */
+
 .password-card {
     background: #ffffff;
     width: 100%;
@@ -64,16 +64,16 @@ body {
     flex-direction: column;
 }
 
-/* --- Layout Header của Card (Chứa ví và chữ "Change Password") --- */
+
 .card-header-custom {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 20px;
-    justify-content: center; /* Căn giữa tổ hợp ví + chữ */
+    justify-content: center; 
 }
 
-/* Icon ví tròn nhỏ màu vàng nhạt có bóng nhẹ */
+
 .wallet-circle-mini {
     width: 45px;
     height: 45px;
@@ -98,7 +98,7 @@ body {
     margin: 0;
 }
 
-/* --- Hộp cảnh báo màu vàng nhạt --- */
+
 .warning-alert-box {
     background-color: #fffde6;
     border: 1px solid #ffe699;
@@ -114,7 +114,7 @@ body {
     color: #b58900;
 }
 
-/* --- Input Group --- */
+
 .in_gr {
     display: flex;
     flex-direction: column;
@@ -162,7 +162,7 @@ body {
     margin-top: 6px;
 }
 
-/* --- Nút bấm thay đổi mật khẩu (Màu xanh dương) --- */
+
 .btn-change-pw {
     width: 100%;
     padding: 14px;
@@ -184,7 +184,7 @@ body {
     transform: scale(0.98);
 }
 
-/* --- Nút Logout --- */
+
 .logout-action-wrapper {
     display: flex;
     justify-content: center;

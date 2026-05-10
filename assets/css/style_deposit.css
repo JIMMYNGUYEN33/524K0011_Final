@@ -13,11 +13,11 @@ body {
     min-height: 100vh;
 }
 
-/* Khung giả lập di động chuẩn khớp với trang Home */
+
 .app-container {
     width: 100%;
     max-width: 414px;
-    height: 820px; /* Chiều cao cố định lọt màn hình */
+    height: 820px; 
     background-color: #fffef5;
     position: relative;
     border-radius: 24px; 
@@ -28,15 +28,15 @@ body {
     flex-direction: column;
 }
 
-/* --- THANH ĐẦU TRANG (GOM CHUNG NÚT BACK VÀ TIÊU ĐỀ NẰM KẾ NHAU) --- */
+
 .app-top-bar {
     padding: 20px 20px 15px 20px;
     display: flex;
-    align-items: center; /* Căn giữa nút và chữ theo chiều dọc */
-    gap: 15px; /* Khoảng cách giữa nút Back và khối chữ */
+    align-items: center; 
+    gap: 15px; 
 }
 
-/* Nút Back hình tròn */
+
 .btn-back {
     display: flex;
     align-items: center;
@@ -49,23 +49,23 @@ body {
     text-decoration: none;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     transition: 0.3s ease;
-    flex-shrink: 0; /* Đảm bảo nút không bị bóp méo */
+    flex-shrink: 0; 
 }
 
 .btn-back:hover {
-    background-color: #ffea00; /* Hover đổi màu vàng thương hiệu */
+    background-color: #ffea00; 
     color: #252603;
     transform: translateX(-3px);
 }
 
-/* Nhóm chữ tiêu đề và mô tả */
+
 .page-title-group {
     display: flex;
     flex-direction: column;
 }
 
 .page-title {
-    font-size: 20px; /* Thu nhỏ một xíu để vừa vặn khi nằm ngang */
+    font-size: 20px; 
     font-weight: 700;
     color: #1e1e1e;
     margin: 0;
@@ -78,7 +78,7 @@ body {
     margin-top: 2px;
 }
 
-/* --- FORM NẠP TIỀN --- */
+
 .deposit-card {
     background: #ffffff;
     width: calc(100% - 40px);
@@ -86,7 +86,7 @@ body {
     padding: 25px 20px;
     border-radius: 24px;
     box-shadow: 0 10px 30px rgba(102, 110, 153, 0.1);
-    margin: 10px auto 0 auto; /* Đẩy sát form lên phía trên gần tiêu đề */
+    margin: 10px auto 0 auto; 
 }
 
 .in_gr {
@@ -128,14 +128,14 @@ body {
 }
 
 .in_wrapper input:focus {
-    border-color: #1e62ff; /* Khi focus đổi sang viền xanh giống trang login mẫu */
+    border-color: #1e62ff; 
     box-shadow: 0 0 5px rgba(30, 98, 255, 0.2);
 }
 
 .btn-deposit {
     width: 100%;
     padding: 14px;
-    background: #1e62ff; /* Màu xanh dương giống nút bấm của Như */
+    background: #1e62ff; 
     color: white;
     border: none;
     border-radius: 12px;
@@ -147,5 +147,5 @@ body {
 }
 
 .btn-deposit:hover {
-    background: #154bcc; /* Hover chuyển sang màu xanh đậm hơn */
+    background: #154bcc; 
 }
