@@ -27,7 +27,7 @@ body {
     flex-direction: column;
 }
 
-/* --- KHU VỰC NÚT BACK (MŨI TÊN) --- */
+
 .back-navigation {
     padding: 20px 20px 0 20px;
     display: flex;
@@ -49,16 +49,16 @@ body {
 }
 
 .btn-back:hover {
-    background-color: #ffea00; /* Đổi màu vàng BeePay khi rê chuột vào */
+    background-color: #ffea00; 
     color: #252603;
-    transform: translateX(-3px); /* Nhích nhẹ sang trái tạo cảm giác quay lại */
+    transform: translateX(-3px); 
 }
 
 .btn-back i {
     font-size: 18px;
 }
 
-/* --- TÊN APP --- */
+
 .brand-title {
     text-align: center; 
     color: #ffc800; 
@@ -99,7 +99,7 @@ body {
     line-height: 1.5;
 }
 
-/* --- INPUT GROUP --- */
+
 .in_gr {
     margin-bottom: 25px;
 }
@@ -135,15 +135,15 @@ body {
 }
 
 .in_wrapper input:focus {
-    border-color: #ffea00; /* Khi focus đổi sang viền vàng đồng bộ */
+    border-color: #ffea00; 
     box-shadow: 0 0 5px rgba(255, 234, 0, 0.3);
 }
 
-/* --- NÚT GỬI YÊU CẦU --- */
+
 .btn-submit {
     width: 100%;
     padding: 14px;
-    background: #252603; /* Màu tối của BeePay */
+    background: #252603; 
     color: white;
     border: none;
     border-radius: 12px;
