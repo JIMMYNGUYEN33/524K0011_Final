@@ -1,3 +1,28 @@
+<?php
+require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../core/WalletDAL.php';
+require_once __DIR__ . '/../core/WalletBLL.php';
+
+require_verified_user();
+
+$user = current_user();
+$message = '';
+$messageType = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $wallet = new WalletBLL(new WalletDAL($pdo), $pdo);
+    $result = $wallet->deposit(
+        $user['id'],
+        trim($_POST['card_number'] ?? ''),
+        trim($_POST['expiration_date'] ?? ''),
+        trim($_POST['cvv'] ?? ''),
+        (float) ($_POST['amount'] ?? 0)
+    );
+
+    $message = $result['message'];
+    $messageType = !empty($result['success']) ? 'success' : 'danger';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,13 +48,16 @@
         </header>
 
         <div class="deposit-card">
-            <form action="#" method="POST">
-                
+            <?php if ($message): ?>
+                <div class="alert alert-<?= h($messageType) ?> text-center"><?= h($message) ?></div>
+            <?php endif; ?>
+
+            <form action="" method="POST">
                 <div class="in_gr">
                     <label>Card Number <span class="required">*</span></label>
                     <div class="in_wrapper">
                         <i class="fa-regular fa-credit-card"></i>
-                        <input required type="text" maxlength="6" placeholder="Enter 6-digit card number">
+                        <input required type="text" name="card_number" maxlength="6" placeholder="Enter 6-digit card number" value="<?= h($_POST['card_number'] ?? '') ?>">
                     </div>
                 </div>
 
@@ -39,17 +67,17 @@
                             <label>Expiration Date <span class="required">*</span></label>
                             <div class="in_wrapper">
                                 <i class="fa-regular fa-calendar"></i>
-                                <input required type="text" placeholder="DD/MM/YYYY">
+                                <input required type="text" name="expiration_date" placeholder="10/10/2022" value="<?= h($_POST['expiration_date'] ?? '') ?>">
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-6">
                         <div class="in_gr mb-0">
                             <label>CVV <span class="required">*</span></label>
                             <div class="in_wrapper">
                                 <i class="fa-solid fa-key"></i>
-                                <input required type="password" maxlength="3" placeholder="3 digits">
+                                <input required type="password" name="cvv" maxlength="3" placeholder="3 digits">
                             </div>
                         </div>
                     </div>
@@ -59,7 +87,7 @@
                     <label>Amount (VND) <span class="required">*</span></label>
                     <div class="in_wrapper">
                         <i class="fa-solid fa-money-bill-wave"></i>
-                        <input required type="number" min="1000" placeholder="Enter amount">
+                        <input required type="number" name="amount" min="1000" placeholder="Enter amount" value="<?= h($_POST['amount'] ?? '') ?>">
                     </div>
                 </div>
 

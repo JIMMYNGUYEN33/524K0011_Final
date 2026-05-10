@@ -1,3 +1,22 @@
+<?php
+require_once __DIR__ . '/../helpers/auth.php';
+
+require_login();
+ensure_first_password_changed();
+
+$user = current_user();
+$stmt = $pdo->prepare(
+    'SELECT t.*, sender.full_name AS sender_name, receiver.full_name AS receiver_name
+     FROM Transactions t
+     LEFT JOIN Users sender ON sender.id = t.user_id
+     LEFT JOIN Users receiver ON receiver.id = t.receiver_id
+     WHERE t.user_id = ?
+        OR (t.receiver_id = ? AND NOT (t.type = "transfer" AND t.status IN ("pending", "cancelled")))
+     ORDER BY t.created_at DESC'
+);
+$stmt->execute([$user['id'], $user['id']]);
+$transactions = $stmt->fetchAll();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,109 +52,78 @@
                     <button class="tab-btn" data-filter="deposit">Deposit</button>
                     <button class="tab-btn" data-filter="withdraw">Withdraw</button>
                     <button class="tab-btn" data-filter="transfer">Transfer</button>
+                    <button class="tab-btn" data-filter="buy_card">Buy Card</button>
                 </div>
             </div>
         </div>
 
         <div class="transactions-list-container">
-            <div id="history-empty-state" class="empty-state-wrapper text-center" style="margin-top: 80px;">
-                <i class="fa-regular fa-folder-open" style="font-size: 50px; color: #cbd5e1; margin-bottom: 15px; display: block;"></i>
-                <p style="color: #94a3b8; font-size: 14px; font-weight: 500;">No transactions yet</p>
-            </div>
-
-            <div class="transactions-list" id="history-list" style="display: none;">
+            <?php if (!$transactions): ?>
+                <div id="history-empty-state" class="empty-state-wrapper text-center" style="margin-top: 80px;">
+                    <i class="fa-regular fa-folder-open" style="font-size: 50px; color: #cbd5e1; margin-bottom: 15px; display: block;"></i>
+                    <p style="color: #94a3b8; font-size: 14px; font-weight: 500;">No transactions yet</p>
                 </div>
+            <?php else: ?>
+                <div class="transactions-list" id="history-list">
+                    <?php foreach ($transactions as $tx): ?>
+                        <?php
+                        $isIncomingTransfer = $tx['type'] === 'transfer' && (int) $tx['receiver_id'] === (int) $user['id'];
+                        $isPositive = $tx['type'] === 'deposit' || $isIncomingTransfer;
+                        $amountClass = $isPositive ? 'positive' : 'negative';
+                        $prefix = $isPositive ? '+' : '-';
+                        $label = $tx['type'];
+                        if ($isIncomingTransfer) {
+                            $label = 'received';
+                        }
+                        ?>
+                        <div class="transaction-item" data-type="<?= h($tx['type']) ?>" data-search="<?= h(strtolower(($tx['transaction_code'] ?? '') . ' ' . ($tx['note'] ?? '') . ' ' . $label)) ?>">
+                            <div class="tx-icon-box orange">
+                                <i class="fa-solid fa-money-bill-wave"></i>
+                            </div>
+                            <div class="tx-details">
+                                <span class="tx-name"><?= h(ucwords(str_replace('_', ' ', $label))) ?></span>
+                                <span class="tx-time"><?= h($tx['created_at']) ?></span>
+                                <?php if (!empty($tx['note'])): ?>
+                                    <span class="tx-time"><?= h($tx['note']) ?></span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="tx-amount-status">
+                                <span class="tx-amount <?= h($amountClass) ?>"><?= h($prefix . format_money($tx['amount'])) ?></span>
+                                <span class="tx-status success"><i class="fa-solid fa-circle-check"></i> <?= h(ucfirst($tx['status'])) ?></span>
+                            </div>
+                            <i class="fa-solid fa-chevron-right tx-arrow"></i>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const emptyState = document.getElementById("history-empty-state");
-            const historyList = document.getElementById("history-list");
-            const searchInput = document.getElementById("search-input");
-            const tabBtns = document.querySelectorAll('.tab-btn');
+        const searchInput = document.getElementById("search-input");
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const rows = Array.from(document.querySelectorAll('.transaction-item'));
 
-            // 1. Khởi tạo dữ liệu mẫu trong localStorage để test thử giao diện (Như có thể xóa đoạn này nếu muốn trống hoàn toàn)
-            // Nhóm của Như sau này khi nạp/rút/chuyển thành công chỉ cần dùng lệnh: 
-            // localStorage.setItem("beepay_transactions", JSON.stringify(mảng_giao_dịch_mới));
-            if (!localStorage.getItem("beepay_transactions")) {
-                const sampleTransactions = []; // Để trống để kiểm tra trạng thái ban đầu giống Như muốn
-                localStorage.setItem("beepay_transactions", JSON.stringify(sampleTransactions));
-            }
+        function filterHistory() {
+            const activeFilter = document.querySelector('.tab-btn.active').getAttribute('data-filter');
+            const keyword = searchInput.value.toLowerCase();
 
-            // Lấy dữ liệu từ localStorage
-            let transactions = JSON.parse(localStorage.getItem("beepay_transactions")) || [];
-
-            // 2. Hàm vẽ giao diện lịch sử dựa trên bộ lọc và tìm kiếm
-            function renderHistory(filterType = "all", keyword = "") {
-                // Sắp xếp các giao dịch mới nhất lên trên đầu
-                let filtered = transactions.slice().reverse();
-
-                // Lọc theo Tab (all, deposit, withdraw, transfer)
-                if (filterType !== "all") {
-                    filtered = filtered.filter(tx => tx.type === filterType);
-                }
-
-                // Lọc theo từ khóa tìm kiếm (Tên giao dịch hoặc ngày giờ)
-                if (keyword !== "") {
-                    filtered = filtered.filter(tx => 
-                        tx.name.toLowerCase().includes(keyword) || 
-                        tx.time.toLowerCase().includes(keyword)
-                    );
-                }
-
-                // Kiểm tra hiển thị trạng thái Trống hay Danh sách
-                if (filtered.length === 0) {
-                    emptyState.style.display = "block";
-                    historyList.style.display = "none";
-                } else {
-                    emptyState.style.display = "none";
-                    historyList.style.display = "block";
-
-                    // Vẽ từng dòng giao dịch ra màn hình
-                    historyList.innerHTML = filtered.map(tx => {
-                        const isPositive = tx.type === 'deposit' || tx.type === 'received';
-                        const amountClass = isPositive ? 'positive' : 'negative';
-                        const prefix = isPositive ? '+' : '-';
-                        const iconColorClass = tx.iconColor || 'orange'; // Mặc định là màu cam
-
-                        return `
-                            <div class="transaction-item" data-type="${tx.type}">
-                                <div class="tx-icon-box ${iconColorClass}">
-                                    <i class="fa-solid ${tx.icon || 'fa-money-bill-wave'}"></i>
-                                </div>
-                                <div class="tx-details">
-                                    <span class="tx-name">${tx.name}</span>
-                                    <span class="tx-time">${tx.time}</span>
-                                </div>
-                                <div class="tx-amount-status">
-                                    <span class="tx-amount ${amountClass}">${prefix}${tx.amount.toLocaleString('en-US')} VND</span>
-                                    <span class="tx-status success"><i class="fa-solid fa-circle-check"></i> Completed</span>
-                                </div>
-                                <i class="fa-solid fa-chevron-right tx-arrow"></i>
-                            </div>
-                        `;
-                    }).join('');
-                }
-            }
-
-            renderHistory();
-
-            tabBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelector('.tab-btn.active').classList.remove('active');
-                    btn.classList.add('active');
-                    
-                    const filter = btn.getAttribute('data-filter');
-                    renderHistory(filter, searchInput.value.toLowerCase());
-                });
+            rows.forEach(row => {
+                const typeMatches = activeFilter === 'all' || row.dataset.type === activeFilter;
+                const searchMatches = !keyword || row.dataset.search.includes(keyword);
+                row.style.display = typeMatches && searchMatches ? '' : 'none';
             });
+        }
 
-            searchInput.addEventListener('input', (e) => {
-                const activeTab = document.querySelector('.tab-btn.active').getAttribute('data-filter');
-                renderHistory(activeTab, e.target.value.toLowerCase());
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelector('.tab-btn.active').classList.remove('active');
+                btn.classList.add('active');
+                filterHistory();
             });
         });
+
+        searchInput.addEventListener('input', filterHistory);
     </script>
 </body>
 </html>

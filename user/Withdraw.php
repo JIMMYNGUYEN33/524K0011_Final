@@ -1,3 +1,29 @@
+<?php
+require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../core/WalletDAL.php';
+require_once __DIR__ . '/../core/WalletBLL.php';
+
+require_verified_user();
+
+$user = current_user();
+$message = '';
+$messageType = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $wallet = new WalletBLL(new WalletDAL($pdo), $pdo);
+    $result = $wallet->withdraw(
+        $user['id'],
+        trim($_POST['card_number'] ?? ''),
+        trim($_POST['expiration_date'] ?? ''),
+        trim($_POST['cvv'] ?? ''),
+        (float) ($_POST['amount'] ?? 0),
+        trim($_POST['note'] ?? '')
+    );
+
+    $message = $result['message'];
+    $messageType = !empty($result['success']) ? 'success' : 'danger';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +41,7 @@
             <a href="Home.php" class="btn-back">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
-            
+
             <div class="page-title-group">
                 <h1 class="page-title">Withdraw Money</h1>
                 <p class="page-subtitle">Transfer money from your wallet to a credit card</p>
@@ -23,13 +49,16 @@
         </header>
 
         <div class="withdraw-card">
-            <form action="#" method="POST">
-                
+            <?php if ($message): ?>
+                <div class="alert alert-<?= h($messageType) ?> text-center"><?= h($message) ?></div>
+            <?php endif; ?>
+
+            <form action="" method="POST">
                 <div class="in_gr">
                     <label>Card Number <span class="required">*</span></label>
                     <div class="in_wrapper">
                         <i class="fa-regular fa-credit-card"></i>
-                        <input required type="text" maxlength="6" placeholder="111111">
+                        <input required type="text" name="card_number" maxlength="6" placeholder="111111" value="<?= h($_POST['card_number'] ?? '') ?>">
                     </div>
                 </div>
 
@@ -39,17 +68,17 @@
                             <label>Expiration Date <span class="required">*</span></label>
                             <div class="in_wrapper">
                                 <i class="fa-regular fa-calendar"></i>
-                                <input required type="text" placeholder="10/10/2022">
+                                <input required type="text" name="expiration_date" placeholder="10/10/2022" value="<?= h($_POST['expiration_date'] ?? '') ?>">
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-6">
                         <div class="in_gr mb-0">
                             <label>CVV <span class="required">*</span></label>
                             <div class="in_wrapper">
                                 <i class="fa-solid fa-key"></i>
-                                <input required type="password" maxlength="3" placeholder="411">
+                                <input required type="password" name="cvv" maxlength="3" placeholder="411">
                             </div>
                         </div>
                     </div>
@@ -59,7 +88,7 @@
                     <label>Amount (VND) <span class="required">*</span></label>
                     <div class="in_wrapper">
                         <i class="fa-solid fa-money-bill-wave"></i>
-                        <input required type="number" step="50000" min="50000" placeholder="Enter amount (multiple of 50,000)">
+                        <input required type="number" name="amount" step="50000" min="50000" placeholder="Enter amount (multiple of 50,000)" value="<?= h($_POST['amount'] ?? '') ?>">
                     </div>
                 </div>
 
@@ -67,7 +96,7 @@
                     <label>Note</label>
                     <div class="in_wrapper">
                         <i class="fa-regular fa-comment-dots" style="top: 25px;"></i>
-                        <textarea rows="3" class="note-textarea" placeholder="Optional note for this withdrawal"></textarea>
+                        <textarea name="note" rows="3" class="note-textarea" placeholder="Optional note for this withdrawal"><?= h($_POST['note'] ?? '') ?></textarea>
                     </div>
                 </div>
 

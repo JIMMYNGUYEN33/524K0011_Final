@@ -1,3 +1,34 @@
+<?php
+require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../core/WalletDAL.php';
+require_once __DIR__ . '/../core/WalletBLL.php';
+
+require_verified_user();
+
+$user = current_user();
+$message = '';
+$messageType = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $carrierMap = [
+        'viettel' => 'Viettel',
+        'mobifone' => 'Mobifone',
+        'vinaphone' => 'Vinaphone',
+    ];
+
+    $carrier = $carrierMap[$_POST['carrier'] ?? 'viettel'] ?? 'Viettel';
+    $wallet = new WalletBLL(new WalletDAL($pdo), $pdo);
+    $result = $wallet->buyCard(
+        $user['id'],
+        $carrier,
+        (int) ($_POST['denomination'] ?? 10000),
+        (int) ($_POST['quantity'] ?? 1)
+    );
+
+    $message = $result['message'];
+    $messageType = !empty($result['success']) ? 'success' : 'danger';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +46,7 @@
             <a href="Home.php" class="btn-back">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
-            
+
             <div class="page-title-group">
                 <h1 class="page-title">Buy Phone Card</h1>
                 <p class="page-subtitle">Purchase mobile phone scratch cards</p>
@@ -23,8 +54,11 @@
         </header>
 
         <div class="buycard-card">
-            <form action="#" method="POST">
-                
+            <?php if ($message): ?>
+                <div class="alert alert-<?= h($messageType) ?> text-center"><?= h($message) ?></div>
+            <?php endif; ?>
+
+            <form action="" method="POST">
                 <div class="selection-section">
                     <label class="section-label">Select Carrier <span class="required">*</span></label>
                     <div class="carriers-grid">
@@ -79,7 +113,6 @@
     </div>
 
     <script>
-        // Xử lý chọn Nhà mạng
         const carrierItems = document.querySelectorAll('.carrier-item');
         const selectedCarrierInput = document.getElementById('selected-carrier');
 
@@ -91,18 +124,15 @@
             });
         });
 
-        // Xử lý chọn Mệnh giá, Số lượng và tính Tổng tiền
         const denomItems = document.querySelectorAll('.denom-item');
         const selectedDenomInput = document.getElementById('selected-denomination');
         const quantityInput = document.getElementById('quantity-input');
         const totalAmountDisplay = document.getElementById('total-amount-display');
 
-        // Hàm tính toán và hiển thị tổng tiền tự động
         function updateTotalPayment() {
             const denomination = parseInt(selectedDenomInput.value) || 0;
             let quantity = parseInt(quantityInput.value) || 1;
 
-            // Ràng buộc số lượng trong khoảng 1 - 5
             if (quantity < 1) {
                 quantity = 1;
                 quantityInput.value = 1;
@@ -112,8 +142,6 @@
             }
 
             const total = denomination * quantity;
-            
-            // Định dạng hiển thị dấu phẩy ngăn cách hàng nghìn (ví dụ: 50,000 VND)
             totalAmountDisplay.innerText = total.toLocaleString('en-US') + " VND";
         }
 
@@ -122,13 +150,10 @@
                 document.querySelector('.denom-item.active').classList.remove('active');
                 item.classList.add('active');
                 selectedDenomInput.value = item.getAttribute('data-value');
-                
-                // Mỗi lần click mệnh giá mới sẽ tính lại tổng tiền
                 updateTotalPayment();
             });
         });
 
-        // Lắng nghe sự kiện khi người dùng gõ hoặc nhấn mũi tên tăng giảm số lượng
         quantityInput.addEventListener('input', updateTotalPayment);
         quantityInput.addEventListener('change', updateTotalPayment);
     </script>
