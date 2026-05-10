@@ -6,6 +6,7 @@ ensure_first_password_changed();
 
 $user = current_user();
 $flash = get_flash();
+$showFlashInVerification = $flash && $user['status'] !== 'verified';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +15,7 @@ $flash = get_flash();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/style_home.css?v=6">
+    <link rel="stylesheet" href="../assets/css/style_home.css?v=7">
     <title>Bee-Home</title>
 </head>
 <body>
@@ -43,7 +44,7 @@ $flash = get_flash();
             </h1>
         </div>
 
-        <?php if ($flash): ?>
+        <?php if ($flash && !$showFlashInVerification): ?>
             <div class="alert alert-<?= h($flash['type']) ?> text-center" style="font-size: 13px; margin: 14px 0;">
                 <?= h($flash['message']) ?>
             </div>
@@ -57,6 +58,9 @@ $flash = get_flash();
                 <div class="alert-content">
                     <p class="alert-title">Account Verification</p>
                     <p class="alert-desc">Your account is waiting for admin verification. Wallet features may be limited.</p>
+                    <?php if ($showFlashInVerification): ?>
+                        <p class="alert-desc alert-flash"><?= h($flash['message']) ?></p>
+                    <?php endif; ?>
                 </div>
             </div>
         <?php endif; ?>

@@ -7,22 +7,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style_cpw.css">
+    <link rel="stylesheet" href="../assets/css/style_cpw.css?v=2">
 </head>
 <body>
     <div class="app-container">
-        <div class="header-icon-wrapper">
-            <div class="wallet-circle">
-                <i class="fa-solid fa-key"></i>
-            </div>
-        </div>
+        <a href="../auth/forgot_password.php" class="btn-back" aria-label="Back">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
 
-        <h1 class="page-title">Reset Password</h1>
-        <p class="page-subtitle">Enter the OTP sent to your email</p>
+        <header class="brand-header">
+            <h1 class="brand-title">BeePay</h1>
+            <p class="brand-subtitle">Secure digital payment solution</p>
+        </header>
 
         <div class="password-card">
+            <div class="card-heading">
+                <h2>Reset Password</h2>
+                <p>Enter the OTP sent to your email</p>
+            </div>
+
             <?php if (!empty($success)): ?>
-                <div class="alert alert-success text-center" style="font-size: 14px; padding: 10px; margin-bottom: 15px;">
+                <div class="alert-message alert-success-custom">
                     Password reset successfully. Please login again.
                 </div>
                 <div class="logout-action-wrapper mt-3">
@@ -31,7 +36,7 @@
             <?php else: ?>
                 <form action="" method="POST">
                     <?php if (!empty($error)): ?>
-                        <div class="alert alert-danger text-center" style="font-size: 14px; padding: 8px; margin-bottom: 15px;">
+                        <div class="alert-message alert-error-custom">
                             <?= h($error) ?>
                         </div>
                     <?php endif; ?>
