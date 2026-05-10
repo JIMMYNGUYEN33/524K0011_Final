@@ -1,3 +1,11 @@
+<?php
+require_once __DIR__ . '/../helpers/auth.php';
+
+require_login();
+ensure_first_password_changed();
+
+$user = current_user();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +23,7 @@
             <div class="header-top">
                 <div class="welcome-text">
                     <p>Welcome back,</p>
-                    <h2>Phan Nguyen Thao Nhu</h2>
+                    <h2><?= h($user['full_name'] ?: $user['email']) ?></h2>
                 </div>
                 <button class="btn-notification"><i class="fa-regular fa-bell"></i></button>
             </div>
@@ -23,52 +31,52 @@
 
         <div class="profile-card">
             <h3 class="card-title">Account Information</h3>
-            
+
             <div class="profile-info-body">
                 <div class="info-list">
                     <div class="info-item">
                         <i class="fa-regular fa-envelope info-icon"></i>
                         <div class="info-text">
                             <span class="info-label">Email</span>
-                            <span class="info-value">me@gmail.com</span>
+                            <span class="info-value"><?= h($user['email']) ?></span>
                         </div>
                     </div>
-                    
+
                     <div class="info-item">
                         <i class="fa-solid fa-phone info-icon"></i>
                         <div class="info-text">
                             <span class="info-label">Phone Number</span>
-                            <span class="info-value">0191293813</span>
+                            <span class="info-value"><?= h($user['phone']) ?></span>
                         </div>
                     </div>
-                    
+
                     <div class="info-item">
                         <i class="fa-regular fa-calendar info-icon"></i>
                         <div class="info-text">
                             <span class="info-label">Date of Birth</span>
-                            <span class="info-value">2000-02-09</span>
+                            <span class="info-value"><?= h($user['dob'] ?: '-') ?></span>
                         </div>
                     </div>
-                    
+
                     <div class="info-item">
                         <i class="fa-solid fa-location-dot info-icon"></i>
                         <div class="info-text">
                             <span class="info-label">Address</span>
-                            <span class="info-value">1223</span>
+                            <span class="info-value"><?= h($user['address'] ?: '-') ?></span>
                         </div>
                     </div>
                 </div>
 
                 <div class="status-badge-wrapper">
                     <span class="status-badge verified">
-                        <i class="fa-solid fa-circle-check"></i> Verified
+                        <i class="fa-solid fa-circle-check"></i> <?= h(ucfirst($user['status'])) ?>
                     </span>
                 </div>
             </div>
         </div>
 
         <div class="menu-section">
-            <a href="Forgot.php" class="menu-item-link">
+            <a href="../auth/change_password.php" class="menu-item-link">
                 <div class="menu-item">
                     <div class="menu-icon-box purple">
                         <i class="fa-solid fa-lock"></i>
@@ -78,8 +86,7 @@
                 </div>
             </a>
 
-
-            <a href="" class="menu-item-link">
+            <a href="#" class="menu-item-link">
                 <div class="menu-item">
                     <div class="menu-icon-box orange">
                         <i class="fa-solid fa-circle-question"></i>
@@ -91,19 +98,19 @@
         </div>
 
         <div class="logout-wrapper">
-            <a href="Login.php" class="btn-logout">
+            <a href="../auth/logout.php" class="btn-logout">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
             </a>
         </div>
 
-        <p class="app-version">E-Wallet v1.0.0<br>Member since 9/5/2026</p>
+        <p class="app-version">E-Wallet v1.0.0<br>Member since <?= h(date('d/m/Y', strtotime($user['created_at']))) ?></p>
 
         <nav class="bottom-nav">
             <a href="Home.php" class="nav-item">
                 <i class="fa-solid fa-house"></i>
                 <span>Home</span>
             </a>
-            <a href="#" class="nav-item scan-btn">
+            <a href="Scan.php" class="nav-item scan-btn">
                 <div class="scan-circle">
                     <i class="fa-solid fa-qrcode"></i>
                 </div>
