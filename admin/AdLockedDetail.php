@@ -1,23 +1,23 @@
 <?php
-// 1. Khởi động session sạch sẽ
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Nhúng các helper và kết nối database
+
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
 
-// 3. Khóa trang bảo vệ quyền Admin
+
 require_admin();
 
 $error = '';
 $success = '';
 $redirect_url = ''; 
 
-// 4. Lấy ID người dùng từ tham số GET trên URL
+
 $userId = $_GET['id'] ?? null;
 
 if (!$userId) {
@@ -25,7 +25,7 @@ if (!$userId) {
     exit();
 }
 
-// 5. Xử lý các hành động quản trị (Verify / Disable)
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
@@ -63,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 }
 
-// 6. Truy vấn thông tin chi tiết người dùng
 try {
     $stmt = $pdo->prepare("SELECT * FROM Users WHERE id = ? LIMIT 1");
     $stmt->execute([$userId]);
