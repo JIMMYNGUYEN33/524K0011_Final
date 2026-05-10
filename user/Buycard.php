@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style_buycard.css">
+    <link rel="stylesheet" href="../assets/css/style_buycard.css?v=2">
 </head>
 <body>
     <div class="app-container">
@@ -64,20 +64,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label class="section-label">Select Carrier <span class="required">*</span></label>
                     <div class="carriers-grid">
                         <div class="carrier-item active" data-carrier="viettel">
-                            <div class="carrier-icon red">
-                                <i class="fa-solid fa-mobile-screen-button"></i>
+                            <div class="carrier-logo viettel-logo" aria-hidden="true">
+                                <span>viettel</span>
                             </div>
                             <span>Viettel</span>
                         </div>
                         <div class="carrier-item" data-carrier="mobifone">
-                            <div class="carrier-icon blue">
-                                <i class="fa-solid fa-mobile-screen-button"></i>
+                            <div class="carrier-logo mobifone-logo" aria-hidden="true">
+                                <span class="mobi">Mobi</span><span class="fone">Fone</span>
                             </div>
                             <span>Mobifone</span>
                         </div>
                         <div class="carrier-item" data-carrier="vinaphone">
-                            <div class="carrier-icon purple">
-                                <i class="fa-solid fa-mobile-screen-button"></i>
+                            <div class="carrier-logo vinaphone-logo" aria-hidden="true">
+                                <span class="vina-mark"></span>
+                                <span>VinaPhone</span>
                             </div>
                             <span>Vinaphone</span>
                         </div>
