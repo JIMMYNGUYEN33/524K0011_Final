@@ -1,11 +1,41 @@
 <?php
+// 1. Nhúng các file bổ trợ cấu hình và xác thực
 require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../config/db_config.php'; // Nhúng database để gọi biến $pdo kết nối dữ liệu
+global $pdo;
 
+// 2. Kiểm tra đăng nhập và đổi mật khẩu lần đầu
 require_login();
 ensure_first_password_changed();
 
 $user = current_user();
 $flash = get_flash();
+
+// 3. --- LẤY DỮ LIỆU 3 GIAO DỊCH GẦN NHẤT ---
+$userId = $user['id'] ?? null;
+$recent_transactions = [];
+
+if ($userId) {
+    try {
+        // Truy vấn lấy tối đa 3 giao dịch gần nhất (nạp tiền, rút tiền, gửi và nhận chuyển khoản)
+        $stmt_tx = $pdo->prepare("
+            SELECT t.*, 
+                   sender.full_name AS sender_name,
+                   receiver.full_name AS receiver_name
+            FROM Transactions t
+            LEFT JOIN Users sender ON t.user_id = sender.id
+            LEFT JOIN Users receiver ON t.receiver_id = receiver.id
+            WHERE t.user_id = ? OR t.receiver_id = ?
+            ORDER BY t.created_at DESC 
+            LIMIT 2
+        ");
+        $stmt_tx->execute([$userId, $userId]);
+        $recent_transactions = $stmt_tx->fetchAll();
+    } catch (PDOException $e) {
+        // Ghi lại lỗi hệ thống nếu gặp trục trặc cơ sở dữ liệu
+        error_log("Error fetching recent transactions: " . $e->getMessage());
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,7 +107,7 @@ $flash = get_flash();
 
                 <a href="Buycard.php" class="service-item-link">
                     <div class="service-item">
-                        <div class="icon-box orange"><i class="fa-solid fa-mobile-screen"></i></div>
+                        <div class="icon-box orange"><i class="fa-regular fa-credit-card"></i></div>
                         <p>Buy Card</p>
                     </div>
                 </a>
@@ -95,10 +125,77 @@ $flash = get_flash();
                 <a href="History.php" style="font-size: 11px; color: #ffea00; text-decoration: none; font-weight: 600; margin-top: 5px;">See All</a>
             </div>
 
-            <div id="home-empty-state" class="empty-state">
-                <i class="fa-solid fa-wallet"></i>
-                <p>No transactions yet</p>
-            </div>
+            <?php if (empty($recent_transactions)): ?>
+                <div id="home-empty-state" class="empty-state">
+                    <i class="fa-solid fa-wallet"></i>
+                    <p>No transactions yet</p>
+                </div>
+            <?php else: ?>
+                <div class="transactions-list-wrapper" style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px; margin-bottom: 20px;">
+                    <?php foreach ($recent_transactions as $tx): ?>
+                        <?php
+                            $is_sender = ($tx['user_id'] == $userId);
+                            $type = $tx['type'];
+                            
+                            // Thiết lập màu sắc và icon cho từng loại giao dịch
+                            if ($type === 'deposit') {
+                                $icon = 'fa-arrow-down';
+                                $icon_color = '#10b981'; // Màu xanh lá
+                                $icon_bg = 'rgba(16, 185, 129, 0.1)';
+                                $title = 'Nạp tiền vào tài khoản';
+                                $amount_prefix = '+';
+                                $amount_color = '#10b981';
+                            } elseif ($type === 'withdraw') {
+                                $icon = 'fa-arrow-up';
+                                $icon_color = '#ef4444'; // Màu đỏ
+                                $icon_bg = 'rgba(239, 68, 68, 0.1)';
+                                $title = 'Rút tiền tài khoản';
+                                $amount_prefix = '-';
+                                $amount_color = '#ef4444';
+                            } else { // Chuyển khoản (transfer)
+                                if ($is_sender) {
+                                    $icon = 'fa-paper-plane';
+                                    $icon_color = '#6366f1'; // Màu tím/indigo
+                                    $icon_bg = 'rgba(99, 102, 241, 0.1)';
+                                    $title = 'Chuyển đến ' . h($tx['receiver_name'] ?? 'Người dùng');
+                                    $amount_prefix = '-';
+                                    $amount_color = '#6366f1';
+                                } else {
+                                    $icon = 'fa-wallet';
+                                    $icon_color = '#10b981'; // Nhận tiền màu xanh lá
+                                    $icon_bg = 'rgba(16, 185, 129, 0.1)';
+                                    $title = 'Nhận từ ' . h($tx['sender_name'] ?? 'Người dùng');
+                                    $amount_prefix = '+';
+                                    $amount_color = '#10b981';
+                                }
+                            }
+                        ?>
+                        <div class="transaction-item-box" style="background: #ffffff; padding: 14px 16px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 38px; height: 38px; border-radius: 50%; background: <?= $icon_bg ?>; color: <?= $icon_color ?>; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0;">
+                                    <i class="fa-solid <?= $icon ?>"></i>
+                                </div>
+                                <div>
+                                    <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: #1f2937;"><?= h($title) ?></h4>
+                                    <p style="margin: 3px 0 0 0; font-size: 10px; color: #9ca3af; display: flex; align-items: center; gap: 6px;">
+                                        <?= !empty($tx['created_at']) ? date('d/m/Y - H:i', strtotime($tx['created_at'])) : '-' ?>
+                                        <?php if ($tx['status'] === 'pending'): ?>
+                                            <span style="background: #fffbeb; color: #d97706; padding: 1px 5px; border-radius: 4px; font-weight: 600; font-size: 9px;">Chờ duyệt</span>
+                                        <?php elseif ($tx['status'] === 'cancelled'): ?>
+                                            <span style="background: #fef2f2; color: #dc2626; padding: 1px 5px; border-radius: 4px; font-weight: 600; font-size: 9px;">Bị từ chối</span>
+                                        <?php endif; ?>
+                                    </p>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="font-size: 14px; font-weight: 800; color: <?= $amount_color ?>;">
+                                    <?= $amount_prefix ?><?= h(format_money($tx['amount'])) ?>
+                                </span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
         </div>
 
         <nav class="bottom-nav">
