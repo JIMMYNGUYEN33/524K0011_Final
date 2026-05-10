@@ -14,7 +14,7 @@ $flash = get_flash();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../assets/css/style_home.css">
+    <link rel="stylesheet" href="../assets/css/style_home.css?v=6">
     <title>Bee-Home</title>
 </head>
 <body>
@@ -46,48 +46,47 @@ $flash = get_flash();
         <?php endif; ?>
 
         <?php if ($user['status'] !== 'verified'): ?>
-            <div class="alert alert-warning text-center" style="font-size: 13px; margin: 14px 0;">
-                Your account is waiting for admin verification. Wallet features may be limited.
+            <div class="verification-alert">
+                <div class="alert-icon">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                </div>
+                <div class="alert-content">
+                    <p class="alert-title">Account Verification</p>
+                    <p class="alert-desc">Your account is waiting for admin verification. Wallet features may be limited.</p>
+                </div>
             </div>
         <?php endif; ?>
 
         <div class="services-section">
             <h3 class="section-title">Services</h3>
             <div class="services-grid">
-                <a href="Deposit.php" class="service-item-link">
-                    <div class="service-item">
-                        <div class="icon-box green"><i class="fa-solid fa-download"></i></div>
-                        <p>Deposit</p>
-                    </div>
+                <a href="Deposit.php" class="service-item">
+                    <div class="icon-box green"><i class="fa-solid fa-download"></i></div>
+                    <p>Deposit</p>
                 </a>
 
-                <a href="Withdraw.php" class="service-item-link">
-                    <div class="service-item">
-                        <div class="icon-box blue"><i class="fa-solid fa-upload"></i></div>
-                        <p>Withdraw</p>
-                    </div>
+                <a href="Withdraw.php" class="service-item">
+                    <div class="icon-box blue"><i class="fa-solid fa-upload"></i></div>
+                    <p>Withdraw</p>
                 </a>
 
-                <a href="Transfer.php" class="service-item-link">
-                    <div class="service-item">
-                        <div class="icon-box purple"><i class="fa-solid fa-exchange-alt"></i></div>
-                        <p>Transfer</p>
-                    </div>
+                <a href="Transfer.php" class="service-item">
+                    <div class="icon-box purple"><i class="fa-solid fa-exchange-alt"></i></div>
+                    <p>Transfer</p>
                 </a>
 
-                <a href="Buycard.php" class="service-item-link">
-                    <div class="service-item">
-                        <div class="icon-box orange"><i class="fa-solid fa-mobile-screen"></i></div>
-                        <p>Buy Card</p>
-                    </div>
+                <a href="Buycard.php" class="service-item">
+                    <div class="icon-box orange"><i class="fa-regular fa-credit-card"></i></div>
+                    <p>Buy Card</p>
                 </a>
 
-                <a href="History.php" class="service-item-link">
-                    <div class="service-item">
-                        <div class="icon-box indigo"><i class="fa-solid fa-history"></i></div>
-                        <p>History</p>
-                    </div>
+                <a href="History.php" class="service-item">
+                    <div class="icon-box indigo"><i class="fa-solid fa-history"></i></div>
+                    <p>History</p>
                 </a>
+            </div>
+            <div class="services-scrollbar" aria-hidden="true">
+                <div class="services-scrollbar-thumb"></div>
             </div>
 
             <div class="d-flex justify-content-between align-items-center">
@@ -118,5 +117,48 @@ $flash = get_flash();
             </a>
         </nav>
     </div>
+    <script>
+        const servicesGrid = document.querySelector('.services-grid');
+        const servicesScrollbar = document.querySelector('.services-scrollbar');
+        const servicesThumb = document.querySelector('.services-scrollbar-thumb');
+
+        function updateServicesScrollbar() {
+            const maxScroll = servicesGrid.scrollWidth - servicesGrid.clientWidth;
+            const maxThumbMove = servicesScrollbar.clientWidth - servicesThumb.offsetWidth;
+            const thumbX = maxScroll > 0 ? (servicesGrid.scrollLeft / maxScroll) * maxThumbMove : 0;
+
+            servicesThumb.style.transform = `translateX(${thumbX}px)`;
+        }
+
+        function moveServicesScroll(clientX) {
+            const maxScroll = servicesGrid.scrollWidth - servicesGrid.clientWidth;
+            const maxThumbMove = servicesScrollbar.clientWidth - servicesThumb.offsetWidth;
+
+            if (maxScroll <= 0 || maxThumbMove <= 0) {
+                return;
+            }
+
+            const rect = servicesScrollbar.getBoundingClientRect();
+            const rawX = clientX - rect.left - servicesThumb.offsetWidth / 2;
+            const thumbX = Math.max(0, Math.min(rawX, maxThumbMove));
+
+            servicesGrid.scrollLeft = (thumbX / maxThumbMove) * maxScroll;
+        }
+
+        servicesGrid.addEventListener('scroll', updateServicesScrollbar, { passive: true });
+        servicesScrollbar.addEventListener('pointerdown', (event) => {
+            moveServicesScroll(event.clientX);
+            servicesScrollbar.setPointerCapture(event.pointerId);
+        });
+        servicesScrollbar.addEventListener('pointermove', (event) => {
+            if (event.buttons !== 1) {
+                return;
+            }
+
+            moveServicesScroll(event.clientX);
+        });
+        window.addEventListener('resize', updateServicesScrollbar);
+        updateServicesScrollbar();
+    </script>
 </body>
 </html>
