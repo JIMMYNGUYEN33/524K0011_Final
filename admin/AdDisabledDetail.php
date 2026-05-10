@@ -1,38 +1,36 @@
 <?php
-// 1. Khởi động session sạch sẽ
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Nhúng các helper và kết nối database
+
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
 
-// 3. Khóa trang bảo vệ quyền Admin
+
 require_admin();
 
 $error = '';
 $success = '';
 $redirect_url = ''; 
 
-// 4. Lấy ID người dùng từ tham số GET trên URL
 $userId = $_GET['id'] ?? null;
 
-// SỬA LỖI: Nếu không có ID, phải quay về trang danh sách Disabled
 if (!$userId) {
     header("Location: AdminDisabled.php");
     exit();
 }
 
-// 5. Xử lý các hành động quản trị (Enable / Lock vĩnh viễn)
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
     try {
         if ($action === 'enable') {
-            // Mở lại tài khoản: Chuyển status về 'verified' và reset toàn bộ cờ khóa
+            
             $stmt = $pdo->prepare("
                 UPDATE Users 
                 SET status = 'verified',
@@ -45,9 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             ");
             $stmt->execute([$userId]);
             $success = "Account enabled and verified successfully! Redirecting to Verified Accounts...";
-            $redirect_url = 'AdminVerified.php'; // Chuyển sang danh sách Đã xác minh
+            $redirect_url = 'AdminVerified.php'; 
         } elseif ($action === 'lock') {
-            // Khóa vĩnh viễn tài khoản từ trạng thái disabled
+            
             $stmt = $pdo->prepare("
                 UPDATE Users 
                 SET status = 'verified',
@@ -57,20 +55,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             ");
             $stmt->execute([$userId]);
             $success = "Account has been permanently locked! Redirecting to Locked Accounts...";
-            $redirect_url = 'AdminLocked.php'; // Chuyển sang danh sách Bị Khóa
+            $redirect_url = 'AdminLocked.php'; 
         }
     } catch (PDOException $e) {
         $error = "Database error: " . $e->getMessage();
     }
 }
 
-// 6. Truy vấn thông tin chi tiết người dùng
+
 try {
     $stmt = $pdo->prepare("SELECT * FROM Users WHERE id = ? LIMIT 1");
     $stmt->execute([$userId]);
     $user = $stmt->fetch();
 
-    // SỬA LỖI: Nếu không tìm thấy user, quay về trang danh sách Disabled
+    
     if (!$user) {
         header("Location: AdminDisabled.php");
         exit();
