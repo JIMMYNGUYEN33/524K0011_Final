@@ -1,23 +1,23 @@
 <?php
-
+// 1. Khởi động session sạch sẽ
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-
+// 2. Nhúng các helper và kết nối database
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
 
-
+// 3. Khóa trang bảo vệ quyền Admin
 require_admin();
 
 $error = '';
 $success = '';
 $redirect_url = ''; // Dùng biến này để định hướng chuyển trang tự động
 
-
+// 4. Lấy ID giao dịch từ tham số GET trên URL
 $transactionId = $_GET['id'] ?? null;
 
 if (!$transactionId) {
@@ -25,15 +25,15 @@ if (!$transactionId) {
     exit();
 }
 
-
+// 5. Xử lý phê duyệt (Approve) hoặc từ chối (Reject) giao dịch
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
     try {
-        
+        // Bắt đầu một Transaction trong Database để đảm bảo an toàn dữ liệu
         $pdo->beginTransaction();
 
-        
+        // Lấy thông tin chi tiết giao dịch hiện tại để xử lý tiền tệ
         $stmtTx = $pdo->prepare("SELECT * FROM Transactions WHERE id = ? FOR UPDATE");
         $stmtTx->execute([$transactionId]);
         $tx = $stmtTx->fetch();
@@ -47,9 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
 
         if ($action === 'approve') {
-<<<<<<< HEAD
             // --- XỬ LÝ KHI PHÊ DUYỆT ---
-            
             if ($tx['type'] === 'transfer') {
                 // 1. Tính tổng tiền người gửi phải trả (Tiền chuyển + Phí nếu người gửi trả)
                 $total_deduct = $tx['amount'];
@@ -61,18 +59,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $stmtCheckSender = $pdo->prepare("SELECT balance FROM Users WHERE id = ?");
                 $stmtCheckSender->execute([$tx['user_id']]);
                 $sender = $stmtCheckSender->fetch();
-=======
-            
-            $stmtUpdateTx = $pdo->prepare("UPDATE Transactions SET status = 'success' WHERE id = ?");
-            $stmtUpdateTx->execute([$transactionId]);
-
->>>>>>> 3cf092cace2d046b3d7d4e6c01615b32c06208b1
 
                 if (!$sender || $sender['balance'] < $total_deduct) {
                     throw new Exception("Sender does not have enough balance to complete this transaction.");
                 }
 
-                // 2. TRỪ TIỀN NGƯỜI GỬI (Lỗi cũ ở đây: Quên chưa trừ tiền)
+                // 2. TRỪ TIỀN NGƯỜI GỬI
                 $stmtDeductSender = $pdo->prepare("UPDATE Users SET balance = balance - ? WHERE id = ?");
                 $stmtDeductSender->execute([$total_deduct, $tx['user_id']]);
 
@@ -88,15 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
             } elseif ($tx['type'] === 'withdraw') {
                 // Nếu rút tiền: Đã trừ tiền người rút từ lúc tạo lệnh pending thì ở đây chỉ cập nhật trạng thái.
-                // Nếu chưa trừ lúc tạo lệnh, bà chạy câu lệnh trừ tiền ở đây:
-                /*
-                $total_withdraw_deduct = $tx['amount'] + $tx['fee'];
-                $stmtDeductWithdraw = $pdo->prepare("UPDATE Users SET balance = balance - ? WHERE id = ?");
-                $stmtDeductWithdraw->execute([$total_withdraw_deduct, $tx['user_id']]);
-                */
             }
 
-            // Cập nhật trạng thái giao dịch thành hoàn tất (completed/success tùy DB)
+            // Cập nhật trạng thái giao dịch thành hoàn tất (completed)
             $stmtUpdateTx = $pdo->prepare("UPDATE Transactions SET status = 'completed', approved_by = ?, approved_at = NOW() WHERE id = ?");
             $stmtUpdateTx->execute([$_SESSION['user_id'] ?? null, $transactionId]);
 
@@ -104,26 +90,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $redirect_url = 'AdminTransactions.php'; // Chuyển hướng về danh sách
             
         } elseif ($action === 'reject') {
-<<<<<<< HEAD
             // --- XỬ LÝ KHI TỪ CHỐI GIAO DỊCH ---
-
-            // Cập nhật trạng thái giao dịch thành Hủy bỏ (cancelled/failed tùy DB)
+            // Cập nhật trạng thái giao dịch thành Hủy bỏ (cancelled)
             $stmtUpdateTx = $pdo->prepare("UPDATE Transactions SET status = 'cancelled', approved_by = ?, approved_at = NOW() WHERE id = ?");
             $stmtUpdateTx->execute([$_SESSION['user_id'] ?? null, $transactionId]);
-=======
-            
-            $stmtUpdateTx = $pdo->prepare("UPDATE Transactions SET status = 'failed' WHERE id = ?");
-            $stmtUpdateTx->execute([$transactionId]);
 
-            
-            $total_refund = $tx['amount'] + $tx['fee'];
-            $stmtRefund = $pdo->prepare("UPDATE Users SET balance = balance + ? WHERE id = ?");
-            $stmtRefund->execute([$total_refund, $tx['user_id']]);
->>>>>>> 3cf092cace2d046b3d7d4e6c01615b32c06208b1
-
-            // HOÀN TIỀN: Chỉ thực hiện hoàn tiền nếu hệ thống đã trừ tiền của họ từ lúc tạo lệnh pending!
-            // Do chuyển khoản nhóm Như không trừ tiền trước, nên khi từ chối KHÔNG cần cộng hoàn lại (tránh trùng lặp tiền).
-            // Nếu là rút tiền (đã trừ từ trước khi pending) thì hoàn lại tiền rút + phí cho họ:
+            // HOÀN TIỀN: Chỉ thực hiện hoàn lại nếu hệ thống tự trừ tiền lúc tạo lệnh rút
             if ($tx['type'] === 'withdraw') {
                 $refund_amount = $tx['amount'] + $tx['fee'];
                 $stmtRefund = $pdo->prepare("UPDATE Users SET balance = balance + ? WHERE id = ?");
@@ -134,15 +106,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $redirect_url = 'AdminTransactions.php'; // Chuyển hướng về danh sách
         }
 
-        
+        // Commit (Lưu) mọi thay đổi vào Database
         $pdo->commit();
     } catch (Exception $e) {
-       
+        // Hoàn tác nếu có bất kỳ lỗi nào xảy ra trong quá trình xử lý
         $pdo->rollBack();
         $error = "Error processing transaction: " . $e->getMessage();
     }
 }
 
+// 6. Truy vấn lấy thông tin chi tiết giao dịch cùng thông tin người gửi & người nhận
 try {
     $stmt = $pdo->prepare(
         'SELECT t.*, 
@@ -165,7 +138,7 @@ try {
     die("Database error: " . $e->getMessage());
 }
 
-
+// Định cấu hình giao diện theo loại giao dịch
 $is_withdraw = ($transaction['type'] === 'withdraw');
 $type_label = $is_withdraw ? 'Withdrawal (Rút tiền)' : 'Transfer (Chuyển tiền)';
 $header_bg = $is_withdraw ? 'bg-blue-600' : 'bg-purple-600';
@@ -253,7 +226,7 @@ $text_amount_color = $is_withdraw ? 'text-blue-600' : 'text-purple-600';
         <main class="flex-1 p-8 overflow-y-auto">
             
             <div class="mb-6 flex items-center justify-between">
-                <a href="AdminTransactions.php" class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+                <a href="AdminTransactions.php" class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-semibold transition-colors text-lg text-decoration-none">
                     <i class="fa-solid fa-arrow-left"></i> Back
                 </a>
 
@@ -332,7 +305,7 @@ $text_amount_color = $is_withdraw ? 'text-blue-600' : 'text-purple-600';
                         <div>
                             <p class="text-sm text-gray-400">Amount</p>
                             <p class="<?= $text_amount_color ?> font-bold text-2xl mt-1">
-                                <?= h(format_money($transaction['amount'])) ?> VND
+                                <?= h(format_money($transaction['amount'])) ?>
                             </p>
                         </div>
                         <div>
@@ -349,7 +322,7 @@ $text_amount_color = $is_withdraw ? 'text-blue-600' : 'text-purple-600';
                         </div>
                         <div>
                             <p class="text-sm text-gray-400">Fee</p>
-                            <p class="text-gray-800 font-bold mt-1"><?= h(format_money($transaction['fee'] ?? 0)) ?> VND</p>
+                            <p class="text-gray-800 font-bold mt-1"><?= h(format_money($transaction['fee'] ?? 0)) ?></p>
                         </div>
                     </div>
                 </div>
