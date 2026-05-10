@@ -34,9 +34,13 @@ $flash = get_flash();
                     <p>Wallet Status</p>
                     <span><?= h(ucfirst($user['status'])) ?></span>
                 </div>
-                <button class="btn-eye"><i class="fa-regular fa-eye"></i></button>
+                <button class="btn-eye" id="toggle-balance" type="button" aria-label="Hide balance" aria-pressed="false">
+                    <i class="fa-regular fa-eye"></i>
+                </button>
             </div>
-            <h1 class="amount"><?= h(format_money($user['balance'])) ?></h1>
+            <h1 class="amount" id="wallet-balance" data-balance="<?= h(format_money($user['balance'])) ?>">
+                <?= h(format_money($user['balance'])) ?>
+            </h1>
         </div>
 
         <?php if ($flash): ?>
@@ -159,6 +163,27 @@ $flash = get_flash();
         });
         window.addEventListener('resize', updateServicesScrollbar);
         updateServicesScrollbar();
+
+        const balanceText = document.querySelector('#wallet-balance');
+        const toggleBalance = document.querySelector('#toggle-balance');
+        const toggleBalanceIcon = toggleBalance.querySelector('i');
+
+        toggleBalance.addEventListener('click', () => {
+            const isHidden = toggleBalance.getAttribute('aria-pressed') === 'true';
+
+            if (isHidden) {
+                balanceText.textContent = balanceText.dataset.balance;
+                toggleBalanceIcon.className = 'fa-regular fa-eye';
+                toggleBalance.setAttribute('aria-label', 'Hide balance');
+                toggleBalance.setAttribute('aria-pressed', 'false');
+                return;
+            }
+
+            balanceText.textContent = '•••••••• VND';
+            toggleBalanceIcon.className = 'fa-regular fa-eye-slash';
+            toggleBalance.setAttribute('aria-label', 'Show balance');
+            toggleBalance.setAttribute('aria-pressed', 'true');
+        });
     </script>
 </body>
 </html>
