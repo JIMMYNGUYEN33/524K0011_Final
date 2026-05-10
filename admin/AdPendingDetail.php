@@ -25,7 +25,7 @@ if (!$userId) {
 }
 
 
-// --- CHỈ COPY LOGIC XỬ LÝ & CHUYỂN HƯỚNG ---
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
@@ -34,21 +34,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $stmt = $pdo->prepare("UPDATE Users SET status = 'verified' WHERE id = ?");
             $stmt->execute([$userId]);
             
-            // Tự động nhảy về trang danh sách chờ duyệt sau khi Verify thành công
+            
             header("Location: AdminPending.php");
             exit();
         } elseif ($action === 'disable') {
             $stmt = $pdo->prepare("UPDATE Users SET status = 'disabled' WHERE id = ?");
             $stmt->execute([$userId]);
             
-            // Tự động nhảy về trang danh sách sau khi Disable thành công
+           
             header("Location: AdminPending.php");
             exit();
         } elseif ($action === 'request_update') {
             $stmt = $pdo->prepare("UPDATE Users SET status = 'update_requested' WHERE id = ?");
             $stmt->execute([$userId]);
             
-            // Tự động nhảy về trang danh sách sau khi yêu cầu cập nhật thành công
+            
             header("Location: AdminPending.php");
             exit();
         }
@@ -63,7 +63,7 @@ try {
     $stmt->execute([$userId]);
     $user = $stmt->fetch();
 
-    // Nếu không tìm thấy user, quay ngược về trang danh sách
+   
     if (!$user) {
         header("Location: AdminPending.php");
         exit();

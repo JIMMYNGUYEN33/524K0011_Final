@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             ");
             $stmt->execute([$userId]);
             $success = "Account has been successfully locked! Redirecting to Locked Accounts...";
-            $redirect_url = 'AdminLocked.php'; // Chuyển sang trang Locked Accounts
+            $redirect_url = 'AdminLocked.php'; 
         }
     } catch (PDOException $e) {
         $error = "Database error: " . $e->getMessage();

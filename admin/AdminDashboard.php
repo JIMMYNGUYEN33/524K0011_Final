@@ -1,41 +1,32 @@
 <?php
-// 1. Khởi động session sạch sẽ
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Nhúng các helper và kết nối database
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
 
-// 3. Khóa trang bảo vệ quyền Admin
 require_admin();
 
-// 4. Lấy các số liệu thống kê thực tế từ Database để hiển thị lên Dashboard
 try {
-    // Đếm tổng số người dùng (loại trừ tài khoản admin)
+    
     $stmtUsers = $pdo->query("SELECT COUNT(*) FROM Users WHERE role = 'user'");
     $total_users = $stmtUsers->fetchColumn();
 
-    // Đếm số tài khoản đang chờ xác minh (pending)
     $stmtPending = $pdo->query("SELECT COUNT(*) FROM Users WHERE role = 'user' AND status = 'pending'");
     $pending_users = $stmtPending->fetchColumn();
 
-    // Đếm số tài khoản đã xác minh (verified)
     $stmtVerified = $pdo->query("SELECT COUNT(*) FROM Users WHERE role = 'user' AND status = 'verified'");
     $verified_users = $stmtVerified->fetchColumn();
 
-    // Đếm số tài khoản bị vô hiệu hóa (disabled)
     $stmtDisabled = $pdo->query("SELECT COUNT(*) FROM Users WHERE role = 'user' AND status = 'disabled'");
     $disabled_users = $stmtDisabled->fetchColumn();
 
-    // Đếm số tài khoản bị khóa vĩnh viễn (permanently locked)
     $stmtLocked = $pdo->query("SELECT COUNT(*) FROM Users WHERE role = 'user' AND is_permanently_locked = TRUE");
     $locked_users = $stmtLocked->fetchColumn();
 
-    // Đếm số lượng giao dịch rút tiền hoặc chuyển khoản trên 5 triệu đang chờ duyệt
     $stmtPendingTx = $pdo->query("
         SELECT COUNT(*) FROM Transactions 
         WHERE status = 'pending' 
@@ -44,11 +35,9 @@ try {
     ");
     $pending_tx_count = $stmtPendingTx->fetchColumn();
 
-    // Tính tổng số tiền Nạp thành công (Deposit)
     $stmtTotalDeposit = $pdo->query("SELECT SUM(amount) FROM Transactions WHERE type = 'deposit' AND status = 'completed'");
     $total_deposit = $stmtTotalDeposit->fetchColumn() ?: 0;
 
-    // Tính tổng số tiền Rút thành công (Withdraw)
     $stmtTotalWithdraw = $pdo->query("SELECT SUM(amount) FROM Transactions WHERE type = 'withdraw' AND status = 'completed'");
     $total_withdraw = $stmtTotalWithdraw->fetchColumn() ?: 0;
 

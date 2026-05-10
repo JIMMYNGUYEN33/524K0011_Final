@@ -1,35 +1,35 @@
 <?php
-// 1. Khởi động session sạch sẽ
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Nhúng các helper và kết nối database
+
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
 
-// 3. Khóa trang bảo vệ quyền Admin
+
 require_admin();
 
-// 4. Xử lý tìm kiếm và bộ lọc vai trò (Role Filter)
+
 $search = trim($_GET['search'] ?? '');
-$filter_role = trim($_GET['role'] ?? 'all'); // 'all', 'admin', 'user'
+$filter_role = trim($_GET['role'] ?? 'all'); 
 
 try {
-    // Xây dựng câu truy vấn động để lấy thông tin người dùng
+    
     $query = "SELECT * FROM Users WHERE 1=1";
     $params = [];
 
-    // Lọc theo vai trò (Admin hoặc User)
+    
     if ($filter_role === 'admin') {
         $query .= " AND role = 'admin'";
     } elseif ($filter_role === 'user') {
         $query .= " AND role = 'user'";
     }
 
-    // Tìm kiếm theo tên, số điện thoại hoặc email
+    
     if ($search !== '') {
         $query .= " AND (full_name LIKE ? OR phone LIKE ? OR email LIKE ?)";
         $search_param = "%$search%";

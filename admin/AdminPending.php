@@ -123,7 +123,6 @@ $pending_count = count($pending_users);
                 <?php else: ?>
                     <?php foreach ($pending_users as $user): ?>
                         <?php 
-                            // Định dạng ngày đăng ký đẹp mắt (Ví dụ: 10/05/2026)
                             $created_date = !empty($user['created_at']) ? date('d/m/Y', strtotime($user['created_at'])) : '-';
                         ?>
                         <a href="AdPendingDetail.php?id=<?= h($user['id']) ?>" class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center justify-between cursor-pointer hover:shadow-md hover:border-indigo-200 transition-all duration-200 group block">

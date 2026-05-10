@@ -128,7 +128,6 @@ $pending_count = count($transactions);
                 <?php else: ?>
                     <?php foreach ($transactions as $tx): ?>
                         <?php 
-                            // Xác định icon và màu sắc cho từng loại giao dịch
                             $is_withdraw = ($tx['type'] === 'withdraw');
                             $type_label = $is_withdraw ? 'Withdrawal (Rút tiền)' : 'Transfer (Chuyển tiền)';
                             $icon_class = $is_withdraw ? 'fa-building-columns' : 'fa-money-bill-transfer';

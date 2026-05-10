@@ -45,6 +45,7 @@ if ($userId) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style_home.css?v=6">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Bee-Home</title>
 </head>
 <body>
@@ -94,27 +95,27 @@ if ($userId) {
         <div class="services-section">
             <h3 class="section-title">Services</h3>
             <div class="services-grid">
-                <a href="Deposit.php" class="service-item">
+                <a href="Deposit.php" onclick="checkVerification(event, 'Deposit.php')" class="service-item">
                     <div class="icon-box green"><i class="fa-solid fa-download"></i></div>
                     <p>Deposit</p>
                 </a>
 
-                <a href="Withdraw.php" class="service-item">
+                <a href="Withdraw.php" onclick="checkVerification(event, 'Withdraw.php')" class="service-item">
                     <div class="icon-box blue"><i class="fa-solid fa-upload"></i></div>
                     <p>Withdraw</p>
                 </a>
 
-                <a href="Transfer.php" class="service-item">
+                <a href="Transfer.php" onclick="checkVerification(event, 'Transfer.php')" class="service-item">
                     <div class="icon-box purple"><i class="fa-solid fa-exchange-alt"></i></div>
                     <p>Transfer</p>
                 </a>
 
-                <a href="Buycard.php" class="service-item">
+                <a href="Buycard.php" onclick="checkVerification(event, 'Buycard.php')" class="service-item">
                     <div class="icon-box orange"><i class="fa-regular fa-credit-card"></i></div>
                     <p>Buy Card</p>
                 </a>
 
-                <a href="History.php" class="service-item">
+                <a href="History.php" onclick="checkVerification(event, 'History.php')" class="service-item">
                     <div class="icon-box indigo"><i class="fa-solid fa-history"></i></div>
                     <p>History</p>
                 </a>
@@ -140,32 +141,31 @@ if ($userId) {
                             $is_sender = ($tx['user_id'] == $userId);
                             $type = $tx['type'];
                             
-                            // Thiết lập màu sắc và icon cho từng loại giao dịch
                             if ($type === 'deposit') {
                                 $icon = 'fa-arrow-down';
-                                $icon_color = '#10b981'; // Màu xanh lá
+                                $icon_color = '#10b981'; 
                                 $icon_bg = 'rgba(16, 185, 129, 0.1)';
                                 $title = 'Nạp tiền vào tài khoản';
                                 $amount_prefix = '+';
                                 $amount_color = '#10b981';
                             } elseif ($type === 'withdraw') {
                                 $icon = 'fa-arrow-up';
-                                $icon_color = '#ef4444'; // Màu đỏ
+                                $icon_color = '#ef4444'; 
                                 $icon_bg = 'rgba(239, 68, 68, 0.1)';
                                 $title = 'Rút tiền tài khoản';
                                 $amount_prefix = '-';
                                 $amount_color = '#ef4444';
-                            } else { // Chuyển khoản (transfer)
+                            } else { 
                                 if ($is_sender) {
                                     $icon = 'fa-paper-plane';
-                                    $icon_color = '#6366f1'; // Màu tím/indigo
+                                    $icon_color = '#6366f1'; 
                                     $icon_bg = 'rgba(99, 102, 241, 0.1)';
                                     $title = 'Chuyển đến ' . h($tx['receiver_name'] ?? 'Người dùng');
                                     $amount_prefix = '-';
                                     $amount_color = '#6366f1';
                                 } else {
                                     $icon = 'fa-wallet';
-                                    $icon_color = '#10b981'; // Nhận tiền màu xanh lá
+                                    $icon_color = '#10b981'; 
                                     $icon_bg = 'rgba(16, 185, 129, 0.1)';
                                     $title = 'Nhận từ ' . h($tx['sender_name'] ?? 'Người dùng');
                                     $amount_prefix = '+';
@@ -219,7 +219,46 @@ if ($userId) {
         </nav>
     </div>
 
+    <div id="verification-modal" class="fixed inset-0 z-50 items-center justify-center p-4 bg-black/40 hidden">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl border border-amber-100 transform scale-95 transition-transform">
+            <div class="w-14 h-14 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="text-base font-bold text-gray-900">Feature Restricted</h3>
+            <p class="text-gray-500 text-xs mt-2 leading-relaxed">
+                This feature is only available for fully verified accounts. Please wait for administrator verification.
+            </p>
+            <button onclick="closeModal()" class="w-full mt-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-xl shadow-md transition-colors">
+                Got it, thanks!
+            </button>
+        </div>
+    </div>
+
     <script>
+        // Lấy trạng thái của tài khoản từ DB qua PHP
+        const userStatus = "<?= h($user['status'] ?? 'pending') ?>";
+
+        // Hàm kiểm tra verify khi bấm vào bất kỳ tính năng dịch vụ nào
+        function checkVerification(event, targetUrl) {
+            if (userStatus === 'pending') {
+                event.preventDefault(); // Chặn chuyển trang
+                const modal = document.getElementById('verification-modal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                // Nếu đã được duyệt thì cho phép chuyển hướng bình thường
+                window.location.href = targetUrl;
+            }
+        }
+
+        // Đóng Popup
+        function closeModal() {
+            const modal = document.getElementById('verification-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // --- CÁC ĐOẠN JS GỐC CỦA BÀ GIỮ NGUYÊN 100% ---
         const servicesGrid = document.querySelector('.services-grid');
         const servicesScrollbar = document.querySelector('.services-scrollbar');
         const servicesThumb = document.querySelector('.services-scrollbar-thumb');

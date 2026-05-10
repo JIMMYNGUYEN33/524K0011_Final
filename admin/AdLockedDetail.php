@@ -31,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
     try {
         if ($action === 'verify') {
-            // Mở khóa: đưa is_permanently_locked về 0, reset đếm sai, đặt status thành 'verified'
             $stmt = $pdo->prepare("
                 UPDATE Users 
                 SET is_permanently_locked = FALSE, 
@@ -44,9 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             ");
             $stmt->execute([$userId]);
             $success = "Account unlocked and verified successfully! Redirecting to Verified Accounts...";
-            $redirect_url = 'AdminVerified.php'; // Chuyển sang danh sách Đã xác minh
+            $redirect_url = 'AdminVerified.php';
         } elseif ($action === 'disable') {
-            // Vô hiệu hóa: reset khóa vĩnh viễn nhưng chuyển status sang 'disabled'
             $stmt = $pdo->prepare("
                 UPDATE Users 
                 SET status = 'disabled', 
@@ -56,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             ");
             $stmt->execute([$userId]);
             $success = "Account has been successfully disabled! Redirecting to Disabled Accounts...";
-            $redirect_url = 'AdminDisabled.php'; // Chuyển sang danh sách Vô hiệu hóa
+            $redirect_url = 'AdminDisabled.php'; 
         }
     } catch (PDOException $e) {
         $error = "Database error: " . $e->getMessage();
