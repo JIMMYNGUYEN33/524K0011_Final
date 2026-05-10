@@ -1,15 +1,15 @@
 <?php
-// Khởi chạy session ở đầu trang để kiểm tra trạng thái đăng nhập
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 1. Nhúng file kết nối database và các file helper cần thiết
+
 require_once __DIR__ . '/../config/db_config.php';
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 
-// Kiểm tra quyền: Phải đăng nhập mới được vào trang đổi mật khẩu này
+
 require_login();
 ensure_first_password_changed();
 
@@ -38,10 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// =========================================================================
-// NHÚNG GIAO DIỆN TỪ THƯ MỤC NGOÀI (BỎ GIAO DIỆN CŨ TRONG AUTH)
-// =========================================================================
-// Nhúng file giao diện ChangePassword.php nằm ở thư mục "user"
 $isFirstPasswordChange = false;
 require_once __DIR__ . '/../user/ChangePassword.php';
 ?>

@@ -1,21 +1,20 @@
 <?php
-// 1. Khởi động session sạch sẽ
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Nhúng các helper và kết nối database
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
 
-// 3. Khóa trang bảo vệ quyền Admin
+
 require_admin();
 
-// 4. Lấy danh sách tài khoản đã xác minh (Trạng thái verified và không phải admin)
+
 try {
-    // Điều chỉnh lại tên cột 'status' hoặc 'role' cho khớp với cấu trúc Database của nhóm Như nhé
+    
     $stmt = $pdo->query(
         "SELECT id, full_name, email, phone, balance, status 
          FROM Users 
@@ -28,7 +27,7 @@ try {
     die("Database error: " . $e->getMessage());
 }
 
-// Đếm số lượng tài khoản đã xác minh
+
 $verified_count = count($verified_users);
 ?>
 <!DOCTYPE html>

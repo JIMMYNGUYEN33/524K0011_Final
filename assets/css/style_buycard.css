@@ -13,11 +13,10 @@ body {
     min-height: 100vh;
 }
 
-/* Khung giả lập di động chuẩn khớp với trang Home và Deposit, Withdraw */
 .app-container {
     width: 100%;
     max-width: 414px;
-    height: 820px; /* Chiều cao cố định lọt màn hình */
+    height: 820px; 
     background-color: #fffef5;
     position: relative;
     border-radius: 24px; 
@@ -28,7 +27,7 @@ body {
     flex-direction: column;
 }
 
-/* --- THANH ĐẦU TRANG --- */
+
 .app-top-bar {
     padding: 20px 20px 15px 20px;
     display: flex;
@@ -36,7 +35,7 @@ body {
     gap: 15px;
 }
 
-/* Nút Back hình tròn */
+
 .btn-back {
     display: flex;
     align-items: center;
@@ -58,7 +57,7 @@ body {
     transform: translateX(-3px);
 }
 
-/* Khối chữ tiêu đề */
+
 .page-title-group {
     display: flex;
     flex-direction: column;
@@ -78,7 +77,7 @@ body {
     margin-top: 2px;
 }
 
-/* --- CARD FORM MUA THẺ CÀO --- */
+
 .buycard-card {
     background: #ffffff;
     width: calc(100% - 40px);
@@ -101,7 +100,7 @@ body {
     color: #dc3545; /* Sao đỏ bắt buộc */
 }
 
-/* --- GRID CHỌN NHÀ MẠNG --- */
+
 .carriers-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -127,7 +126,7 @@ body {
     margin-top: 10px;
 }
 
-/* Các vòng màu biểu tượng nhà mạng */
+
 .carrier-icon {
     width: 45px;
     height: 45px;
@@ -143,14 +142,14 @@ body {
 .carrier-icon.blue { background: #1e82e6; }
 .carrier-icon.purple { background: #9c27b0; }
 
-/* Trạng thái được chọn (Active) */
+
 .carrier-item.active {
-    border-color: #1e62ff; /* Viền xanh dương đậm */
+    border-color: #1e62ff; 
     background-color: #f0f4ff;
     box-shadow: 0 4px 10px rgba(30, 98, 255, 0.15);
 }
 
-/* --- GRID CHỌN MỆNH GIÁ --- */
+
 .denominations-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -170,7 +169,7 @@ body {
     transition: all 0.2s ease;
 }
 
-/* Trạng thái được chọn (Active) */
+
 .denom-item.active {
     border-color: #1e62ff;
     background-color: #f0f4ff;
@@ -178,7 +177,7 @@ body {
     box-shadow: 0 4px 10px rgba(30, 98, 255, 0.15);
 }
 
-/* --- INPUT NHẬP SỐ LƯỢNG --- */
+
 .in_gr {
     margin-bottom: 18px;
 }
@@ -218,14 +217,14 @@ body {
     box-shadow: 0 0 5px rgba(30, 98, 255, 0.2);
 }
 
-/* --- KHU VỰC HIỂN THỊ TỔNG TIỀN --- */
+
 .total-payment-box {
-    background-color: #f8f9fa; /* Nền xám nhạt */
-    border: 1px dashed #e0e0e0; /* Viền đứt mảnh nhẹ nhàng */
+    background-color: #f8f9fa; 
+    border: 1px dashed #e0e0e0; 
     border-radius: 14px;
     padding: 15px;
     display: flex;
-    justify-content: space-between; /* Đẩy chữ sang trái, số tiền sang phải */
+    justify-content: space-between; 
     align-items: center;
     margin-bottom: 15px;
 }
@@ -239,10 +238,10 @@ body {
 .total-amount {
     font-size: 18px;
     font-weight: 700;
-    color: #1e62ff; /* Màu xanh dương thương hiệu nổi bật */
+    color: #1e62ff; 
 }
 
-/* --- NÚT PURCHASE XANH DƯƠNG --- */
+
 .btn-purchase {
     width: 100%;
     padding: 14px;

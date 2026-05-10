@@ -1,21 +1,20 @@
 <?php
-// 1. Khởi động session sạch sẽ
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Nhúng các helper và kết nối database
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
 
-// 3. Khóa trang bảo vệ quyền Admin
+
 require_admin();
 
-// 4. Lấy danh sách tài khoản bị vô hiệu hóa (Trạng thái disabled và không phải admin)
+
 try {
-    // Điều chỉnh cột trạng thái ('status') hoặc vai trò ('role') cho khớp cấu trúc database của nhóm Như nhé
+    
     $stmt = $pdo->query(
         "SELECT id, full_name, email, phone, balance, status 
          FROM Users 
@@ -28,7 +27,6 @@ try {
     die("Database error: " . $e->getMessage());
 }
 
-// Đếm số lượng tài khoản bị vô hiệu hóa
 $disabled_count = count($disabled_users);
 ?>
 <!DOCTYPE html>
