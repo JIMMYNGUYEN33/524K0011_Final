@@ -36,38 +36,38 @@
             <nav class="flex-1 py-4">
                 <ul class="space-y-1">
                     <li>
-                        <a href="AdminDashboard.html"
+                        <a href="AdminDashboard.php"
                             class="menu-item flex items-center gap-3 px-6 py-3 bg-indigo-50 text-indigo-600 font-medium">
                             <i class="fa-solid fa-house"></i>
                             Dashboard
                         </a>
                     </li>
                     <li>
-                        <a href="AdminPending.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminPending.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
                             <i class="fa-regular fa-clock"></i>
                             Pending Accounts
                         </a>
                     </li>
                     <li>
-                        <a href="AdminVerified.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminVerified.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
                             <i class="fa-regular fa-user"></i>
                             Verified Accounts
                         </a>
                     </li>
                     <li>
-                        <a href="AdminDisabled.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminDisabled.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
                             <i class="fa-solid fa-user-xmark"></i>
                             Disabled Accounts
                         </a>
                     </li>
                     <li>
-                        <a href="AdminLocked.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminLocked.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
                             <i class="fa-solid fa-lock"></i>
                             Locked Accounts
                         </a>
                     </li>
                     <li>
-                        <a href="AdminTransactions.html"
+                        <a href="AdminTransactions.php"
                             class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
                             <i class="fa-solid fa-users"></i>
                             Pending Transactions
@@ -97,7 +97,7 @@
                     </div>
                 </div>
 
-                <a href="AdminPending.html"
+                <a href="AdminPending.php"
                     class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block">
                     <div>
                         <p class="card-label hover-yellow text-sm text-gray-500 font-medium">Pending Verification</p>
@@ -109,7 +109,7 @@
                     </div>
                 </a>
 
-                <a href="AdminVerified.html"
+                <a href="AdminVerified.php"
                     class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block">
                     <div>
                         <p class="card-label hover-green text-sm text-gray-500 font-medium">Verified Accounts</p>
@@ -121,7 +121,7 @@
                     </div>
                 </a>
 
-                <a href="AdminDisabled.html"
+                <a href="AdminDisabled.php"
                     class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block">
                     <div>
                         <p class="card-label hover-red text-sm text-gray-500 font-medium">Disabled Accounts</p>
@@ -133,7 +133,7 @@
                     </div>
                 </a>
 
-                <a href="AdminLocked.html"
+                <a href="AdminLocked.php"
                     class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block">
                     <div>
                         <p class="card-label hover-orange text-sm text-gray-500 font-medium">Locked Accounts</p>

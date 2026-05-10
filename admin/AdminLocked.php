@@ -1,3 +1,34 @@
+<?php
+// 1. Khởi động session sạch sẽ
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// 2. Nhúng các helper và kết nối database
+require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../helpers/ui.php';
+require_once __DIR__ . '/../config/db_config.php';
+global $pdo;
+
+// 3. Khóa trang bảo vệ quyền Admin
+require_admin();
+
+// 4. Lấy danh sách tài khoản bị khóa vĩnh viễn (is_permanently_locked = 1)
+try {
+    $stmt = $pdo->query(
+        "SELECT id, full_name, email, phone, balance, status, permanently_locked_at 
+         FROM Users 
+         WHERE is_permanently_locked = 1 
+           AND (role IS NULL OR role != 'admin')
+         ORDER BY permanently_locked_at DESC"
+    );
+    $locked_users = $stmt->fetchAll();
+} catch (PDOException $e) {
+    die("Database error: " . $e->getMessage());
+}
+
+$locked_count = count($locked_users);
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -18,47 +49,49 @@
         <div class="flex items-center gap-6 text-white">
             <div class="text-right">
                 <div class="text-sm opacity-90">Administrator</div>
-                <div class="text-sm font-semibold">System Administrator</div>
+                <div class="text-sm font-semibold"><?= h($_SESSION['user_name'] ?? 'System Administrator') ?></div>
             </div>
-            <button class="btn-logout flex items-center gap-2 px-3 py-1.5 rounded">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                <span>Logout</span>
-            </button>
+            <form action="<?= base_url('/auth/logout.php') ?>" method="POST" class="m-0">
+                <button type="submit" class="btn-logout flex items-center gap-2 px-3 py-1.5 rounded bg-indigo-700 hover:bg-indigo-800 transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
         </div>
     </header>
 
     <div class="flex flex-1 overflow-hidden">
         
-        <aside class="w-64 bg-white shadow-md flex flex-col overflow-y-auto z-0">
+        <aside class="w-64 bg-white shadow-md flex flex-col overflow-y-auto z-0 shrink-0">
             <nav class="flex-1 py-4">
                 <ul class="space-y-1">
                     <li>
-                        <a href="AdminDashboard.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminDashboard.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
                             <i class="fa-solid fa-house"></i> Dashboard
                         </a>
                     </li>
                     <li>
-                        <a href="AdminPending.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminPending.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
                             <i class="fa-regular fa-clock"></i> Pending Accounts
                         </a>
                     </li>
                     <li>
-                        <a href="AdminVerified.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminVerified.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
                             <i class="fa-regular fa-user"></i> Verified Accounts
                         </a>
                     </li>
                     <li>
-                        <a href="AdminDisabled.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminDisabled.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
                             <i class="fa-solid fa-user-xmark"></i> Disabled Accounts
                         </a>
                     </li>
                     <li>
-                        <a href="AdminLocked.html" class="menu-item flex items-center gap-3 px-6 py-3 bg-indigo-50 text-indigo-600 font-medium">
+                        <a href="AdminLocked.php" class="menu-item flex items-center gap-3 px-6 py-3 bg-indigo-50 text-indigo-600 font-medium">
                             <i class="fa-solid fa-lock"></i> Locked Accounts
                         </a>
                     </li>
                     <li>
-                        <a href="AdminTransactions.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminTransactions.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
                             <i class="fa-solid fa-users"></i> Pending Transactions
                         </a>
                     </li>
@@ -70,38 +103,51 @@
             
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900">Locked Accounts</h1>
-                <p class="text-gray-500 mt-1">Accounts temporarily locked (1)</p>
+                <p class="text-gray-500 mt-1">Accounts temporarily or permanently locked (<?= $locked_count ?>)</p>
             </div>
 
             <div class="flex flex-col gap-4">
                 
-               <a href="AdLockedDetail.html" class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center justify-between cursor-pointer hover:shadow-md hover:border-orange-200 transition-all duration-200 group block">
-    
-    <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-xl">
-            <i class="fa-solid fa-lock"></i>
-        </div>
-        <div>
-            <h4 class="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">Phan Nguyễn Thảo Như</h4>
-            <div class="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                <span>lockeduser@gmail.com</span>
-                <span>•</span>
-                <span>0987654321</span>
-            </div>
-        </div>
-    </div>
-    
-    <div class="flex items-center gap-6">
-        <div class="text-right">
-            <div class="text-sm font-bold text-gray-400 mb-1.5 strike-through">0 VND</div>
-            <span class="inline-flex items-center gap-1 bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                <i class="fa-solid fa-lock"></i> Locked
-            </span>
-        </div>
-        <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-orange-500 transition-colors"></i>
-    </div>
-    
-</a>
+                <?php if (empty($locked_users)): ?>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center text-gray-500">
+                        <i class="fa-solid fa-user-shield text-4xl mb-3 text-gray-300"></i>
+                        <p>No locked accounts found.</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($locked_users as $user): ?>
+                        <a href="AdLockedDetail.php?id=<?= h($user['id']) ?>" class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center justify-between cursor-pointer hover:shadow-md hover:border-orange-200 transition-all duration-200 group block">
+            
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-xl shrink-0">
+                                    <i class="fa-solid fa-lock"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">
+                                        <?= h($user['full_name']) ?>
+                                    </h4>
+                                    <div class="flex items-center gap-2 text-sm text-gray-500 mt-1">
+                                        <span><?= h($user['email']) ?></span>
+                                        <span>•</span>
+                                        <span><?= h($user['phone']) ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-6">
+                                <div class="text-right">
+                                    <div class="text-sm font-bold text-gray-400 mb-1.5 line-through">
+                                        <?= h(format_money($user['balance'] ?? 0)) ?> VND
+                                    </div>
+                                    <span class="inline-flex items-center gap-1 bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                        <i class="fa-solid fa-lock"></i> Locked
+                                    </span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-orange-500 transition-colors"></i>
+                            </div>
+                            
+                        </a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
             </div>
 

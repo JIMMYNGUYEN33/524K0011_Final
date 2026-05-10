@@ -3,6 +3,7 @@ require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../core/WalletDAL.php';
 require_once __DIR__ . '/../core/WalletBLL.php';
 
+
 require_verified_user();
 
 $user = current_user();

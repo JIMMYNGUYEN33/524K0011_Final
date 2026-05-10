@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../helpers/auth.php';
 
+
 require_login();
 ensure_first_password_changed();
 

@@ -1,3 +1,117 @@
+<?php
+// 1. Khởi động session sạch sẽ
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// 2. Nhúng các helper và kết nối database
+require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../helpers/ui.php';
+require_once __DIR__ . '/../config/db_config.php';
+global $pdo;
+
+// 3. Khóa trang bảo vệ quyền Admin
+require_admin();
+
+$error = '';
+$success = '';
+
+// 4. Lấy ID giao dịch từ tham số GET trên URL
+$transactionId = $_GET['id'] ?? null;
+
+if (!$transactionId) {
+    header("Location: pending_transactions.php");
+    exit();
+}
+
+// 5. Xử lý phê duyệt (Approve) hoặc từ chối (Reject) giao dịch
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    $action = $_POST['action'];
+
+    try {
+        // Bắt đầu một Transaction trong Database để đảm bảo an toàn dữ liệu
+        $pdo->beginTransaction();
+
+        // Lấy thông tin chi tiết giao dịch hiện tại để xử lý tiền tệ
+        $stmtTx = $pdo->prepare("SELECT * FROM Transactions WHERE id = ? FOR UPDATE");
+        $stmtTx->execute([$transactionId]);
+        $tx = $stmtTx->fetch();
+
+        if (!$tx) {
+            throw new Exception("Transaction not found.");
+        }
+
+        if ($tx['status'] !== 'pending') {
+            throw new Exception("This transaction has already been processed.");
+        }
+
+        if ($action === 'approve') {
+            // A. Cập nhật trạng thái giao dịch thành 'approved' (hoặc 'success' tùy DB nhóm bạn)
+            $stmtUpdateTx = $pdo->prepare("UPDATE Transactions SET status = 'success' WHERE id = ?");
+            $stmtUpdateTx->execute([$transactionId]);
+
+            // B. Nếu là giao dịch Rút tiền (withdraw), tiền đã bị trừ tạm thời lúc tạo yêu cầu.
+            // Nếu database chưa trừ tiền lúc tạo giao dịch pending, thì trừ tiền tài khoản ở đây:
+            /*
+            $total_deduct = $tx['amount'] + $tx['fee'];
+            $stmtUpdateUser = $pdo->prepare("UPDATE Users SET balance = balance - ? WHERE id = ?");
+            $stmtUpdateUser->execute([$total_deduct, $tx['user_id']]);
+            */
+
+            $success = "Transaction approved successfully!";
+        } elseif ($action === 'reject') {
+            // A. Cập nhật trạng thái giao dịch thành 'rejected' (hoặc 'failed')
+            $stmtUpdateTx = $pdo->prepare("UPDATE Transactions SET status = 'failed' WHERE id = ?");
+            $stmtUpdateTx->execute([$transactionId]);
+
+            // B. HOÀN TIỀN: Vì lúc tạo yêu cầu rút/chuyển tiền pending, tài khoản đã bị trừ tạm giữ.
+            // Khi Reject, bắt buộc phải cộng hoàn trả lại số tiền + phí cho User.
+            $total_refund = $tx['amount'] + $tx['fee'];
+            $stmtRefund = $pdo->prepare("UPDATE Users SET balance = balance + ? WHERE id = ?");
+            $stmtRefund->execute([$total_refund, $tx['user_id']]);
+
+            $success = "Transaction rejected and funds have been refunded to the user.";
+        }
+
+        // Commit (Lưu) mọi thay đổi vào Database
+        $pdo->commit();
+    } catch (Exception $e) {
+        // Hoàn tác nếu có bất kỳ lỗi nào xảy ra trong quá trình xử lý
+        $pdo->rollBack();
+        $error = "Error processing transaction: " . $e->getMessage();
+    }
+}
+
+// 6. Truy vấn lấy thông tin chi tiết giao dịch cùng thông tin người gửi & người nhận
+try {
+    $stmt = $pdo->prepare(
+        'SELECT t.*, 
+                sender.full_name AS sender_name, sender.phone AS sender_phone, sender.email AS sender_email,
+                receiver.full_name AS receiver_name, receiver.phone AS receiver_phone
+        FROM Transactions t
+        LEFT JOIN Users sender ON sender.id = t.user_id
+        LEFT JOIN Users receiver ON receiver.id = t.receiver_id
+        WHERE t.id = ? 
+        LIMIT 1'
+    );
+    $stmt->execute([$transactionId]);
+    $transaction = $stmt->fetch();
+
+    if (!$transaction) {
+        header("Location: pending_transactions.php");
+        exit();
+    }
+} catch (PDOException $e) {
+    die("Database error: " . $e->getMessage());
+}
+
+// Định cấu hình giao diện theo loại giao dịch
+$is_withdraw = ($transaction['type'] === 'withdraw');
+$type_label = $is_withdraw ? 'Withdrawal (Rút tiền)' : 'Transfer (Chuyển tiền)';
+$header_bg = $is_withdraw ? 'bg-blue-600' : 'bg-purple-600';
+$icon_class = $is_withdraw ? 'fa-building-columns' : 'fa-money-bill-transfer';
+$text_amount_color = $is_withdraw ? 'text-blue-600' : 'text-purple-600';
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -18,47 +132,49 @@
         <div class="flex items-center gap-6 text-white">
             <div class="text-right">
                 <div class="text-sm opacity-90">Administrator</div>
-                <div class="text-sm font-semibold">System Administrator</div>
+                <div class="text-sm font-semibold"><?= h($_SESSION['user_name'] ?? 'System Administrator') ?></div>
             </div>
-            <button class="btn-logout flex items-center gap-2 px-3 py-1.5 rounded">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                <span>Logout</span>
-            </button>
+            <form action="<?= base_url('/auth/logout.php') ?>" method="POST" class="m-0">
+                <button type="submit" class="btn-logout flex items-center gap-2 px-3 py-1.5 rounded bg-indigo-700 hover:bg-indigo-800 transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
         </div>
     </header>
 
     <div class="flex flex-1 overflow-hidden">
         
-        <aside class="w-64 bg-white shadow-md flex flex-col overflow-y-auto z-0">
+        <aside class="w-64 bg-white shadow-md flex flex-col overflow-y-auto z-0 shrink-0">
             <nav class="flex-1 py-4">
                 <ul class="space-y-1">
                     <li>
-                        <a href="AdminDashboard.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminDashboard.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
                             <i class="fa-solid fa-house"></i> Dashboard
                         </a>
                     </li>
                     <li>
-                        <a href="AdminPending.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminPending.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
                             <i class="fa-regular fa-clock"></i> Pending Accounts
                         </a>
                     </li>
                     <li>
-                        <a href="AdminVerified.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminVerified.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
                             <i class="fa-regular fa-user"></i> Verified Accounts
                         </a>
                     </li>
                     <li>
-                        <a href="AdminDisabled.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminDisabled.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
                             <i class="fa-solid fa-user-xmark"></i> Disabled Accounts
                         </a>
                     </li>
                     <li>
-                        <a href="AdminLocked.html" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600">
+                        <a href="AdminLocked.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
                             <i class="fa-solid fa-lock"></i> Locked Accounts
                         </a>
                     </li>
                     <li>
-                        <a href="AdminTransactions.html" class="menu-item flex items-center gap-3 px-6 py-3 bg-indigo-50 text-indigo-600 font-medium">
+                        <a href="pending_transactions.php" class="menu-item flex items-center gap-3 px-6 py-3 bg-indigo-50 text-indigo-600 font-medium">
                             <i class="fa-solid fa-users"></i> Pending Transactions
                         </a>
                     </li>
@@ -68,21 +184,32 @@
 
         <main class="flex-1 p-8 overflow-y-auto">
             
-            <div class="mb-6">
-                <a href="AdminTransactions.html" class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+            <div class="mb-6 flex items-center justify-between">
+                <a href="pending_transactions.php" class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
                     <i class="fa-solid fa-arrow-left"></i> Back
                 </a>
+
+                <?php if ($success): ?>
+                    <span class="bg-emerald-100 text-emerald-800 text-sm font-semibold px-4 py-2 rounded-xl flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check"></i> <?= $success ?>
+                    </span>
+                <?php endif; ?>
+                <?php if ($error): ?>
+                    <span class="bg-rose-100 text-rose-800 text-sm font-semibold px-4 py-2 rounded-xl flex items-center gap-2">
+                        <i class="fa-solid fa-circle-exclamation"></i> <?= $error ?>
+                    </span>
+                <?php endif; ?>
             </div>
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
                 
-                <div class="bg-purple-600 p-8 flex items-center gap-6 text-white">
-                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center text-3xl">
-                        <i class="fa-solid fa-arrow-trend-up"></i>
+                <div class="<?= $header_bg ?> p-8 flex items-center gap-6 text-white">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center text-3xl shrink-0">
+                        <i class="fa-solid <?= $icon_class ?>"></i>
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold">Transaction Request</h2>
-                        <p class="text-purple-200 text-sm mt-1">ID: tx-99285710481</p>
+                        <p class="text-white/80 text-sm mt-1">ID: <?= h($transaction['transaction_code'] ?: $transaction['id']) ?></p>
                     </div>
                 </div>
 
@@ -92,8 +219,10 @@
                         <div class="flex items-start gap-4">
                             <i class="fa-regular fa-user text-gray-400 text-lg mt-1 w-5 text-center"></i>
                             <div>
-                                <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">User Account</p>
-                                <p class="text-gray-800 font-medium mt-0.5">Phan Nguyễn Thảo Như (user-1778257242282)</p>
+                                <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">User Account (Người gửi)</p>
+                                <p class="text-gray-800 font-medium mt-0.5">
+                                    <?= h($transaction['sender_name']) ?> (ID: <?= h($transaction['user_id']) ?>) - SĐT: <?= h($transaction['sender_phone']) ?>
+                                </p>
                             </div>
                         </div>
 
@@ -101,23 +230,31 @@
                             <i class="fa-solid fa-money-bill-transfer text-gray-400 text-lg mt-1 w-5 text-center"></i>
                             <div>
                                 <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Transaction Type</p>
-                                <p class="text-gray-800 font-medium mt-0.5">Withdrawal (Rút tiền)</p>
+                                <p class="text-gray-800 font-medium mt-0.5"><?= $type_label ?></p>
                             </div>
                         </div>
 
                         <div class="flex items-start gap-4">
                             <i class="fa-solid fa-building-columns text-gray-400 text-lg mt-1 w-5 text-center"></i>
                             <div>
-                                <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Bank Method</p>
-                                <p class="text-gray-800 font-medium mt-0.5">Vietcombank - 10123456789</p>
+                                <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">
+                                    <?= $is_withdraw ? 'Withdrawal Method (Ngân hàng nhận)' : 'Receiver (Người nhận)' ?>
+                                </p>
+                                <p class="text-gray-800 font-medium mt-0.5">
+                                    <?php if ($is_withdraw): ?>
+                                        <?= h($transaction['bank_name'] ?? 'Vietcombank') ?> - <?= h($transaction['card_number'] ?? '10123456789') ?>
+                                    <?php else: ?>
+                                        <?= h($transaction['receiver_name'] ?? '-') ?> (SĐT: <?= h($transaction['receiver_phone'] ?? '-') ?>)
+                                    <?php endif; ?>
+                                </p>
                             </div>
                         </div>
 
                         <div class="flex items-start gap-4">
                             <i class="fa-regular fa-comment-dots text-gray-400 text-lg mt-1 w-5 text-center"></i>
                             <div>
-                                <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Memo</p>
-                                <p class="text-gray-800 font-medium mt-0.5">Rut tien tu tai khoan Saigon-Ride</p>
+                                <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Memo (Nội dung)</p>
+                                <p class="text-gray-800 font-medium mt-0.5"><?= h($transaction['note'] ?: 'No memo provided') ?></p>
                             </div>
                         </div>
 
@@ -126,19 +263,25 @@
                     <div class="grid grid-cols-2 gap-y-6 gap-x-12 pt-8">
                         <div>
                             <p class="text-sm text-gray-400">Amount</p>
-                            <p class="text-purple-600 font-bold text-xl mt-1">2.000.000 VND</p>
+                            <p class="<?= $text_amount_color ?> font-bold text-2xl mt-1">
+                                <?= h(format_money($transaction['amount'])) ?> VND
+                            </p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-400">Status</p>
-                            <p class="text-yellow-600 font-bold mt-1">Pending Approval</p>
+                            <span class="inline-flex items-center gap-1 bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full mt-1">
+                                <i class="fa-regular fa-clock"></i> <?= ucfirst(h($transaction['status'])) ?>
+                            </span>
                         </div>
                         <div>
                             <p class="text-sm text-gray-400">Requested Time</p>
-                            <p class="text-gray-800 font-bold mt-1">5/8/2026 - 14:32</p>
+                            <p class="text-gray-800 font-bold mt-1">
+                                <?= !empty($transaction['created_at']) ? date('d/m/Y - H:i', strtotime($transaction['created_at'])) : '-' ?>
+                            </p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-400">Fee</p>
-                            <p class="text-gray-800 font-bold mt-1">0 VND</p>
+                            <p class="text-gray-800 font-bold mt-1"><?= h(format_money($transaction['fee'] ?? 0)) ?> VND</p>
                         </div>
                     </div>
                 </div>
@@ -147,14 +290,28 @@
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
                 <h3 class="text-lg font-bold text-gray-900 mb-6">Transaction Actions</h3>
-                <div class="flex flex-wrap gap-4">
-                    <button class="flex-1 min-w-[180px] bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
-                        <i class="fa-regular fa-circle-check"></i> Approve Transaction
-                    </button>
-                    <button class="flex-1 min-w-[180px] bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
-                        <i class="fa-regular fa-circle-xmark"></i> Reject Transaction
-                    </button>
-                </div>
+                
+                <?php if ($transaction['status'] === 'pending'): ?>
+                    <div class="flex flex-wrap gap-4">
+                        <form method="POST" action="" class="flex-1 min-w-[180px] m-0" onsubmit="return confirm('Do you want to APPROVE this transaction?');">
+                            <input type="hidden" name="action" value="approve">
+                            <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
+                                <i class="fa-regular fa-circle-check"></i> Approve Transaction
+                            </button>
+                        </form>
+                        
+                        <form method="POST" action="" class="flex-1 min-w-[180px] m-0" onsubmit="return confirm('Do you want to REJECT and refund this transaction?');">
+                            <input type="hidden" name="action" value="reject">
+                            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
+                                <i class="fa-regular fa-circle-xmark"></i> Reject Transaction
+                            </button>
+                        </form>
+                    </div>
+                <?php else: ?>
+                    <div class="bg-gray-100 text-gray-600 text-center p-4 rounded-xl font-semibold">
+                        This transaction has been processed (Status: <?= ucfirst(h($transaction['status'])) ?>)
+                    </div>
+                <?php endif; ?>
             </div>
 
         </main>
