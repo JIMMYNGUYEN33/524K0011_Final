@@ -17,7 +17,7 @@ CREATE TABLE Users (
     id_back VARCHAR(255),
 
     status ENUM('pending', 'verified', 'disabled', 'waiting_update') DEFAULT 'pending',
-    balance DECIMAL(15,2) DEFAULT 0,
+    balance DECIMAL(15,2) DEFAULT 10000000.00,
 
     is_first_login BOOLEAN DEFAULT TRUE,
 

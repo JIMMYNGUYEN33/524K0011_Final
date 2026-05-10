@@ -96,7 +96,7 @@ $pending_count = count($transactions);
                         </a>
                     </li>
                     <li>
-                        <a href="pending_transactions.php" class="menu-item flex items-center gap-3 px-6 py-3 bg-indigo-50 text-indigo-600 font-medium">
+                        <a href="AdminTransactions.php" class="menu-item flex items-center gap-3 px-6 py-3 bg-indigo-50 text-indigo-600 font-medium">
                             <i class="fa-solid fa-users"></i> Pending Transactions
                         </a>
                     </li>
@@ -128,7 +128,6 @@ $pending_count = count($transactions);
                             $bg_icon_color = $is_withdraw ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600';
                             $text_amount_color = $is_withdraw ? 'text-blue-600' : 'text-purple-600';
                             
-                            // Định nghĩa đối tượng nhận (nếu có)
                             $receiver_info = !empty($tx['receiver_name']) ? " • To: " . h($tx['receiver_name']) : "";
                         ?>
                         
@@ -165,21 +164,10 @@ $pending_count = count($transactions);
                                 </div>
                                 
                                 <div class="flex items-center gap-2">
-                                    <form method="post" action="<?= base_url('/admin/transaction_action.php') ?>" onsubmit="return confirm('Approve this transaction?');" class="m-0">
-                                        <input type="hidden" name="transaction_id" value="<?= h($tx['id']) ?>">
-                                        <input type="hidden" name="action" value="approve">
-                                        <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors">
-                                            Approve
-                                        </button>
-                                    </form>
-                                    <form method="post" action="<?= base_url('/admin/transaction_action.php') ?>" onsubmit="return confirm('Reject this transaction?');" class="m-0">
-                                        <input type="hidden" name="transaction_id" value="<?= h($tx['id']) ?>">
-                                        <input type="hidden" name="action" value="reject">
-                                        <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors">
-                                            Reject
-                                        </button>
-                                    </form>
-                                    <a href="AdTransactionsDetail.php?id=<?= h($tx['id']) ?>" class="p-2 text-gray-400 hover:text-indigo-500 transition-colors">
+                                    <a href="AdPendingTransactionsDetail.php?id=<?= h($tx['id']) ?>" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-1.5">
+                                        <i class="fa-solid fa-magnifying-glass text-xs"></i> Review & Action
+                                    </a>
+                                    <a href="AdPendingTransactionsDetail.php?id=<?= h($tx['id']) ?>" class="p-2 text-gray-400 hover:text-indigo-500 transition-colors">
                                         <i class="fa-solid fa-chevron-right text-lg"></i>
                                     </a>
                                 </div>
