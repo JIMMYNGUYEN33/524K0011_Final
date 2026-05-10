@@ -1,21 +1,20 @@
 <?php
-// 1. Khởi động session sạch sẽ
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Nhúng các helper và kết nối database
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
 
-// 3. Khóa trang bảo vệ quyền Admin
+
 require_admin();
 
-// 4. Lấy danh sách tài khoản đang chờ xác minh (Trạng thái pending và không phải admin)
+
 try {
-    // Điều chỉnh cột trạng thái ('status'), vai trò ('role') hoặc ngày tạo ('created_at') cho khớp database của nhóm bạn nhé
+    
     $stmt = $pdo->query(
         "SELECT id, full_name, email, phone, created_at, status 
          FROM Users 
@@ -28,7 +27,7 @@ try {
     die("Database error: " . $e->getMessage());
 }
 
-// Đếm số lượng tài khoản đang chờ xác minh
+
 $pending_count = count($pending_users);
 ?>
 <!DOCTYPE html>
