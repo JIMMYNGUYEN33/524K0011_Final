@@ -1,22 +1,22 @@
 <?php
-// 1. Khởi động session sạch sẽ
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Nhúng các helper và kết nối database
+
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
 
-// 3. Khóa trang bảo vệ quyền Admin
+
 require_admin();
 
 $error = '';
 $success = '';
 
-// 4. Lấy ID giao dịch từ tham số GET trên URL
+
 $transactionId = $_GET['id'] ?? null;
 
 if (!$transactionId) {
@@ -24,15 +24,15 @@ if (!$transactionId) {
     exit();
 }
 
-// 5. Xử lý phê duyệt (Approve) hoặc từ chối (Reject) giao dịch
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
     try {
-        // Bắt đầu một Transaction trong Database để đảm bảo an toàn dữ liệu
+        
         $pdo->beginTransaction();
 
-        // Lấy thông tin chi tiết giao dịch hiện tại để xử lý tiền tệ
+        
         $stmtTx = $pdo->prepare("SELECT * FROM Transactions WHERE id = ? FOR UPDATE");
         $stmtTx->execute([$transactionId]);
         $tx = $stmtTx->fetch();
@@ -46,26 +46,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
 
         if ($action === 'approve') {
-            // A. Cập nhật trạng thái giao dịch thành 'approved' (hoặc 'success' tùy DB nhóm bạn)
+            
             $stmtUpdateTx = $pdo->prepare("UPDATE Transactions SET status = 'success' WHERE id = ?");
             $stmtUpdateTx->execute([$transactionId]);
 
-            // B. Nếu là giao dịch Rút tiền (withdraw), tiền đã bị trừ tạm thời lúc tạo yêu cầu.
-            // Nếu database chưa trừ tiền lúc tạo giao dịch pending, thì trừ tiền tài khoản ở đây:
-            /*
-            $total_deduct = $tx['amount'] + $tx['fee'];
-            $stmtUpdateUser = $pdo->prepare("UPDATE Users SET balance = balance - ? WHERE id = ?");
-            $stmtUpdateUser->execute([$total_deduct, $tx['user_id']]);
-            */
 
             $success = "Transaction approved successfully!";
         } elseif ($action === 'reject') {
-            // A. Cập nhật trạng thái giao dịch thành 'rejected' (hoặc 'failed')
+            
             $stmtUpdateTx = $pdo->prepare("UPDATE Transactions SET status = 'failed' WHERE id = ?");
             $stmtUpdateTx->execute([$transactionId]);
 
-            // B. HOÀN TIỀN: Vì lúc tạo yêu cầu rút/chuyển tiền pending, tài khoản đã bị trừ tạm giữ.
-            // Khi Reject, bắt buộc phải cộng hoàn trả lại số tiền + phí cho User.
+            
             $total_refund = $tx['amount'] + $tx['fee'];
             $stmtRefund = $pdo->prepare("UPDATE Users SET balance = balance + ? WHERE id = ?");
             $stmtRefund->execute([$total_refund, $tx['user_id']]);
@@ -73,16 +65,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $success = "Transaction rejected and funds have been refunded to the user.";
         }
 
-        // Commit (Lưu) mọi thay đổi vào Database
+        
         $pdo->commit();
     } catch (Exception $e) {
-        // Hoàn tác nếu có bất kỳ lỗi nào xảy ra trong quá trình xử lý
+       
         $pdo->rollBack();
         $error = "Error processing transaction: " . $e->getMessage();
     }
 }
 
-// 6. Truy vấn lấy thông tin chi tiết giao dịch cùng thông tin người gửi & người nhận
 try {
     $stmt = $pdo->prepare(
         'SELECT t.*, 
@@ -105,7 +96,7 @@ try {
     die("Database error: " . $e->getMessage());
 }
 
-// Định cấu hình giao diện theo loại giao dịch
+
 $is_withdraw = ($transaction['type'] === 'withdraw');
 $type_label = $is_withdraw ? 'Withdrawal (Rút tiền)' : 'Transfer (Chuyển tiền)';
 $header_bg = $is_withdraw ? 'bg-blue-600' : 'bg-purple-600';

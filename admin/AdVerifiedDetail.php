@@ -1,23 +1,23 @@
 <?php
-// 1. Khởi động session sạch sẽ
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Nhúng các helper và kết nối database
+
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
 
-// 3. Khóa trang bảo vệ quyền Admin
+
 require_admin();
 
 $error = '';
 $success = '';
-$redirect_url = ''; // Biến lưu đường dẫn chuyển hướng động
+$redirect_url = ''; 
 
-// 4. Lấy ID người dùng từ tham số GET trên URL
+
 $userId = $_GET['id'] ?? null;
 
 if (!$userId) {
@@ -25,19 +25,19 @@ if (!$userId) {
     exit();
 }
 
-// 5. Xử lý các hành động quản trị khi gửi Form POST (Disable / Lock)
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
     try {
         if ($action === 'disable') {
-            // Cập nhật trạng thái thành 'disabled'
+            
             $stmt = $pdo->prepare("UPDATE Users SET status = 'disabled' WHERE id = ?");
             $stmt->execute([$userId]);
             $success = "Account has been successfully disabled! Redirecting to Disabled Accounts...";
-            $redirect_url = 'AdminDisabled.php'; // CHUYỂN HƯỚNG THẲNG QUA TRANG DISABLED ACCOUNTS
+            $redirect_url = 'AdminDisabled.php'; 
         } elseif ($action === 'lock') {
-            // Cập nhật trạng thái khóa vĩnh viễn trong database
+            
             $stmt = $pdo->prepare("
                 UPDATE Users 
                 SET is_permanently_locked = TRUE, 
@@ -53,13 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 }
 
-// 6. Truy vấn thông tin chi tiết người dùng
+
 try {
     $stmt = $pdo->prepare("SELECT * FROM Users WHERE id = ? LIMIT 1");
     $stmt->execute([$userId]);
     $user = $stmt->fetch();
 
-    // Nếu không tìm thấy user, quay ngược về trang danh sách Verified
+    
     if (!$user) {
         header("Location: AdminVerified.php");
         exit();
