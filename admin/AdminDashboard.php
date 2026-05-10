@@ -145,15 +145,15 @@ try {
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 
-                <div class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center">
-                    <div>
-                        <p class="card-label hover-blue text-sm text-gray-500 font-medium">Total Users</p>
-                        <h3 class="text-3xl font-bold text-gray-900 mt-1"><?= $total_users ?></h3>
-                    </div>
-                    <div class="card-icon w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center text-white text-xl">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                </div>
+                <a href="AdminUsers.php" class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block hover:border-blue-200 transition-all">
+            <div>
+        <p class="card-label hover-blue text-sm text-gray-500 font-medium">Total Users</p>
+        <h3 class="text-3xl font-bold text-gray-900 mt-1"><?= $total_users ?></h3>
+    </div>
+    <div class="card-icon w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center text-white text-xl">
+        <i class="fa-solid fa-users"></i>
+    </div>
+</a>
 
                 <a href="AdminPending.php"
                     class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block hover:border-yellow-200 transition-all">

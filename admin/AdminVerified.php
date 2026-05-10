@@ -106,6 +106,13 @@ $verified_count = count($verified_users);
 
         <main class="flex-1 p-8 overflow-y-auto">
 
+        
+        <div class="mb-4">
+    <a href="AdminDashboard.php" class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-semibold transition-colors text-sm text-decoration-none">
+        <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900">Verified Accounts</h1>
                 <p class="text-gray-500 mt-1">Active verified accounts (<?= $verified_count ?>)</p>
