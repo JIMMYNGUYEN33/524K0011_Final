@@ -1,19 +1,19 @@
 <?php
-// 1. Khởi động session sạch sẽ
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Nhúng các helper và kết nối database
+
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
 
-// 3. Khóa trang bảo vệ quyền Admin
+
 require_admin();
 
-// 4. Lấy danh sách giao dịch đang chờ duyệt (Rút tiền hoặc Chuyển khoản trên 5 triệu)
+
 try {
     $stmt = $pdo->query(
         'SELECT t.*, sender.full_name AS sender_name, sender.phone AS sender_phone,
@@ -31,7 +31,7 @@ try {
     die("Database error: " . $e->getMessage());
 }
 
-// Đếm số lượng giao dịch đang chờ duyệt
+
 $pending_count = count($transactions);
 ?>
 <!DOCTYPE html>
