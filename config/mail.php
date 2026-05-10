@@ -3,9 +3,9 @@
 
 return [
     'host'       => 'smtp.gmail.com',
-    'username'   => 'email_cua_nhom_ba@gmail.com', // 1. Điền chính xác Gmail dùng để gửi
-    'password'   => 'abcd efgh ijkl mnop',        // 2. BẮT BUỘC dùng "Mật khẩu ứng dụng" (16 ký tự viết liền)
+    'username'   => 'giaphucnguyen36573@gmail.com', // Điền đúng Gmail gửi mail của nhóm
+    'password'   => 'xxxx xxxx xxxx xxxx',          // BẮT BUỘC ĐIỀN 16 KÝ TỰ MẬT KHẨU ỨNG DỤNG TẠO TỪ GMAIL TRÊN
     'port'       => 587,
-    'from_email' => 'email_cua_nhom_ba@gmail.com', // 3. Nên để trùng với username để tránh bị Gmail chặn
+    'from_email' => 'giaphucnguyen36573@gmail.com', // Trùng với email username gửi
     'from_name'  => 'BeePay Wallet'
 ];

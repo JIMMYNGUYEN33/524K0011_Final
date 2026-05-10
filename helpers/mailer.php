@@ -20,6 +20,15 @@ function send_mail($toEmail, $toName, $subject, $htmlBody)
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = $config['port'];
 
+        // SỬA/THÊM: Cấu hình bỏ qua xác thực SSL khi chạy trên môi trường Localhost (XAMPP)
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+
         $mail->CharSet = 'UTF-8';
         $mail->setFrom($config['from_email'], $config['from_name']);
         $mail->addAddress($toEmail, $toName ?: $toEmail);
@@ -30,6 +39,8 @@ function send_mail($toEmail, $toName, $subject, $htmlBody)
 
         return $mail->send();
     } catch (Exception $e) {
+        // Ghi log lỗi ra hệ thống để dễ debug nếu có sự cố
+        error_log("PHPMailer Error: " . $e->getMessage());
         return false;
     }
 }
