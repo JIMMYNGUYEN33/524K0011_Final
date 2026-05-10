@@ -13,11 +13,10 @@ body {
     min-height: 100vh;
 }
 
-/* Khung giả lập di động chuẩn khớp với hệ thống */
 .app-container {
     width: 100%;
     max-width: 414px;
-    height: 820px; /* Chiều cao cố định lọt màn hình */
+    height: 820px; 
     background-color: #fffef5;
     position: relative;
     border-radius: 24px; 
@@ -27,7 +26,6 @@ body {
     display: flex;
     flex-direction: column;
 }
-
 
 .app-header {
     background: linear-gradient(120deg, #ffea00 0%, #302107 100%);
@@ -44,7 +42,7 @@ body {
     margin-bottom: 4px;
 }
 
-.user-info h1 {
+.user-info h2 {
     font-size: 22px; 
     font-weight: 700;
     margin-bottom: 8px;
@@ -69,7 +67,6 @@ body {
     background: rgba(255,255,255,0.3);
 }
 
-/* --- CARD SỐ DƯ (BALANCE CARD) --- */
 .balance-card {
     background: linear-gradient(135deg, #ffea00 0%, #252603 100%);
     margin: 20px; 
@@ -120,7 +117,49 @@ body {
     padding-bottom: 15px; 
 }
 
-/* --- SERVICES SECTION --- */
+.verification-alert {
+    background-color: #fffdf0; 
+    border: 1px solid #ffe57f; 
+    border-radius: 16px;      
+    padding: 12px 16px;
+    margin: 0 20px 24px 20px;  
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(255, 235, 59, 0.05); 
+}
+
+.verification-alert .alert-icon {
+    font-size: 16px;
+    color: #e65100; 
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+}
+
+.verification-alert .alert-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.verification-alert .alert-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #5d4037; 
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+.verification-alert .alert-desc {
+    font-size: 11px;
+    color: #795548; 
+    line-height: 1.4;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
 .services-section {
     padding: 0 20px;
 }
@@ -128,15 +167,48 @@ body {
 .section-title {
     font-size: 15px; 
     color: #333; 
-    margin: 10px 0 15px; 
+    margin: 10px 0 20px; 
     font-weight: 700; 
 }
 
 .services-grid { 
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Tối ưu 4 cột trên di động cho cân đối */
-    gap: 15px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    gap: 32px;
+    padding: 5px 20px 12px;
+    margin: 0 -20px 12px;
     text-align: center; 
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.services-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.services-scrollbar {
+    width: 92px;
+    height: 4px;
+    background: #e7eda9;
+    border-radius: 999px;
+    margin: -4px auto 18px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.services-scrollbar-thumb {
+    width: 38px;
+    height: 100%;
+    background: #eddb84;
+    border-radius: inherit;
+    transform: translateX(0);
+    transition: transform 0.12s ease-out;
+    pointer-events: none;
 }
 
 .service-item {
@@ -146,6 +218,9 @@ body {
     flex-direction: column;
     align-items: center;
     cursor: pointer;
+    flex: 0 0 70px;
+    min-width: 70px;
+    scroll-snap-align: start;
 }
 
 .icon-box { 
@@ -161,10 +236,9 @@ body {
 }
 
 .service-item:hover .icon-box {
-    transform: translateY(-3px); /* Hiệu ứng nhích nhẹ khi hover */
+    transform: translateY(-3px); 
 }
 
-/* Service Colors */
 .icon-box.green { background: #e8f5e9; color: #2e7d32; }
 .icon-box.blue { background: #e3f2fd; color: #1565c0; }
 .icon-box.purple { background: #f3e5f5; color: #7b1fa2; }
@@ -178,7 +252,6 @@ body {
     font-weight: 600;
 }
 
-/* --- EMPTY STATE / TRANSACTION HISTORY --- */
 .empty-state { 
     background: white; 
     padding: 30px 20px; 
@@ -186,7 +259,7 @@ body {
     text-align: center; 
     color: #999; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.02); 
-    margin: 20px;
+    margin: 20px 0;
 }
 
 .empty-state i { 
@@ -199,7 +272,6 @@ body {
     font-size: 13px;
 }
 
-/* --- BOTTOM NAVIGATION BAR --- */
 .bottom-nav { 
     position: absolute; 
     bottom: 0; 
@@ -232,7 +304,6 @@ body {
     margin-bottom: 4px; 
 }
 
-/* Center Scanning Action Button */
 .scan-btn { 
     position: relative;
     top: -15px; 
@@ -257,7 +328,6 @@ body {
     margin: 0; 
 }
 
-/* --- STYLE CHO LIST GIAO DỊCH THẬT Ở TRANG CHỦ --- */
 .transactions-list-box {
     background: #ffffff;
     border-radius: 16px;
@@ -287,7 +357,6 @@ body {
     font-size: 14px;
 }
 
-/* Các màu sắc của icon */
 .tx-icon-circle.orange { background-color: #fff3e0; color: #e65100; }
 .tx-icon-circle.green { background-color: #e8f5e9; color: #2e7d32; }
 .tx-icon-circle.blue { background-color: #e3f2fd; color: #1565c0; }
@@ -317,4 +386,4 @@ body {
 }
 
 .pos-amount { color: #10b981; } 
-.neg-amount { color: #ef4444; } 
+.neg-amount { color: #ef4444; }

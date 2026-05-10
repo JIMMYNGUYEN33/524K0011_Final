@@ -65,21 +65,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         <div class="carrier-item active" data-carrier="viettel">
                             <div class="carrier-icon" style="background: #fff; border: 1px solid #f3f4f6; padding: 4px; display: flex; align-items: center; justify-content: center;">
-                                <img src="../assets/upload_images/viettel.png" alt="Viettel" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                <img src="../assets/viettel.png" alt="Viettel" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                             </div>
                             <span>Viettel</span>
                         </div>
 
                         <div class="carrier-item" data-carrier="mobifone">
                             <div class="carrier-icon" style="background: #fff; border: 1px solid #f3f4f6; padding: 4px; display: flex; align-items: center; justify-content: center;">
-                                <img src="../assets/upload_images/mobifone.png" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                <img src="../assets/mobifone.png" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                             </div>
                             <span>Mobifone</span>
                         </div>
 
                         <div class="carrier-item" data-carrier="vinaphone">
                             <div class="carrier-icon" style="background: #fff; border: 1px solid #f3f4f6; padding: 4px; display: flex; align-items: center; justify-content: center;">
-                                <img src="../assets/upload_images/vinaphone.png" alt="Vinaphone" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                <img src="../assets/vinaphone.png" alt="Vinaphone" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                             </div>
                             <span>Vinaphone</span>
                         </div>
