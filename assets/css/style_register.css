@@ -17,7 +17,7 @@ body {
 .app-container {
     width: 100%;
     max-width: 414px;
-    height: 820px; /* Chiều cao cố định lọt màn hình */
+    height: 820px;
     background-color: #392802;
     position: relative;
     border-radius: 24px; 
@@ -76,7 +76,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* --- CARD ĐĂNG KÝ (Co giãn chống tràn tuyệt đối) --- */
 .Register-card {
     background: #fffffff3;
     width: calc(100% - 40px);
@@ -110,6 +109,7 @@ body {
 
 .in_wrapper {
     position: relative;
+    overflow: hidden; /* fix tràn */
 }
 
 .in_wrapper i {
@@ -118,6 +118,8 @@ body {
     left: 15px;
     transform: translateY(-50%);
     color: #999;
+    z-index: 1;
+    pointer-events: none;
 }
 
 .in_wrapper input {
@@ -128,6 +130,18 @@ body {
     outline: none;
     transition: 0.3s;
     font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* Fix riêng cho date input khỏi bị tràn */
+.in_wrapper input[type="date"] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 10px;
 }
 
 .in_wrapper input:focus {
@@ -152,7 +166,7 @@ body {
 
 .btn-register:hover {
     background: #ffea00;
-    color: #252603;
+color: #252603;
 }
 
 
@@ -231,4 +245,40 @@ body {
 .upload-hint {
     font-size: 11px;
     color: #888;
+}
+
+/* --- Birthday dropdowns --- */
+.birthday-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.birthday-icon {
+    color: #999;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.birthday-select {
+    flex: 1;
+    padding: 12px 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    outline: none;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    background-color: #fff;
+    -webkit-appearance: none;
+    appearance: none;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.birthday-select:focus {
+    border-color: #ffea00;
+    box-shadow: 0 0 5px rgba(255, 234, 0, 0.3);
 }

@@ -219,7 +219,7 @@ try {
                     <div class="grid grid-cols-2 gap-y-6 gap-x-12 pt-8">
                         <div>
                             <p class="text-sm text-gray-400">Balance</p>
-                            <p class="text-gray-800 font-bold mt-1"><?= h(format_money($user['balance'] ?? 0)) ?> VND</p>
+                            <p class="text-gray-800 font-bold mt-1"><?= h(format_money($user['balance'] ?? 0)) ?></p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-400">Status</p>
@@ -257,7 +257,7 @@ try {
                     <form method="POST" action="" class="flex-1 min-w-[180px] m-0" onsubmit="return confirm('Are you sure you want to lock this verified account?');">
                         <input type="hidden" name="action" value="lock">
                         <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
-                            <i class="fa-solid fa-lock"></i> Lock Account
+                            <i class="fa-solid fa-lock"></i> Permanently Lock Account
                         </button>
                     </form>
 

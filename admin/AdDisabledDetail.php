@@ -228,7 +228,7 @@ try {
                     <div class="grid grid-cols-2 gap-y-6 gap-x-12 pt-8">
                         <div>
                             <p class="text-sm text-gray-400">Balance</p>
-                            <p class="text-gray-800 font-bold mt-1"><?= h(format_money($user['balance'] ?? 0)) ?> VND</p>
+                            <p class="text-gray-800 font-bold mt-1"><?= h(format_money($user['balance'] ?? 0)) ?></p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-400">Status</p>

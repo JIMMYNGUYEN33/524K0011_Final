@@ -1,23 +1,23 @@
 <?php
-// 1. Nhúng các file bổ trợ cấu hình và xác thực
+
 require_once __DIR__ . '/../helpers/auth.php';
-require_once __DIR__ . '/../config/db_config.php'; // Nhúng database để gọi biến $pdo kết nối dữ liệu
+require_once __DIR__ . '/../config/db_config.php'; 
 global $pdo;
 
-// 2. Kiểm tra đăng nhập và đổi mật khẩu lần đầu
+
 require_login();
 ensure_first_password_changed();
 
 $user = current_user();
 $flash = get_flash();
 
-// 3. --- LẤY DỮ LIỆU GIAO DỊCH GẦN NHẤT (LIMIT 2) ---
+
 $userId = $user['id'] ?? null;
 $recent_transactions = [];
 
 if ($userId) {
     try {
-        // Truy vấn lấy tối đa 2 giao dịch gần nhất (nạp tiền, rút tiền, gửi và nhận chuyển khoản)
+        
         $stmt_tx = $pdo->prepare("
             SELECT t.*, 
                    sender.full_name AS sender_name,
@@ -32,7 +32,7 @@ if ($userId) {
         $stmt_tx->execute([$userId, $userId]);
         $recent_transactions = $stmt_tx->fetchAll();
     } catch (PDOException $e) {
-        // Ghi lại lỗi hệ thống nếu gặp trục trặc cơ sở dữ liệu
+        
         error_log("Error fetching recent transactions: " . $e->getMessage());
     }
 }

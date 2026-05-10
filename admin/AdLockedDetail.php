@@ -146,7 +146,7 @@ try {
                         </a>
                     </li>
                     <li>
-                        <a href="pending_transactions.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
+                        <a href="AdminTransactions.php" class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
                             <i class="fa-solid fa-users"></i> Pending Transactions
                         </a>
                     </li>
@@ -227,7 +227,7 @@ try {
                     <div class="grid grid-cols-2 gap-y-6 gap-x-12 pt-8">
                         <div>
                             <p class="text-sm text-gray-400">Balance</p>
-                            <p class="text-gray-800 font-bold mt-1"><?= h(format_money($user['balance'] ?? 0)) ?> VND</p>
+                            <p class="text-gray-800 font-bold mt-1"><?= h(format_money($user['balance'] ?? 0)) ?></p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-400">Status</p>

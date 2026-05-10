@@ -69,8 +69,7 @@ try {
 </head>
 
 <body class="bg-gray-50 text-gray-800 font-sans h-screen flex flex-col overflow-hidden">
-
-    <header class="h-16 bg-indigo-600 flex items-center justify-between px-6 shadow-sm z-10 shrink-0">
+<header class="h-16 bg-indigo-600 flex items-center justify-between px-6 shadow-sm z-10 shrink-0">
         <div class="flex items-center gap-2 text-white">
             <i class="fa-solid fa-shield-halved text-xl"></i>
             <span class="text-xl font-bold">BeePay</span>
@@ -125,7 +124,7 @@ try {
                             Locked Accounts
                         </a>
                     </li>
-                    <li>
+<li>
                         <a href="AdminTransactions.php"
                             class="menu-item flex items-center gap-3 px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">
                             <i class="fa-solid fa-users"></i>
@@ -178,7 +177,7 @@ try {
                 </a>
 
                 <a href="AdminDisabled.php"
-                    class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block hover:border-red-200 transition-all">
+class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block hover:border-red-200 transition-all">
                     <div>
                         <p class="card-label hover-red text-sm text-gray-500 font-medium">Disabled Accounts</p>
                         <h3 class="text-3xl font-bold text-gray-900 mt-1"><?= $disabled_users ?></h3>
@@ -224,7 +223,7 @@ try {
                     </div>
                     <div class="mt-6">
                         <h2 class="text-4xl font-bold"><?= h(format_money($total_deposit)) ?></h2>
-                    </div>
+</div>
                 </div>
 
                 <div class="finance-card withdrawals bg-blue-500 rounded-xl shadow-sm p-6 text-white flex flex-col justify-between">

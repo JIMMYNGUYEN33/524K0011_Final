@@ -142,7 +142,7 @@ $locked_count = count($locked_users);
                             <div class="flex items-center gap-6">
                                 <div class="text-right">
                                     <div class="text-sm font-bold text-gray-400 mb-1.5 line-through">
-                                        <?= h(format_money($user['balance'] ?? 0)) ?> VND
+                                        <?= h(format_money($user['balance'] ?? 0)) ?> 
                                     </div>
                                     <span class="inline-flex items-center gap-1 bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-1 rounded-full">
                                         <i class="fa-solid fa-lock"></i> Locked

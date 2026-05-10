@@ -163,7 +163,7 @@ $pending_count = count($transactions);
                             <div class="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 pt-3 md:pt-0">
                                 <div class="text-left md:text-right">
                                     <div class="text-lg font-bold <?= $text_amount_color ?> mb-1">
-                                        - <?= h(format_money($tx['amount'])) ?> VND
+                                        - <?= h(format_money($tx['amount'])) ?>
                                     </div>
                                     <span class="inline-flex items-center gap-1 bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full">
                                         <i class="fa-regular fa-clock"></i> Pending

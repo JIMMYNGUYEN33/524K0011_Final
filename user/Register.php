@@ -53,7 +53,7 @@
                     <label>Birthday</label>
                     <div class="in_wrapper">
                         <i class="fa-regular fa-calendar"></i>
-                        <input required type="date" name="birthday" placeholder="Select your birthdate" value="<?= htmlspecialchars($_POST['birthday'] ?? '') ?>">
+                        <input required type="date" name="birthday" value="<?= htmlspecialchars($_POST['birthday'] ?? '') ?>">
                     </div>
                 </div>
 
@@ -70,6 +70,14 @@
                     <div class="in_wrapper">
                         <i class="fa-solid fa-phone"></i>
                         <input required type="tel" name="phone" placeholder="Enter your phone number" value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>">
+                    </div>
+                </div>
+
+                <div class="in_gr">
+                    <label>Address</label>
+                    <div class="in_wrapper">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <input required type="text" name="address" placeholder="Enter your address" value="<?= htmlspecialchars($_POST['address'] ?? '') ?>">
                     </div>
                 </div>
 
@@ -108,7 +116,7 @@
         function displayFileName(input, targetId) {
             const fileName = input.files[0] ? input.files[0].name : "Upload ID Card";
             document.getElementById(targetId).innerHTML = `<strong>Selected:</strong> ${fileName}`;
-            document.getElementById(targetId).style.color = "#FFC800"; // Đổi màu chữ highlight
+            document.getElementById(targetId).style.color = "#FFC800";
         }
     </script>
 </body>

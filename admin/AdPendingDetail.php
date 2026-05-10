@@ -25,25 +25,32 @@ if (!$userId) {
 }
 
 
+// --- CHỈ COPY LOGIC XỬ LÝ & CHUYỂN HƯỚNG ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
     try {
         if ($action === 'verify') {
-            
             $stmt = $pdo->prepare("UPDATE Users SET status = 'verified' WHERE id = ?");
             $stmt->execute([$userId]);
-            $success = "Account has been successfully verified!";
-        } elseif ($action === 'disable') {
             
+            // Tự động nhảy về trang danh sách chờ duyệt sau khi Verify thành công
+            header("Location: AdminPending.php");
+            exit();
+        } elseif ($action === 'disable') {
             $stmt = $pdo->prepare("UPDATE Users SET status = 'disabled' WHERE id = ?");
             $stmt->execute([$userId]);
-            $success = "Account has been disabled.";
+            
+            // Tự động nhảy về trang danh sách sau khi Disable thành công
+            header("Location: AdminPending.php");
+            exit();
         } elseif ($action === 'request_update') {
-            // Cập nhật yêu cầu người dùng cập nhật lại chứng minh thư/thông tin
             $stmt = $pdo->prepare("UPDATE Users SET status = 'update_requested' WHERE id = ?");
             $stmt->execute([$userId]);
-            $success = "Verification update request sent to the user.";
+            
+            // Tự động nhảy về trang danh sách sau khi yêu cầu cập nhật thành công
+            header("Location: AdminPending.php");
+            exit();
         }
     } catch (PDOException $e) {
         $error = "Database error: " . $e->getMessage();
@@ -144,12 +151,12 @@ try {
                 
                 <?php if ($success): ?>
                     <span class="bg-emerald-100 text-emerald-800 text-sm font-semibold px-4 py-2 rounded-xl flex items-center gap-2">
-                        <i class="fa-solid fa-circle-check"></i> <?= $success ?>
+                        <i class="fa-solid fa-circle-check"></i> <?= h($success) ?>
                     </span>
                 <?php endif; ?>
                 <?php if ($error): ?>
                     <span class="bg-rose-100 text-rose-800 text-sm font-semibold px-4 py-2 rounded-xl flex items-center gap-2">
-                        <i class="fa-solid fa-circle-exclamation"></i> <?= $error ?>
+                        <i class="fa-solid fa-circle-exclamation"></i> <?= h($error) ?>
                     </span>
                 <?php endif; ?>
             </div>
@@ -190,7 +197,7 @@ try {
                             <div>
                                 <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Date of Birth</p>
                                 <p class="text-gray-800 font-medium mt-0.5">
-                                    <?= !empty($user['birth_date']) ? date('Y-m-d', strtotime($user['birth_date'])) : '-' ?>
+                                    <?= !empty($user['birth_date']) ? date('d/m/Y', strtotime($user['birth_date'])) : '-' ?>
                                 </p>
                             </div>
                         </div>
@@ -237,21 +244,21 @@ try {
                 <div class="flex flex-wrap gap-4">
                     <form method="POST" action="" class="flex-1 min-w-[180px] m-0" onsubmit="return confirm('Do you want to verify this account?');">
                         <input type="hidden" name="action" value="verify">
-                        <button type="submit" class="w-100 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
+                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
                             <i class="fa-regular fa-circle-check"></i> Verify Account
                         </button>
                     </form>
                     
                     <form method="POST" action="" class="flex-1 min-w-[180px] m-0" onsubmit="return confirm('Do you want to disable this account?');">
                         <input type="hidden" name="action" value="disable">
-                        <button type="submit" class="w-100 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
+                        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
                             <i class="fa-regular fa-circle-xmark"></i> Disable Account
                         </button>
                     </form>
                     
                     <form method="POST" action="" class="flex-1 min-w-[180px] m-0" onsubmit="return confirm('Do you want to request ID update from this user?');">
                         <input type="hidden" name="action" value="request_update">
-                        <button type="submit" class="w-100 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
+                        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200">
                             <i class="fa-regular fa-circle-question"></i> Request ID Update
                         </button>
                     </form>

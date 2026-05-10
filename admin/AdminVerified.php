@@ -149,7 +149,7 @@ $verified_count = count($verified_users);
                             <div class="flex items-center gap-6">
                                 <div class="text-right">
                                     <div class="text-sm font-bold text-gray-900 mb-1.5">
-                                        <?= h(format_money($user['balance'] ?? 0)) ?> VND
+                                        <?= h(format_money($user['balance'] ?? 0)) ?>
                                     </div>
                                     <span class="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
                                         <i class="fa-solid fa-user-check"></i> Verified
