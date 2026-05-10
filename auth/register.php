@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         // Thực hiện INSERT tài khoản mới vào database
                         $stmt = $pdo->prepare(
                             'INSERT INTO Users (full_name, dob, email, phone, password, role, is_first_login, id_front, id_back, status, created_at) 
-                             VALUES (?, ?, ?, ?, ?, "user", TRUE, ?, ?, "active", NOW())'
+                             VALUES (?, ?, ?, ?, ?, "user", TRUE, ?, ?, "pending", NOW())'
                         );
                         $stmt->execute([
                             $fullName,

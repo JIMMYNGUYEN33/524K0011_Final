@@ -76,6 +76,23 @@ function require_admin()
     }
 }
 
+function require_verified_user()
+{
+    require_login();
+    ensure_first_password_changed();
+
+    $user = current_user();
+
+    if (!$user || $user['role'] !== 'user') {
+        redirect_to('/auth/login.php');
+    }
+
+    if ($user['status'] !== 'verified') {
+        set_flash('error', 'This feature is only available for verified accounts.');
+        redirect_to('/user/Home.php');
+    }
+}
+
 function redirect_after_login($user)
 {
     if ($user['role'] === 'admin') {

@@ -56,5 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Nạp file giao diện hiển thị đổi mật khẩu
+$isFirstPasswordChange = true;
 require_once __DIR__ . '/../user/ChangePassword.php';
 ?>

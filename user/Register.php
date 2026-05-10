@@ -12,7 +12,7 @@
 <body>
     <div class="app-container">
         <div class="back-navigation">
-            <a href="login.php" class="btn-back">
+            <a href="../auth/login.php" class="btn-back">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </div>
@@ -99,7 +99,7 @@
             </form>
 
             <p class="signin-text">
-                Already have an account? <a href="login.php">Sign In</a>
+                Already have an account? <a href="../auth/login.php">Sign In</a>
             </p>
         </div>
     </div>

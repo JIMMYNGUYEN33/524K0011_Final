@@ -18,12 +18,14 @@
         </div>
 
         <h1 class="page-title">Change Password</h1>
-        <p class="page-subtitle">You must change your password to continue</p>
+        <p class="page-subtitle"><?= !empty($isFirstPasswordChange) ? 'You must change your password to continue' : 'Update your BeePay password' ?></p>
 
         <div class="password-card">
-            <div class="warning-alert-box">
-                <strong>First Time Login:</strong> For security reasons, you must change your password before accessing the system. If you don't want to change it now, you can logout.
-            </div>
+            <?php if (!empty($isFirstPasswordChange)): ?>
+                <div class="warning-alert-box">
+                    <strong>First Time Login:</strong> For security reasons, you must change your password before accessing the system. If you don't want to change it now, you can logout.
+                </div>
+            <?php endif; ?>
 
             <form action="" method="POST">
                 
@@ -33,7 +35,17 @@
                     </div>
                 <?php endif; ?>
 
-                <div class="in_gr">
+                <?php if (empty($isFirstPasswordChange)): ?>
+                    <div class="in_gr">
+                        <label>Old Password</label>
+                        <div class="in_wrapper">
+                            <i class="fa-solid fa-lock"></i>
+                            <input required type="password" name="old_password" placeholder="Enter old password">
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <div class="in_gr <?= empty($isFirstPasswordChange) ? 'mt-3' : '' ?>">
                     <label>New Password</label>
                     <div class="in_wrapper">
                         <i class="fa-solid fa-lock"></i>
@@ -50,11 +62,11 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-change-pw mt-4">Change Password & Continue</button>
+                <button type="submit" class="btn-change-pw mt-4"><?= !empty($isFirstPasswordChange) ? 'Change Password & Continue' : 'Change Password' ?></button>
             </form>
 
             <div class="logout-action-wrapper mt-3">
-                <a href="logout.php" class="btn-logout-link">
+                <a href="../auth/logout.php" class="btn-logout-link">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
                 </a>
             </div>

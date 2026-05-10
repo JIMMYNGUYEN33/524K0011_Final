@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([password_hash($newPassword, PASSWORD_DEFAULT), $user['id']]);
 
         set_flash('success', 'Password changed successfully.');
-        redirect_to('/index.php');
+        redirect_to('/user/Profile.php');
         exit();
     }
 }
@@ -42,5 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // NHÚNG GIAO DIỆN TỪ THƯ MỤC NGOÀI (BỎ GIAO DIỆN CŨ TRONG AUTH)
 // =========================================================================
 // Nhúng file giao diện ChangePassword.php nằm ở thư mục "user"
+$isFirstPasswordChange = false;
 require_once __DIR__ . '/../user/ChangePassword.php';
 ?>

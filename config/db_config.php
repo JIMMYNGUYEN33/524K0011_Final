@@ -1,8 +1,8 @@
 <?php
-$host = 'localhost';
-$dbname = 'e_wallet';
-$username = 'root';
-$password = '';
+$host = 'sql102.infinityfree.com';
+$dbname = 'if0_41871398_e_wallet';
+$username = 'if0_41871398';
+$password = 'BeePay2026';
 
 try {
     $pdo = new PDO(

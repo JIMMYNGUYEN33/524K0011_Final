@@ -12,7 +12,7 @@
 <body>
     <div class="app-container">
         <div class="back-navigation">
-            <a href="Login.php" class="btn-back">
+            <a href="../auth/login.php" class="btn-back">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </div>
@@ -21,23 +21,54 @@
         <p class="brand-subtitle">Secure digital payment solution</p>
 
         <div class="Forgot-card">
-            <form action="#" method="POST">
+            <form action="" method="POST">
                 <h2>Forgot Password</h2>
-                <p class="forgot-desc">Enter your email or phone number below. We will send you instructions to reset your password.</p>
-                
+                <p class="forgot-desc">Enter your email and phone number. We will send a one-time password to your email.</p>
+
+                <?php if (!empty($error)): ?>
+                    <div class="alert alert-danger text-center" style="font-size: 14px; padding: 10px; margin-bottom: 15px;">
+                        <?= h($error) ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($otpForTesting)): ?>
+                    <?php if (!empty($mailSent)): ?>
+                        <div class="alert alert-success text-center" style="font-size: 14px; padding: 10px; margin-bottom: 15px;">
+                            OTP has been sent to your email. This code expires in 1 minute.
+                        </div>
+                    <?php else: ?>
+                        <div class="alert alert-danger text-center" style="font-size: 14px; padding: 10px; margin-bottom: 15px;">
+                            Cannot send OTP email. OTP for testing:
+                            <strong><?= h($otpForTesting) ?></strong>
+                        </div>
+                    <?php endif; ?>
+
+                    <p class="back-to-login">
+                        <a href="../auth/reset_password.php">Continue to reset password</a>
+                    </p>
+                <?php endif; ?>
+
                 <div class="in_gr">
-                    <label>Email or Phone Number</label>
+                    <label>Email</label>
                     <div class="in_wrapper">
                         <i class="fa-regular fa-envelope"></i>
-                        <input required type="text" placeholder="Enter registered email or phone">
+                        <input required type="email" name="email" placeholder="Enter registered email" value="<?= h($_POST['email'] ?? '') ?>">
                     </div>
                 </div>
 
-                <button type="submit" class="btn-submit">Send Reset Link</button>
+                <div class="in_gr">
+                    <label>Phone Number</label>
+                    <div class="in_wrapper">
+                        <i class="fa-solid fa-phone"></i>
+                        <input required type="text" name="phone" placeholder="Enter registered phone" value="<?= h($_POST['phone'] ?? '') ?>">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Send OTP</button>
             </form>
 
             <p class="back-to-login">
-                Remember your password? <a href="Login.php">Sign In</a>
+                Remember your password? <a href="../auth/login.php">Sign In</a>
             </p>
         </div>
     </div>
