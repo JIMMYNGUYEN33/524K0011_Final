@@ -63,7 +63,7 @@ $pending_count = count($pending_users);
 
     <div class="flex flex-1 overflow-hidden">
         
-        <aside class="w-64 bg-white shadow-md flex flex-col overflow-y-auto z-0 shrink-0">
+        <aside class="hidden md:flex w-64 bg-white shadow-md flex-col overflow-y-auto z-0 shrink-0">
             <nav class="flex-1 py-4">
                 <ul class="space-y-1">
                     <li>
@@ -100,7 +100,7 @@ $pending_count = count($pending_users);
             </nav>
         </aside>
 
-        <main class="flex-1 p-8 overflow-y-auto">
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto">
 
         <div class="mb-4">
     <a href="AdminDashboard.php" class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-semibold transition-colors text-sm text-decoration-none">

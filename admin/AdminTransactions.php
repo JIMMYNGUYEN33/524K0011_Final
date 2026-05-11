@@ -67,7 +67,7 @@ $pending_count = count($transactions);
 
     <div class="flex flex-1 overflow-hidden">
         
-        <aside class="w-64 bg-white shadow-md flex flex-col overflow-y-auto z-0 shrink-0">
+        <aside class="hidden md:flex w-64 bg-white shadow-md flex-col overflow-y-auto z-0 shrink-0">
             <nav class="flex-1 py-4">
                 <ul class="space-y-1">
                     <li>
@@ -104,7 +104,7 @@ $pending_count = count($transactions);
             </nav>
         </aside>
 
-        <main class="flex-1 p-8 overflow-y-auto">
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto">
 
         
         <div class="mb-4">

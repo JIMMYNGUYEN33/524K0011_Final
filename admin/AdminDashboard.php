@@ -2,31 +2,31 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
+ 
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/ui.php';
 require_once __DIR__ . '/../config/db_config.php';
 global $pdo;
-
+ 
 require_admin();
-
+ 
 try {
     
     $stmtUsers = $pdo->query("SELECT COUNT(*) FROM Users WHERE role = 'user'");
     $total_users = $stmtUsers->fetchColumn();
-
+ 
     $stmtPending = $pdo->query("SELECT COUNT(*) FROM Users WHERE role = 'user' AND status = 'pending'");
     $pending_users = $stmtPending->fetchColumn();
-
+ 
     $stmtVerified = $pdo->query("SELECT COUNT(*) FROM Users WHERE role = 'user' AND status = 'verified'");
     $verified_users = $stmtVerified->fetchColumn();
-
+ 
     $stmtDisabled = $pdo->query("SELECT COUNT(*) FROM Users WHERE role = 'user' AND status = 'disabled'");
     $disabled_users = $stmtDisabled->fetchColumn();
-
+ 
     $stmtLocked = $pdo->query("SELECT COUNT(*) FROM Users WHERE role = 'user' AND is_permanently_locked = TRUE");
     $locked_users = $stmtLocked->fetchColumn();
-
+ 
     $stmtPendingTx = $pdo->query("
         SELECT COUNT(*) FROM Transactions 
         WHERE status = 'pending' 
@@ -34,30 +34,29 @@ try {
           AND amount > 5000000
     ");
     $pending_tx_count = $stmtPendingTx->fetchColumn();
-
+ 
     $stmtTotalDeposit = $pdo->query("SELECT SUM(amount) FROM Transactions WHERE type = 'deposit' AND status = 'completed'");
     $total_deposit = $stmtTotalDeposit->fetchColumn() ?: 0;
-
+ 
     $stmtTotalWithdraw = $pdo->query("SELECT SUM(amount) FROM Transactions WHERE type = 'withdraw' AND status = 'completed'");
     $total_withdraw = $stmtTotalWithdraw->fetchColumn() ?: 0;
-
+ 
 } catch (PDOException $e) {
     die("Database error: " . $e->getMessage());
 }
 ?>
 <!DOCTYPE html>
 <html lang="vi">
-
+ 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../assets/css/admin_responsive.css">
     <link rel="stylesheet" href="../assets/css/admin_style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-
+ 
 <body class="bg-gray-50 text-gray-800 font-sans h-screen flex flex-col overflow-hidden">
 <header class="h-16 bg-indigo-600 flex items-center justify-between px-6 shadow-sm z-10 shrink-0">
         <div class="flex items-center gap-2 text-white">
@@ -77,10 +76,10 @@ try {
             </form>
         </div>
     </header>
-
+ 
     <div class="flex flex-1 overflow-hidden">
-
-        <aside class="w-64 bg-white shadow-md flex flex-col overflow-y-auto z-0 shrink-0">
+ 
+        <aside class="hidden md:flex w-64 bg-white shadow-md flex-col overflow-y-auto z-0 shrink-0">
             <nav class="flex-1 py-4">
                 <ul class="space-y-1">
                     <li>
@@ -124,14 +123,14 @@ try {
                 </ul>
             </nav>
         </aside>
-
-        <main class="flex-1 p-8 overflow-y-auto">
-
+ 
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto pb-20 md:pb-8">
+ 
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
                 <p class="text-gray-500 mt-1">Manage users and oversee system activity</p>
             </div>
-
+ 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 
                 <a href="AdminUsers.php" class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block hover:border-blue-200 transition-all">
@@ -143,7 +142,7 @@ try {
         <i class="fa-solid fa-users"></i>
     </div>
 </a>
-
+ 
                 <a href="AdminPending.php"
                     class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block hover:border-yellow-200 transition-all">
                     <div>
@@ -154,7 +153,7 @@ try {
                         <i class="fa-regular fa-clock"></i>
                     </div>
                 </a>
-
+ 
                 <a href="AdminVerified.php"
                     class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block hover:border-green-200 transition-all">
                     <div>
@@ -165,7 +164,7 @@ try {
                         <i class="fa-regular fa-user"></i>
                     </div>
                 </a>
-
+ 
                 <a href="AdminDisabled.php"
 class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block hover:border-red-200 transition-all">
                     <div>
@@ -176,7 +175,7 @@ class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justif
                         <i class="fa-solid fa-user-xmark"></i>
                     </div>
                 </a>
-
+ 
                 <a href="AdminLocked.php"
                     class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block hover:border-orange-200 transition-all">
                     <div>
@@ -187,7 +186,7 @@ class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justif
                         <i class="fa-solid fa-lock"></i>
                     </div>
                 </a>
-
+ 
                 <a href="AdminTransactions.php"
                     class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justify-between items-center block hover:border-purple-200 transition-all">
                     <div>
@@ -199,7 +198,7 @@ class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justif
                     </div>
                 </a>
             </div>
-
+ 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="finance-card deposits bg-emerald-500 rounded-xl shadow-sm p-6 text-white flex flex-col justify-between">
                     <div class="flex items-center gap-4">
@@ -215,7 +214,7 @@ class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justif
                         <h2 class="text-4xl font-bold"><?= h(format_money($total_deposit)) ?></h2>
 </div>
                 </div>
-
+ 
                 <div class="finance-card withdrawals bg-blue-500 rounded-xl shadow-sm p-6 text-white flex flex-col justify-between">
                     <div class="flex items-center gap-4">
                         <div class="finance-icon w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
@@ -231,10 +230,10 @@ class="card bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex justif
                     </div>
                 </div>
             </div>
-
+ 
         </main>
     </div>
-
+ 
 </body>
-
+ 
 </html>
