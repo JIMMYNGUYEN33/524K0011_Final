@@ -38,13 +38,10 @@
 
 \### Admin Account
 
-| Field    | Value |
 
-|----------|-------|
+ Email:     admin@ewallet.com 
 
-| Email    | admin@ewallet.com |
-
-| Password | password |
+ Password: password 
 
 
 
@@ -100,7 +97,7 @@ Copy the entire project folder into XAMPP's web root:
 
 
 
-C:\\xampp\\htdocs\\524K0011\_Final\\
+C:\\xampp\\htdocs\\524K0011_Final\\
 
 
 
@@ -108,9 +105,9 @@ The final path should look like:
 
 
 
-C:\\xampp\\htdocs\\524K0011\_Final\\auth\\login.php
+C:\\xampp\\htdocs\\524K0011_Final\\auth\\login.php
 
-C:\\xampp\\htdocs\\524K0011\_Final\\config\\db\_config.php
+C:\\xampp\\htdocs\\524K0011_Final\\config\\db\_config.php
 
 
 
@@ -150,7 +147,7 @@ Open \*\*Command Prompt\*\*, navigate to the project folder and run:
 
 bash
 
-cd C:\\xampp\\htdocs\\524K0011\_Final
+cd C:\\xampp\\htdocs\\524K0011_Final
 
 composer install
 
@@ -250,7 +247,7 @@ Open your browser and go to:
 
 
 
-http://localhost/524K0011\_Final/auth/login.php
+http://localhost/524K0011_Final/auth/login.php
 
 
 
@@ -372,7 +369,7 @@ http://localhost/524K0011\_Final/auth/login.php
 
 
 
-> Link: 
+> Link: https://drive.google.com/drive/folders/198MapwoBoCDMRrw83QgJSFq58PRNiDUg?usp=sharing
 
 
 
