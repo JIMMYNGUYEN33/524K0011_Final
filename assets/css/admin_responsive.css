@@ -1,0 +1,93 @@
+/* ==========================================================================
+   CSS RESPONSIVE CHUNG CHO GIAO DIỆN ADMIN
+   ========================================================================== */
+body {
+    background-color: #f1f5f9;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Sidebar mặc định cho màn hình máy tính (Desktop) */
+.admin-sidebar {
+    background-color: #1e293b; /* Tone màu tối sang trọng */
+    min-height: 100vh;
+    color: #f8fafc;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+.admin-sidebar .nav-link {
+    color: #94a3b8;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.admin-sidebar .nav-link:hover, 
+.admin-sidebar .nav-link.active {
+    background-color: #334155;
+    color: #ffffff;
+}
+
+/* Phần nội dung chính (Main Content) - Dịch sang phải để chừa chỗ cho Sidebar */
+.admin-main-content {
+    margin-left: 240px;
+    padding: 30px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+/* Thanh Header phụ trên điện thoại (Mặc định ẩn trên PC) */
+.mobile-admin-header {
+    display: none;
+    background-color: #1e293b;
+    padding: 15px 20px;
+}
+
+/* ==========================================================================
+   @MEDIA QUERY: RESPONSIVE CHO MÀN HÌNH ĐIỆN THOẠI (DƯỚI 768PX)
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    /* Hiện thanh Header phụ trên điện thoại */
+    .mobile-admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 101;
+    }
+
+    /* Thu nhỏ Sidebar lại thành Menu ẩn */
+    .admin-sidebar {
+        position: fixed;
+        top: 60px; /* Nằm ngay dưới thanh mobile header */
+        left: -100%; /* Đẩy ẩn sang bên trái màn hình */
+        width: 100%; /* Bung rộng toàn màn hình khi mở */
+        height: calc(100vh - 60px);
+        min-height: auto;
+        z-index: 99;
+    }
+
+    /* Khi class "show" được thêm vào Sidebar bằng JS */
+    .admin-sidebar.show {
+        left: 0;
+    }
+
+    /* Đưa nội dung chính tràn ra toàn màn hình trên điện thoại */
+    .admin-main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+}
