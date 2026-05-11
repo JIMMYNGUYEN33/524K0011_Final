@@ -74,7 +74,7 @@ Copy the entire project folder into XAMPP's web root:
 
 
 
-C:\\xampp\\htdocs\\524K0011_Final\\
+C:\\xampp\\htdocs\\524K0010_524K0011_524V0007\\
 
 
 
@@ -82,9 +82,9 @@ The final path should look like:
 
 
 
-C:\\xampp\\htdocs\\524K0011_Final\\auth\\login.php
+C:\\xampp\\htdocs\\524K0010_524K0011_524V0007l\\auth\\login.php
 
-C:\\xampp\\htdocs\\524K0011_Final\\config\\db\_config.php
+C:\\xampp\\htdocs\\524K0010_524K0011_524V0007l\\config\\db_config.php
 
 
 
@@ -124,7 +124,7 @@ Open \*\*Command Prompt\*\*, navigate to the project folder and run:
 
 bash
 
-cd C:\\xampp\\htdocs\\524K0011_Final
+cd C:\\xampp\\htdocs\\524K0010_524K0011_524V0007
 
 composer install
 
@@ -148,7 +148,7 @@ This installs \*\*PHPMailer\*\* (`phpmailer/phpmailer ^7.0`) into the `vendor/` 
 
 
 
-Open `config/db\_config.php`. The file auto-detects whether the site is running locally or on the hosted server:
+Open `config/db_config.php`. The file auto-detects whether the site is running locally or on the hosted server:
 
 
 
@@ -224,7 +224,7 @@ Open your browser and go to:
 
 
 
-http://localhost/524K0011_Final/auth/login.php
+http://localhost/524K0010_524K0011_524V0007/auth/login.php
 
 
 
@@ -332,7 +332,7 @@ http://localhost/524K0011_Final/auth/login.php
 
 \- \*\*uploads/ folder:\*\* Created automatically on first ID card upload. Ensure Apache has write permission to the project directory.
 
-\- \*\*Base URL:\*\* Hardcoded as `/524K0011\_Final` in `helpers/auth.php` → `base\_url()`. The project folder \*\*must\*\* be named `524K0011\_Final` exactly.
+\- \*\*Base URL:\*\* Hardcoded as `/524K0010_524K0011_524V0007` in `helpers/auth.php` → `base\_url()`. The project folder \*\*must\*\* be named `524K0010_524K0011_524V0007` exactly.
 
 \- \*\*Admin password:\*\* The hash in `Database.sql` corresponds to the password `password` (Laravel's default test hash `$2y$10$92IXU...`).
 
