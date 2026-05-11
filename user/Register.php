@@ -16,28 +16,34 @@
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </div>
-
+ 
         <h1 class="brand-title">BeePay</h1>
         <p class="brand-subtitle">Secure digital payment solution</p>
-
+ 
         <div class="Register-card">
             <form action="" method="POST" enctype="multipart/form-data">
                 <h2>Create Account</h2>
-
+ 
                 <?php if (!empty($error)): ?>
                     <div class="alert alert-danger text-center" style="font-size: 14px; padding: 10px; margin-bottom: 15px;">
                         <?= htmlspecialchars($error) ?>
                     </div>
                 <?php endif; ?>
-
-                <?php if (!empty($success)): ?>
+ 
+                <?php if ($success === 'email_sent'): ?>
                     <div class="alert alert-success text-center" style="font-size: 14px; padding: 15px; margin-bottom: 15px;">
-                        <h5>🎉 <?= htmlspecialchars($success) ?></h5>
+                        <h5>🎉 Account registered successfully!</h5>
+                        <p style="margin-bottom: 5px;">Your temporary password has been sent to your email.</p>
+                        <p style="font-size: 12px; color: #666;">Please check your inbox and use it to log in for the first time.</p>
+                    </div>
+                <?php elseif ($success === 'show_password'): ?>
+                    <div class="alert alert-success text-center" style="font-size: 14px; padding: 15px; margin-bottom: 15px;">
+                        <h5>🎉 Account registered successfully!</h5>
                         <p style="margin-bottom: 5px;">Your temporary password for the first login is:</p>
                         <strong style="font-size: 20px; color: #155724; background: #d4edda; padding: 5px 15px; border-radius: 5px; display: inline-block;">
                             <?= htmlspecialchars($generated_password) ?>
                         </strong>
-                        <p class="mt-2" style="font-size: 12px; color: #666;">(Please save this password to log in and change it.)</p>
+                        <p class="mt-2" style="font-size: 12px; color: #666;">(Email could not be sent. Please save this password.)</p>
                     </div>
                 <?php endif; ?>
                 
@@ -48,7 +54,7 @@
                         <input required type="text" name="full_name" placeholder="Enter your full name" value="<?= htmlspecialchars($_POST['full_name'] ?? '') ?>">
                     </div>
                 </div>
-
+ 
                 <div class="in_gr">
                     <label>Birthday</label>
                     <div class="in_wrapper">
@@ -56,7 +62,7 @@
                         <input required type="date" name="birthday" value="<?= htmlspecialchars($_POST['birthday'] ?? '') ?>">
                     </div>
                 </div>
-
+ 
                 <div class="in_gr">
                     <label>Email Address</label>
                     <div class="in_wrapper">
@@ -64,7 +70,7 @@
                         <input required type="email" name="email" placeholder="Enter your email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
                     </div>
                 </div>
-
+ 
                 <div class="in_gr">
                     <label>Phone Number</label>
                     <div class="in_wrapper">
@@ -72,7 +78,7 @@
                         <input required type="tel" name="phone" placeholder="Enter your phone number" value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>">
                     </div>
                 </div>
-
+ 
                 <div class="in_gr">
                     <label>Address</label>
                     <div class="in_wrapper">
@@ -80,7 +86,7 @@
                         <input required type="text" name="address" placeholder="Enter your address" value="<?= htmlspecialchars($_POST['address'] ?? '') ?>">
                     </div>
                 </div>
-
+ 
                 <div class="id-verification-section">
                     <h3 class="verification-title">ID Verification</h3>
                     
@@ -92,7 +98,7 @@
                             <span class="upload-hint">PNG, JPG up to 5MB</span>
                         </div>
                     </div>
-
+ 
                     <div class="upload-box mt-3" id="upload-back" onclick="document.getElementById('file-back').click();" style="cursor: pointer;">
                         <input type="file" id="file-back" name="id_back" accept="image/*" required hidden onchange="displayFileName(this, 'back-text')">
                         <div class="upload-content">
@@ -102,16 +108,16 @@
                         </div>
                     </div>
                 </div>
-
+ 
                 <button type="submit" class="btn-register">Register</button>
             </form>
-
+ 
             <p class="signin-text">
                 Already have an account? <a href="../auth/login.php">Sign In</a>
             </p>
         </div>
     </div>
-
+ 
     <script>
         function displayFileName(input, targetId) {
             const fileName = input.files[0] ? input.files[0].name : "Upload ID Card";
