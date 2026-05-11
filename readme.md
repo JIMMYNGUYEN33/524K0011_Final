@@ -47,32 +47,9 @@
 
 > The admin account has `is\_first\_login = FALSE` — no forced password change on first login.
 
-
-
-Test User Accounts
-
-
-
-| Email | Password | Status |
-
-|-------|----------|--------|
-
-| \[email] | \[password] | verified |
-
-| \[email] | \[password] | pending |
-
-| \[email] | \[password] | disabled |
-
-
-
 > All user accounts start with a balance of \*\*10,000,000 VND\*\* (set by default in the database schema).
 
-
-
-
-
 **Local Setup Guide (XAMPP)**
-
 
 
 **Requirements**
