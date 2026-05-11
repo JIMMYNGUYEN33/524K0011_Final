@@ -38,44 +38,18 @@
 
 \### Admin Account
 
-| Field    | Value |
 
-|----------|-------|
+ Email:     admin@ewallet.com 
 
-| Email    | admin@ewallet.com |
-
-| Password | password |
+ Password: password 
 
 
 
 > The admin account has `is\_first\_login = FALSE` — no forced password change on first login.
 
-
-
-Test User Accounts
-
-
-
-| Email | Password | Status |
-
-|-------|----------|--------|
-
-| \[email] | \[password] | verified |
-
-| \[email] | \[password] | pending |
-
-| \[email] | \[password] | disabled |
-
-
-
 > All user accounts start with a balance of \*\*10,000,000 VND\*\* (set by default in the database schema).
 
-
-
-
-
 **Local Setup Guide (XAMPP)**
-
 
 
 **Requirements**
@@ -100,7 +74,7 @@ Copy the entire project folder into XAMPP's web root:
 
 
 
-C:\\xampp\\htdocs\\524K0011\_Final\\
+C:\\xampp\\htdocs\\524K0010_524K0011_524V0007\\
 
 
 
@@ -108,9 +82,9 @@ The final path should look like:
 
 
 
-C:\\xampp\\htdocs\\524K0011\_Final\\auth\\login.php
+C:\\xampp\\htdocs\\524K0010_524K0011_524V0007l\\auth\\login.php
 
-C:\\xampp\\htdocs\\524K0011\_Final\\config\\db\_config.php
+C:\\xampp\\htdocs\\524K0010_524K0011_524V0007l\\config\\db_config.php
 
 
 
@@ -150,7 +124,7 @@ Open \*\*Command Prompt\*\*, navigate to the project folder and run:
 
 bash
 
-cd C:\\xampp\\htdocs\\524K0011\_Final
+cd C:\\xampp\\htdocs\\524K0010_524K0011_524V0007
 
 composer install
 
@@ -174,7 +148,7 @@ This installs \*\*PHPMailer\*\* (`phpmailer/phpmailer ^7.0`) into the `vendor/` 
 
 
 
-Open `config/db\_config.php`. The file auto-detects whether the site is running locally or on the hosted server:
+Open `config/db_config.php`. The file auto-detects whether the site is running locally or on the hosted server:
 
 
 
@@ -250,7 +224,7 @@ Open your browser and go to:
 
 
 
-http://localhost/524K0011\_Final/auth/login.php
+http://localhost/524K0010_524K0011_524V0007/auth/login.php
 
 
 
@@ -358,7 +332,7 @@ http://localhost/524K0011\_Final/auth/login.php
 
 \- \*\*uploads/ folder:\*\* Created automatically on first ID card upload. Ensure Apache has write permission to the project directory.
 
-\- \*\*Base URL:\*\* Hardcoded as `/524K0011\_Final` in `helpers/auth.php` → `base\_url()`. The project folder \*\*must\*\* be named `524K0011\_Final` exactly.
+\- \*\*Base URL:\*\* Hardcoded as `/524K0010_524K0011_524V0007` in `helpers/auth.php` → `base\_url()`. The project folder \*\*must\*\* be named `524K0010_524K0011_524V0007` exactly.
 
 \- \*\*Admin password:\*\* The hash in `Database.sql` corresponds to the password `password` (Laravel's default test hash `$2y$10$92IXU...`).
 
@@ -372,11 +346,10 @@ http://localhost/524K0011\_Final/auth/login.php
 
 
 
-> Link: 
+> Link: [https://drive.google.com/drive/folders/198MapwoBoCDMRrw83QgJSFq58PRNiDUg?usp=sharing](https://drive.google.com/drive/folders/198MapwoBoCDMRrw83QgJSFq58PRNiDUg?usp=sharing)
 
 
 
-\---
 
 
 
@@ -384,5 +357,5 @@ http://localhost/524K0011\_Final/auth/login.php
 
 
 
-> https://github.com/JIMMYNGUYEN33/524K0011\_Final
+> [https://github.com/JIMMYNGUYEN33/524K0011\_Final](https://github.com/JIMMYNGUYEN33/524K0011_Final.git)
 
