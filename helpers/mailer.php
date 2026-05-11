@@ -18,7 +18,7 @@ function send_mail($toEmail, $toName, $subject, $htmlBody)
         $mail->Username = $config['username'];
         $mail->Password = $config['password'];
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = $config['port'];
+        $mail->Port = 587;
 
   
         $mail->SMTPOptions = array(
