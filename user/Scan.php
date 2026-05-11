@@ -56,33 +56,27 @@
 
     <script>
         function onScanSuccess(decodedText, decodedResult) {
-            // Khi quét thành công một mã QR:
-            // Tạm thời dừng camera để không quét liên tục
+       
             html5QrcodeScanner.clear();
 
-            // Hiển thị thông báo kết quả (hoặc Như có thể chuyển hướng tự động sang trang Transfer)
             alert("Scanned Successfully: " + decodedText);
-            
-            // Ví dụ: Nếu quét ra một số điện thoại hoặc đường dẫn, mình chuyển hướng qua trang Transfer luôn
-            // window.location.href = "Transfer.html?receiver=" + encodeURIComponent(decodedText);
             window.location.href = "Transfer.html";
         }
 
         function onScanFailure(error) {
-            // Hàm này chạy liên tục khi camera chưa tìm thấy mã QR (Như cứ để trống không cần xử lý)
         }
 
-        // Cấu hình khung quét camera
+      
         let html5QrcodeScanner = new Html5QrcodeScanner(
             "reader", 
             { 
-                fps: 10, // Số khung hình trên giây
-                qrbox: { width: 220, height: 220 } // Kích thước khung nét đứt định vị mã QR
+                fps: 10, 
+                qrbox: { width: 220, height: 220 } 
             },
-            /* verbose= */ false
+             false
         );
         
-        // Bắt đầu chạy quét
+
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
     </script>
 </body>

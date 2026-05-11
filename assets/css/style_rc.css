@@ -13,11 +13,10 @@ body {
     min-height: 100vh;
 }
 
-/* Khung giả lập di động chuẩn BeePay */
 .app-container {
     width: 100%;
     max-width: 414px;
-    height: 820px; /* Chiều cao cố định lọt màn hình */
+    height: 820px; 
     background-color: #fffef5;
     position: relative;
     border-radius: 24px; 
@@ -28,7 +27,6 @@ body {
     flex-direction: column;
 }
 
-/* --- ICON THÀNH CÔNG --- */
 .success-icon-wrapper {
     display: flex;
     justify-content: center;
@@ -43,15 +41,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2ecc71; /* Màu xanh lá cây thành công */
-    font-size: 80px; /* Độ lớn của icon Checkmark */
+    color: #2ecc71; 
+    font-size: 80px; 
     box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
 }
 
-/* --- TIÊU ĐỀ TRANG --- */
 .page-title {
     text-align: center;
-    color: #252603; /* Màu tối của BeePay */
+    color: #252603; 
     font-weight: 700;
     font-size: 24px;
     margin-bottom: 8px;
@@ -67,7 +64,6 @@ body {
     line-height: 1.5;
 }
 
-/* --- CARD THÔNG TIN TÀI KHOẢN --- */
 .success-card {
     background: #ffffff;
     width: calc(100% - 40px);
@@ -86,8 +82,6 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-
-/* Dòng thông tin */
 .info-row {
     display: flex;
     justify-content: space-between;
@@ -107,7 +101,7 @@ body {
     font-weight: 600;
 }
 
-/* Hàng nổi bật chứa Password mặc định */
+
 .highlight-row {
     background-color: #f0f4ff;
     border-radius: 8px;
@@ -117,9 +111,9 @@ body {
 }
 
 .password-value {
-    color: #1e62ff; /* Màu xanh nổi bật */
+    color: #1e62ff; 
     font-weight: 700;
-    font-family: 'Courier New', monospace; /* Kiểu chữ monospace cho dễ đọc kí tự */
+    font-family: 'Courier New', monospace; 
     font-size: 15px;
     letter-spacing: 1px;
 }

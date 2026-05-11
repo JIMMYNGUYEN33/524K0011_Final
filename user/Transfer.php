@@ -9,7 +9,7 @@ $user = current_user();
 $message = '';
 $messageType = '';
 $show_popup = false;
-$popup_type = ''; // 'instant_success' hoặc 'pending_approval'
+$popup_type = '';
 $trans_amount = 0;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $wallet = new WalletBLL(new WalletDAL($pdo), $pdo);
     
-    // Giữ nguyên hàm transfer gốc chuẩn nghiệp vụ BLL của nhóm bà
+
     $result = $wallet->transfer(
         $user['id'],
         trim($_POST['receiver_phone'] ?? ''),
@@ -30,10 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = $result['message'];
     $messageType = !empty($result['success']) ? 'success' : 'danger';
 
-    // Nếu giao dịch được xử lý thành công ở tầng BLL
+   
     if (!empty($result['success'])) {
         $show_popup = true;
-        // Phân luồng hiển thị dựa trên hạn mức 5,000,000 VND
+   
         if ($amount < 5000000) {
             $popup_type = 'instant_success';
         } else {
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/style_transfer.css">
     
     <style>
-        /* CSS Popup Hiển thị trạng thái giao dịch Chuyển tiền */
+       
         .transfer-popup-overlay {
             position: fixed;
             top: 0;
@@ -100,12 +100,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin: 0 auto 16px auto;
             font-size: 28px;
         }
-        /* Style cho trạng thái Thành công tức thì (< 5tr) */
+     
         .icon-success {
             background: #dcfce7;
             color: #16a34a;
         }
-        /* Style cho trạng thái Chờ duyệt (>= 5tr) */
+      
         .icon-pending {
             background: #fef3c7;
             color: #d97706;
@@ -225,7 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const popup = document.getElementById('transferPopup');
             if (popup) {
                 popup.classList.remove('show');
-                // Tự động điều hướng về trang chủ sau khi tắt popup để cập nhật số dư mới nhất
+                
                 window.location.href = 'Home.php';
             }
         }

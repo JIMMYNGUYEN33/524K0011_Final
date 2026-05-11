@@ -62,27 +62,26 @@
     transform: translateY(-4px); 
 }
 
-/* Class CSS nền màu Vàng Nâu/Vàng Nghệ đồng bộ 100% với App BeePay */
+
 .admin-header-gold-brown {
-    background-color: #b29100 !important; /* Màu nâu vàng đất cực sang */
-    border-bottom: 3px solid #7a6000 !important; /* Viền dưới màu nâu vàng đậm tạo khối */
+    background-color: #b29100 !important; 
+    border-bottom: 3px solid #7a6000 !important; 
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
 }
 
-/* Chữ trắng trên nền vàng nâu */
 .admin-header-gold-brown .text-white-custom {
     color: #ffffff !important;
 }
 
-/* Chữ Administrator màu vàng chanh sáng cực dễ đọc */
+
 .admin-header-gold-brown .text-yellow-light {
     color: #fef08a !important; 
 }
 
-/* Nút Logout màu tối (Đen đá) nổi bần bật trên nền vàng */
+
 .admin-header-gold-brown .btn-logout-custom {
-    background-color: #1c1917 !important; /* Màu đen sẫm */
-    color: #facc15 !important; /* Chữ màu vàng sáng */
+    background-color: #1c1917 !important; 
+    color: #facc15 !important;
     border: none !important;
     transition: all 0.2s ease-in-out;
 }

@@ -1,14 +1,13 @@
 <?php
 class WalletBLL {
     private $dal;
-    private $pdo; // Thêm thuộc tính pdo nếu bạn muốn BLL thực thi truy vấn trực tiếp, hoặc dùng DAL.
+    private $pdo; 
 
     public function __construct($dal, $pdo = null) {
         $this->dal = $dal;
-        $this->pdo = $pdo; // Gán PDO để phục vụ các phương thức Admin bên dưới
+        $this->pdo = $pdo; 
     }
 
-    // --- 1. NẠP TIỀN (DEPOSIT) ---
     public function deposit($userId, $cardNumber, $exp, $cvv, $amount) {
         $card = $this->dal->getCardByNumber($cardNumber);
         if (!$card) return ['success' => false, 'message' => 'Cards are not supported.'];
@@ -27,7 +26,6 @@ class WalletBLL {
         return ['success' => true, 'message' => 'Deposit successful'];
     }
 
-    // --- 2. RÚT TIỀN (WITHDRAW) ---
     public function withdraw($userId, $cardNumber, $exp, $cvv, $amount, $note) {
         if ($cardNumber !== '111111' || $exp !== '10/10/2022' || $cvv !== '411') {
             return ['success' => false, 'message' => 'Invalid card information'];
@@ -50,7 +48,6 @@ class WalletBLL {
         return ['success' => true, 'message' => ($status === 'pending') ? 'Pending administrator approval' : 'Withdrawal successful!'];
     }
 
-    // --- 3. CHUYỂN TIỀN (TRANSFER) ---
     public function transfer($senderId, $receiverPhone, $amount, $note, $isSenderPayFee) {
         $receiver = $this->dal->getUserByPhone($receiverPhone);
         if (!$receiver) return ['success' => false, 'message' => 'Receiver not found'];
@@ -76,7 +73,7 @@ class WalletBLL {
         return ['success' => true, 'message' => 'Transaction successful!', 'otp_required' => true];
     }
 
-    // --- 4. MUA THẺ CÀO (BUY CARD) ---
+
     public function buyCard($userId, $carrier, $denomination, $quantity) {
         $validDenoms = [10000, 20000, 50000, 100000];
         if (!in_array($denomination, $validDenoms)) return ['success' => false, 'message' => 'Invalid card denomination'];
@@ -100,7 +97,7 @@ class WalletBLL {
         return ['success' => true, 'message' => 'Card purchased successfully! View your code in History'];
     }
 
-    // --- 5. ADMIN: DUYỆT GIAO DỊCH (WITHDRAW/TRANSFER > 5TR) ---
+  
     public function approveTransaction($transactionId, $isApprove) {
         if (!$this->pdo) {
             return ['success' => false, 'message' => 'Database connection (PDO) is missing in BLL'];
@@ -131,14 +128,14 @@ class WalletBLL {
         }
     }
 
-    // --- 6. ADMIN: QUẢN LÝ TRẠNG THÁI TÀI KHOẢN ---
+  
     public function updateAccountStatus($userId, $newStatus) {
         if (!$this->pdo) return false;
         $stmt = $this->pdo->prepare("UPDATE Users SET status = ? WHERE id = ?");
         return $stmt->execute([$newStatus, $userId]);
     }
 
-    // --- 7. ADMIN: MỞ KHÓA TÀI KHOẢN (DO NHẬP SAI PASS) ---
+   
     public function unlockAccount($userId) {
         if (!$this->pdo) return false;
         $stmt = $this->pdo->prepare("UPDATE Users SET 

@@ -20,7 +20,7 @@ function send_mail($toEmail, $toName, $subject, $htmlBody)
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = $config['port'];
 
-        // Cấu hình bỏ qua xác thực SSL khi chạy trên môi trường Localhost (XAMPP)
+  
         $mail->SMTPOptions = array(
             'ssl' => array(
                 'verify_peer' => false,

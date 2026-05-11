@@ -4,7 +4,7 @@ require_once __DIR__ . '/../helpers/auth.php';
 require_login();
 ensure_first_password_changed();
 
-$user = current_user();
+$user = current_user(); 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,7 +54,12 @@ $user = current_user();
                         <i class="fa-regular fa-calendar info-icon"></i>
                         <div class="info-text">
                             <span class="info-label">Date of Birth</span>
-                            <span class="info-value"><?= h($user['dob'] ?: '-') ?></span>
+                            <span class="info-value">
+                                <?php 
+                                    $dob = $user['dob'] ?? $user['birth_date'] ?? $user['birthday'] ?? '';
+                                    echo h(!empty($dob) ? date('d/m/Y', strtotime($dob)) : '-');
+                                ?>
+                            </span>
                         </div>
                     </div>
 
@@ -62,7 +67,7 @@ $user = current_user();
                         <i class="fa-solid fa-location-dot info-icon"></i>
                         <div class="info-text">
                             <span class="info-label">Address</span>
-                            <span class="info-value"><?= h($user['address'] ?: '-') ?></span>
+                            <span class="info-value"><?= h(!empty($user['address']) ? $user['address'] : '-') ?></span>
                         </div>
                     </div>
                 </div>
@@ -103,7 +108,10 @@ $user = current_user();
             </a>
         </div>
 
-        <p class="app-version">E-Wallet v1.0.0<br>Member since <?= h(date('d/m/Y', strtotime($user['created_at']))) ?></p>
+        <p class="app-version">
+            E-Wallet v1.0.0<br>
+            Member since <?= h(!empty($user['created_at']) ? date('d/m/Y', strtotime($user['created_at'])) : date('d/m/Y')) ?>
+        </p>
 
         <nav class="bottom-nav">
             <a href="Home.php" class="nav-item">

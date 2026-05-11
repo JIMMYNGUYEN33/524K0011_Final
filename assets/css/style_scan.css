@@ -14,12 +14,11 @@ body {
     padding: 20px 0;
 }
 
-/* Khung giả lập di động bo tròn, lọt lòng màn hình chuẩn BeePay */
 .app-container {
     width: 100%;
     max-width: 414px;
     height: 820px;
-    background-color: #1e1e24; /* Nền tối cho sang trọng và nổi bật camera */
+    background-color: #1e1e24; 
     position: relative;
     border-radius: 24px; 
     border: none; 
@@ -29,7 +28,6 @@ body {
     flex-direction: column;
 }
 
-/* --- TOP BAR --- */
 .app-top-bar {
     padding: 25px 20px 15px 20px;
     display: flex;
@@ -79,7 +77,6 @@ body {
     margin-top: 2px;
 }
 
-/* --- VÙNG HIỂN THỊ CAMERA --- */
 .scan-area-container {
     flex-grow: 1;
     display: flex;
@@ -99,7 +96,6 @@ body {
     background-color: #000000;
 }
 
-/* Ẩn bớt các chữ thừa của thư viện html5-qrcode mặc định */
 #reader {
     border: none !important;
     width: 100% !important;
@@ -112,7 +108,6 @@ body {
     height: 100% !important;
 }
 
-/* Nút chọn camera của thư viện */
 #reader button {
     background-color: #ffea00 !important;
     color: #000000 !important;
@@ -124,12 +119,11 @@ body {
     margin-top: 10px !important;
 }
 
-/* Hiệu ứng tia Laser chạy lên xuống quét mã */
 .scan-overlay {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    pointer-events: none; /* Tránh cản trở click nút chọn camera */
+    pointer-events: none;
 }
 
 .scanner-laser {
@@ -147,7 +141,6 @@ body {
     100% { top: 10%; }
 }
 
-/* --- HỘP HƯỚNG DẪN DƯỚI CAMERA --- */
 .instruction-box {
     margin: 20px;
     padding: 15px;
@@ -173,7 +166,6 @@ body {
     margin: 0;
 }
 
-/* --- SYSTEM BOTTOM NAVIGATION BAR --- */
 .bottom-nav {
     position: absolute;
     bottom: 0;
@@ -199,7 +191,7 @@ body {
 }
 
 .nav-item.active {
-    color: #452a00; /* Màu active vàng đậm của trang Scan */
+    color: #452a00; 
 }
 
 .nav-item i {
@@ -207,7 +199,7 @@ body {
     margin-bottom: 4px;
 }
 
-/* Center Scanning Action Button */
+
 .scan-btn {
     position: relative;
     top: -15px;

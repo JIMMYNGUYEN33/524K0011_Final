@@ -220,45 +220,50 @@ if ($userId) {
     </div>
 
     <div id="verification-modal" class="fixed inset-0 z-50 items-center justify-center p-4 bg-black/40 hidden">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl border border-amber-100 transform scale-95 transition-transform">
-            <div class="w-14 h-14 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl border transform scale-95 transition-transform" style="border-color: rgba(134, 136, 44, 0.2);">
+            
+            <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl" style="background-color: rgba(134, 136, 44, 0.1); color: #86882c;">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
+            
             <h3 class="text-base font-bold text-gray-900">Feature Restricted</h3>
             <p class="text-gray-500 text-xs mt-2 leading-relaxed">
                 This feature is only available for fully verified accounts. Please wait for administrator verification.
             </p>
-            <button onclick="closeModal()" class="w-full mt-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-xl shadow-md transition-colors">
+            
+            <button onclick="closeModal()" 
+                    class="w-full mt-5 py-2.5 text-white text-xs font-semibold rounded-xl shadow-md transition-colors"
+                    style="background-color: #86882c;"
+                    onmouseover="this.style.backgroundColor='#6e7021'" 
+                    onmouseout="this.style.backgroundColor='#86882c'">
                 Got it, thanks!
             </button>
         </div>
     </div>
 
     <script>
-        // Lấy trạng thái của tài khoản từ DB qua PHP
+   
         const userStatus = "<?= h($user['status'] ?? 'pending') ?>";
 
-        // Hàm kiểm tra verify khi bấm vào bất kỳ tính năng dịch vụ nào
         function checkVerification(event, targetUrl) {
             if (userStatus === 'pending') {
-                event.preventDefault(); // Chặn chuyển trang
+                event.preventDefault(); 
                 const modal = document.getElementById('verification-modal');
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
             } else {
-                // Nếu đã được duyệt thì cho phép chuyển hướng bình thường
                 window.location.href = targetUrl;
             }
         }
 
-        // Đóng Popup
+      
         function closeModal() {
             const modal = document.getElementById('verification-modal');
             modal.classList.remove('flex');
             modal.classList.add('hidden');
         }
 
-        // --- CÁC ĐOẠN JS GỐC CỦA BÀ GIỮ NGUYÊN 100% ---
+        
         const servicesGrid = document.querySelector('.services-grid');
         const servicesScrollbar = document.querySelector('.services-scrollbar');
         const servicesThumb = document.querySelector('.services-scrollbar-thumb');

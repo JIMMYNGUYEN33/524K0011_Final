@@ -52,7 +52,7 @@ body {
 }
 
 .btn-back:hover {
-    background-color: #ffea00; /* Màu vàng BeePay đặc trưng */
+    background-color: #ffea00;
     color: #252603;
     transform: translateX(-3px);
 }
@@ -97,7 +97,7 @@ body {
 }
 
 .required {
-    color: #dc3545; /* Sao đỏ bắt buộc */
+    color: #dc3545;
 }
 
 
@@ -245,7 +245,7 @@ body {
 .btn-purchase {
     width: 100%;
     padding: 14px;
-    background: #1e62ff; /* Màu xanh dương nhạt theo hình mẫu */
+    background: #1e62ff; 
     color: white;
     border: none;
     border-radius: 12px;

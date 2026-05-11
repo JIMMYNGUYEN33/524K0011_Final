@@ -28,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($newPassword !== $confirmPassword) {
         $error = 'Password confirmation does not match.';
     } else {
-        // Cập nhật mật khẩu mới mã hóa bằng bcrypt vào Database
         $stmt = $pdo->prepare('UPDATE Users SET password = ? WHERE id = ?');
         $stmt->execute([password_hash($newPassword, PASSWORD_DEFAULT), $user['id']]);
 

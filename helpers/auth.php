@@ -50,7 +50,7 @@ function current_user()
 
     $stmt = $pdo->prepare('SELECT * FROM Users WHERE id = ? LIMIT 1');
     $stmt->execute([$_SESSION['user_id']]);
-    $user = $stmt->fetch();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
         unset($_SESSION['user_id'], $_SESSION['role']);

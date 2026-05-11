@@ -6,20 +6,18 @@
 }
 
 body {
-    background-color: #cbd5e1; /* Màu nền xám bên ngoài để nổi bật khung điện thoại */
+    background-color: #cbd5e1; 
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px 0; /* Đệm trên dưới tránh chạm viền màn hình laptop */
+    padding: 20px 0; 
 }
 
-/* Khung giả lập di động bo tròn, lọt lòng màn hình chuẩn BeePay */
 .app-container {
     width: 100%;
     max-width: 414px;
-    height: 820px; /* Chiều cao cố định lọt màn hình */
-    background-color: #fffef5;
+    height: 820px; 
     position: relative;
     border-radius: 24px; 
     border: none; 
@@ -29,7 +27,6 @@ body {
     flex-direction: column;
 }
 
-/* --- THANH ĐẦU TRANG (TOP BAR) --- */
 .app-top-bar {
     padding: 25px 20px 15px 20px;
     display: flex;
@@ -38,7 +35,6 @@ body {
     flex-shrink: 0;
 }
 
-/* Nút quay lại (Back Button) */
 .btn-back {
     display: flex;
     align-items: center;
@@ -55,7 +51,7 @@ body {
 }
 
 .btn-back:hover {
-    background-color: #ffea00; /* Màu vàng BeePay đặc trưng */
+    background-color: #ffea00;
     color: #252603;
     transform: translateX(-3px);
 }
@@ -79,7 +75,6 @@ body {
     margin-top: 2px;
 }
 
-/* --- KHUNG BỘ LỌC VÀ TÌM KIẾM --- */
 .filter-card {
     background: #ffffff;
     margin: 0 20px 15px 20px;
@@ -119,7 +114,6 @@ body {
     background-color: #ffffff;
 }
 
-/* Bộ lọc Tab trượt ngang mượt mà */
 .tabs-scroll-container {
     overflow-x: auto;
     white-space: nowrap;
@@ -127,7 +121,7 @@ body {
     padding-bottom: 5px;
 }
 
-/* Ẩn scrollbar xấu xí của bộ lọc */
+
 .tabs-scroll-container::-webkit-scrollbar {
     height: 3px;
 }
@@ -159,18 +153,17 @@ body {
 }
 
 .tab-btn.active {
-    background-color: #1e62ff; /* Màu xanh nút bấm BeePay */
+    background-color: #1e62ff; 
     color: #ffffff;
 }
 
-/* --- VÙNG CHỨA DANH SÁCH GIAO DỊCH (CÓ THỂ CUỘN TRONG ĐIỆN THOẠI) --- */
 .transactions-list-container {
     flex-grow: 1;
     overflow-y: auto;
     padding: 0 20px 20px 20px;
 }
 
-/* Ẩn thanh cuộn của khung danh sách */
+
 .transactions-list-container::-webkit-scrollbar {
     width: 4px;
 }
@@ -179,7 +172,6 @@ body {
     border-radius: 10px;
 }
 
-/* Khung bọc danh sách màu trắng */
 .transactions-list {
     background-color: #ffffff;
     border-radius: 20px;
@@ -204,7 +196,7 @@ body {
     background-color: #fcfcfc;
 }
 
-/* Vòng tròn Icon của mỗi giao dịch */
+
 .tx-icon-box {
     width: 40px;
     height: 40px;
@@ -217,7 +209,7 @@ body {
     flex-shrink: 0;
 }
 
-/* Tông màu icon các giao dịch */
+
 .tx-icon-box.orange { background-color: #fff3e0; color: #e65100; }
 .tx-icon-box.green { background-color: #e8f5e9; color: #2e7d32; }
 .tx-icon-box.blue { background-color: #e3f2fd; color: #1565c0; }
@@ -254,7 +246,7 @@ body {
     font-weight: 700;
 }
 
-/* Số tiền âm/dương (Đỏ/Xanh lá) */
+
 .tx-amount.negative { color: #ef4444; }
 .tx-amount.positive { color: #10b981; }
 
@@ -280,7 +272,6 @@ body {
     flex-shrink: 0;
 }
 
-/* --- TRẠNG THÁI TRỐNG (EMPTY STATE CHUẨN ĐỒNG BỘ) --- */
 .empty-state-wrapper {
     background: #ffffff;
     padding: 40px 20px;

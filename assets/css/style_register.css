@@ -109,7 +109,7 @@ body {
 
 .in_wrapper {
     position: relative;
-    overflow: hidden; /* fix tràn */
+    overflow: hidden;
 }
 
 .in_wrapper i {
@@ -133,7 +133,6 @@ body {
     box-sizing: border-box;
 }
 
-/* Fix riêng cho date input khỏi bị tràn */
 .in_wrapper input[type="date"] {
     width: 100%;
     -webkit-appearance: none;
@@ -247,7 +246,6 @@ color: #252603;
     color: #888;
 }
 
-/* --- Birthday dropdowns --- */
 .birthday-wrapper {
     display: flex;
     align-items: center;

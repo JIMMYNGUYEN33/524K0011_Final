@@ -8,7 +8,7 @@ require_verified_user();
 $user = current_user();
 $message = '';
 $messageType = '';
-$purchased_cards = []; // Mảng chứa danh sách thẻ cào vừa mua thành công để hiển thị lên popup
+$purchased_cards = []; 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $carrierMap = [
@@ -20,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $carrier = $carrierMap[$_POST['carrier'] ?? 'viettel'] ?? 'Viettel';
     $quantity = (int) ($_POST['quantity'] ?? 1);
     
-    // Giới hạn số lượng mua từ 1 đến tối đa 5 thẻ mỗi lần
     if ($quantity > 5) {
         $quantity = 5;
     } elseif ($quantity < 1) {
@@ -38,15 +37,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = $result['message'];
     $messageType = !empty($result['success']) ? 'success' : 'danger';
 
-    // Nếu giao dịch mua thẻ thành công, sinh ngẫu nhiên mã thẻ 10 chữ số tương ứng số lượng đã chọn
+   
     if (!empty($result['success'])) {
         for ($i = 0; $i < $quantity; $i++) {
-            // Tạo mã thẻ cào 10 chữ số ngẫu nhiên
+          
             $card_code = '';
             for ($j = 0; $j < 10; $j++) {
                 $card_code .= rand(0, 9);
             }
-            // Tạo số serial ngẫu nhiên
+  
             $card_serial = 'SN' . rand(100000, 999999) . rand(10, 99);
             
             $purchased_cards[] = [
@@ -69,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/style_buycard.css">
     
     <style>
-        /* CSS Popup Hiển thị danh sách thẻ cào */
+       
         .card-popup-overlay {
             position: fixed;
             top: 0;
@@ -128,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             position: relative;
             overflow: hidden;
         }
-        /* Tạo vết bấm răng cưa hai đầu vé thẻ cào */
+
         .card-item-popup::before, .card-item-popup::after {
             content: '';
             position: absolute;
@@ -270,28 +269,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div style="width: 48px; height: 48px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 20px;">
                         <i class="fa-solid fa-circle-check"></i>
                     </div>
-                    <h3 class="popup-title">Mua Thẻ Thành Công!</h3>
-                    <p class="popup-subtitle">Nhà mạng: <span class="fw-bold"><?= h($carrier) ?></span> - Mệnh giá: <span class="fw-bold"><?= h(format_money($_POST['denomination'])) ?></span></p>
+                    <h3 class="popup-title">Purchase Successful!</h3>
+                    <p class="popup-subtitle">Carrier: <span class="fw-bold"><?= h($carrier) ?></span> - Denomination: <span class="fw-bold"><?= h(format_money($_POST['denomination'])) ?></span></p>
                 </div>
                 
                 <div style="max-height: 280px; overflow-y: auto; padding-right: 4px;">
                     <?php foreach ($purchased_cards as $index => $card): ?>
                         <div class="card-item-popup">
                             <div class="card-field mb-1">
-                                <span>Thẻ cào #<?= $index + 1 ?></span>
+                                <span>Phone Card #<?= $index + 1 ?></span>
                                 <span>Serial: <strong class="text-dark"><?= h($card['serial']) ?></strong></span>
                             </div>
                             <div class="card-field">
                                 <span class="card-code-val" id="code-<?= $index ?>"><?= h($card['code']) ?></span>
                                 <button class="btn-copy-code" onclick="copyCardCode('<?= h($card['code']) ?>', this)">
-                                    <i class="fa-regular fa-copy"></i> Sao chép
+                                    <i class="fa-regular fa-copy"></i> Copy
                                 </button>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
 
-                <button class="btn-popup-close" onclick="closeCardPopup()">Đóng</button>
+                <button class="btn-popup-close" onclick="closeCardPopup()">Close</button>
             </div>
         </div>
     <?php endif; ?>
@@ -341,7 +340,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         quantityInput.addEventListener('input', updateTotalPayment);
         quantityInput.addEventListener('change', updateTotalPayment);
 
-        // --- ĐIỀU KHIỂN ĐÓNG POPUP & SAO CHÉP MÃ NHANH ---
         function closeCardPopup() {
             const popup = document.getElementById('cardPopup');
             if (popup) {
@@ -352,14 +350,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         function copyCardCode(text, button) {
             navigator.clipboard.writeText(text).then(() => {
                 const originalText = button.innerHTML;
-                button.innerHTML = '<i class="fa-solid fa-check"></i> Đã chép';
+                button.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
                 button.style.color = '#16a34a';
                 setTimeout(() => {
                     button.innerHTML = originalText;
                     button.style.color = '#2563eb';
                 }, 1500);
             }).catch(err => {
-                console.error('Không thể sao chép mã: ', err);
+                console.error('Failed to copy code: ', err);
             });
         }
     </script>

@@ -59,21 +59,21 @@ class WalletDAL {
         return $stmt->execute([$transactionId, $carrier, $code, $amount]);
     }
 
-    // Lấy danh sách tài khoản chờ kích hoạt (mới nhất lên đầu)
+ 
     public function getPendingAccounts() {
         $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE status = 'pending' ORDER BY created_at DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Lấy danh sách tài khoản bị khóa vô thời hạn do sai pass
+   
     public function getLockedAccounts() {
         $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE is_permanently_locked = TRUE ORDER BY locked_until DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Lấy danh sách các giao dịch rút/chuyển trên 5 triệu đang chờ duyệt
+    
     public function getPendingTransactions() {
         $stmt = $this->pdo->prepare("SELECT t.*, u.full_name as sender_name 
                                      FROM Transactions t 
