@@ -346,11 +346,10 @@ http://localhost/524K0011_Final/auth/login.php
 
 
 
-> Link: https://drive.google.com/drive/folders/198MapwoBoCDMRrw83QgJSFq58PRNiDUg?usp=sharing
+> Link: [https://drive.google.com/drive/folders/198MapwoBoCDMRrw83QgJSFq58PRNiDUg?usp=sharing](https://drive.google.com/drive/folders/198MapwoBoCDMRrw83QgJSFq58PRNiDUg?usp=sharing)
 
 
 
-\---
 
 
 
@@ -358,5 +357,5 @@ http://localhost/524K0011_Final/auth/login.php
 
 
 
-> https://github.com/JIMMYNGUYEN33/524K0011\_Final
+> [https://github.com/JIMMYNGUYEN33/524K0011\_Final](https://github.com/JIMMYNGUYEN33/524K0011_Final.git)
 
